@@ -1,8 +1,9 @@
 package com.importH.service;
 
 import com.importH.domain.User;
-import com.importH.dto.UserLoginResponseDto;
-import com.importH.dto.UserSignUpRequestDto;
+import com.importH.dto.user.UserLoginResponseDto;
+import com.importH.dto.signup.UserSignUpRequestDto;
+import com.importH.dto.user.UserResponseDto;
 import com.importH.error.exception.UserException;
 import com.importH.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,4 +49,8 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public UserResponseDto findById(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
+        return new UserResponseDto(user);
+    }
 }

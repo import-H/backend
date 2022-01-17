@@ -1,5 +1,6 @@
 package com.importH.error;
 
+import com.importH.error.exception.JwtException;
 import com.importH.error.exception.UserException;
 import com.importH.model.response.CommonResult;
 import com.importH.service.response.ResponseService;
@@ -21,7 +22,15 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(UserException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected CommonResult defaultException(HttpServletRequest request, UserException e) {
+    protected CommonResult userException(HttpServletRequest request, UserException e) {
+        log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
+        return responseService.getFailResult(e.getErrorCode());
+
+    }
+
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult jwtException(HttpServletRequest request, JwtException e) {
         log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
         return responseService.getFailResult(e.getErrorCode());
 

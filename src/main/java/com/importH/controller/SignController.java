@@ -1,8 +1,8 @@
 package com.importH.controller;
 
 import com.importH.config.security.JwtProvider;
-import com.importH.dto.UserLoginResponseDto;
-import com.importH.dto.UserSignUpRequestDto;
+import com.importH.dto.user.UserLoginResponseDto;
+import com.importH.dto.signup.UserSignUpRequestDto;
 import com.importH.error.code.UserErrorCode;
 import com.importH.error.exception.UserException;
 import com.importH.model.response.SingleResult;
@@ -18,7 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-//TODO 컨트롤러 구현
 @Api(tags = "1. SignUp / Login")
 @Slf4j
 @RestController
