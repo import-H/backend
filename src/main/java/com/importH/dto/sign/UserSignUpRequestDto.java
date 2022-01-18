@@ -1,4 +1,4 @@
-package com.importH.dto.signup;
+package com.importH.dto.sign;
 
 import com.importH.domain.User;
 import io.swagger.annotations.ApiModel;

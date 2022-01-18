@@ -21,7 +21,7 @@ public class ExceptionAdvice {
     private final ResponseService responseService;
 
     @ExceptionHandler(UserException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected CommonResult userException(HttpServletRequest request, UserException e) {
         log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
         return responseService.getFailResult(e.getErrorCode());
@@ -29,7 +29,7 @@ public class ExceptionAdvice {
     }
 
     @ExceptionHandler(JwtException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected CommonResult jwtException(HttpServletRequest request, JwtException e) {
         log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
         return responseService.getFailResult(e.getErrorCode());

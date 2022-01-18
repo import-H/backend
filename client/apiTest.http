@@ -1,0 +1,35 @@
+#회원가입  정상 요청
+POST http://localhost:8090/v1/signup
+Content-Type: application/json
+
+{
+  "email": "abc@hongik.ac.kr",
+  "nickname": "string",
+  "password": "string123123"
+}
+
+### 로그인 정상 요청
+POST http://localhost:8090/v1/login
+Content-Type: application/json
+
+{
+  "email": "abc@hongik.ac.kr",
+  "password": "string123123"
+}
+
+### 토큰 재발급 정상 요청
+POST http://localhost:8090/v1/reissue
+Content-Type: application/json
+
+{
+  "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MjUxNTc2OSwiZXhwIjoxNjQyNTE1ODI5fQ.aaLRzjuOSM4pBQrRlibANm8gQKtl4iUwScdx8fmO5H8",
+  "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MjUxNTc2OSwiZXhwIjoxNjQzNzI1MzY5fQ.lTCe9z4J1jgU2fRGV0GZvLQ0qIVqvU_dWob3hZNPmLs"
+}
+
+
+### 회원 정보 조회
+GET http://localhost:8090/v1/user/id/1
+X-AUTH-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MjUxNTEyNiwiZXhwIjoxNjQyNTE1MTg2fQ.xbBNO9ukAb7QoXvW5-acUnuAsh8Dxi_Mcg0OZ3O4A08
+
+
+

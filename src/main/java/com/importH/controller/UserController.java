@@ -2,7 +2,7 @@ package com.importH.controller;
 
 import com.importH.dto.user.UserResponseDto;
 import com.importH.model.response.SingleResult;
-import com.importH.service.UserService;
+import com.importH.service.user.UserService;
 import com.importH.service.response.ResponseService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;

@@ -36,7 +36,7 @@ public class User implements UserDetails {
     @Column(length = 20)
     private String nickName;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
