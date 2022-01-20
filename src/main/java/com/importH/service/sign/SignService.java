@@ -1,10 +1,12 @@
 package com.importH.service.sign;
 
 import com.importH.config.security.JwtProvider;
+import com.importH.config.security.UserAccount;
 import com.importH.domain.Account;
 import com.importH.domain.RefreshToken;
 import com.importH.dto.jwt.TokenDto;
 import com.importH.dto.jwt.TokenRequestDto;
+import com.importH.dto.jwt.TokenResponseDto;
 import com.importH.dto.sign.UserSignUpRequestDto;
 import com.importH.error.code.JwtErrorCode;
 import com.importH.error.exception.JwtException;
@@ -54,7 +56,7 @@ public class SignService {
         tokenRepository.save(refreshToken);
         return tokenDto;
     }
-    public TokenDto reissue(TokenRequestDto tokenRequestDto) {
+    public TokenResponseDto reissue(TokenRequestDto tokenRequestDto) {
 
         // 만료된  refresh token 에러
         if (!jwtProvider.validationToken(tokenRequestDto.getRefreshToken())) {
@@ -63,10 +65,10 @@ public class SignService {
 
         // AccessToken 에서 email(pk) 가져오기
         String accessToken = tokenRequestDto.getAccessToken();
-        Authentication authentication = jwtProvider.getAuthentication(accessToken);
+        UserAccount userAccount = (UserAccount) jwtProvider.getAuthentication(accessToken).getPrincipal();
 
         // user pk로 유저 검색 / RefreshToken 이 없음
-        Account account = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
+        Account account = userRepository.findByEmail(userAccount.getAccount().getEmail()).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
         RefreshToken refreshToken = tokenRepository.findByKey(account.getId()).orElseThrow(() -> new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID));
 
         // 리프레시 토큰 불일치
@@ -79,6 +81,6 @@ public class SignService {
         RefreshToken updateRefreshToken = refreshToken.updateToken(newToken.getRefreshToken());
         tokenRepository.save(updateRefreshToken);
 
-        return newToken;
+        return TokenResponseDto.builder().accessToken(newToken.getAccessToken()).refreshToken(newToken.getRefreshToken()).build();
     }
 }

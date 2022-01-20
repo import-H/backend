@@ -3,6 +3,7 @@ package com.importH.controller;
 import com.importH.config.security.JwtProvider;
 import com.importH.dto.jwt.TokenDto;
 import com.importH.dto.jwt.TokenRequestDto;
+import com.importH.dto.jwt.TokenResponseDto;
 import com.importH.dto.sign.UserLoginRequestDto;
 import com.importH.dto.user.UserLoginResponseDto;
 import com.importH.dto.sign.UserSignUpRequestDto;
@@ -60,7 +61,7 @@ public class SignController {
     @ApiOperation(value = "엑세스 , 리프레시 토큰 재발급",
             notes = "액세스 토큰 만료시 회원 검증 후 리프레쉬 토큰을 검증해서 액세스 토큰과 리프레시 토큰을 재발급합니다.")
     @PostMapping("/reissue")
-    public SingleResult<TokenDto> reissue(
+    public SingleResult<TokenResponseDto> reissue(
             @ApiParam(value = "토큰 재발급 요청 DTO", required = true) @RequestBody TokenRequestDto tokenRequestDto
             ) {
         return responseService.getSingleResult(signService.reissue(tokenRequestDto));
