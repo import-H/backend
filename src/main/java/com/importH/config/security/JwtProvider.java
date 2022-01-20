@@ -1,5 +1,6 @@
 package com.importH.config.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.importH.domain.Account;
 import com.importH.dto.jwt.TokenDto;
 import com.importH.error.code.ErrorCode;
@@ -8,11 +9,13 @@ import com.importH.error.code.JwtErrorCode;
 import com.importH.error.code.UserErrorCode;
 import com.importH.error.exception.JwtException;
 import com.importH.error.exception.UserException;
+import com.importH.model.response.CommonResult;
 import com.importH.repository.UserRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +25,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.interfaces.RSAKey;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +55,7 @@ public class JwtProvider {
     private Long refreshTokenValidTime = 14 * 24 * 60 * 60 * 1000L; // 14day
 
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
     @PostConstruct
     protected void init() {
@@ -96,7 +103,7 @@ public class JwtProvider {
         }
 
         // 권한 정보가 없음
-        Account account = userRepository.findByEmail(claims.getSubject()).orElse(null);
+        Account account = userRepository.findByEmail(claims.getSubject()).orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_USERID));
         return new UsernamePasswordAuthenticationToken(new UserAccount(account), "", account.getRoles()
                 .stream().map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList()));
@@ -125,7 +132,7 @@ public class JwtProvider {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
+        } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("잘못된 Jwt 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.error("만료된 토큰입니다.");
@@ -136,6 +143,5 @@ public class JwtProvider {
         }
         return false;
     }
-
 
 }

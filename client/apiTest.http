@@ -29,7 +29,7 @@ Content-Type: application/json
 
 ### 회원 정보 조회
 GET http://localhost:8090/v1/user/id/1
-X-AUTH-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MjY5MjM5OCwiZXhwIjoxNjQyNjk1OTk4fQ.MRPUiCdYbDAoDljnSXJ7ZmOVN5-h2Dv_yCTCfyh6O6w
+X-AUTH-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MjY5NDgxMSwiZXhwIjox
 
 
 
