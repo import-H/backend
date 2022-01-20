@@ -1,6 +1,7 @@
 package com.importH.service.user;
 
-import com.importH.domain.User;
+import com.importH.config.security.UserAccount;
+import com.importH.domain.Account;
 import com.importH.dto.user.UserResponseDto;
 import com.importH.error.exception.UserException;
 import com.importH.repository.UserRepository;
@@ -23,13 +24,13 @@ public class UserService implements UserDetailsService {
     // TODO
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
-        return user;
+        Account account = userRepository.findByEmail(email).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
+        return new UserAccount(account);
     }
 
 
     public UserResponseDto findById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
-        return new UserResponseDto(user);
+        Account account = userRepository.findById(userId).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
+        return new UserResponseDto(account);
     }
 }

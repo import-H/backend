@@ -1,11 +1,14 @@
 package com.importH.controller;
 
+import com.importH.config.security.CurrentAccount;
+import com.importH.domain.Account;
 import com.importH.dto.user.UserResponseDto;
 import com.importH.model.response.SingleResult;
 import com.importH.service.user.UserService;
 import com.importH.service.response.ResponseService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = {"2. User"})
@@ -26,7 +29,9 @@ public class UserController {
     @ApiOperation(value = "회원 단건 검색", notes = "userId로 회원을 조회합니다.")
     @GetMapping("/user/id/{userId}")
     public SingleResult<UserResponseDto> findUserById
-            (@ApiParam(value = "회원 ID", required = true) @PathVariable Long userId) {
+            (@ApiParam(value = "회원 ID", required = true) @PathVariable Long userId,
+             @CurrentAccount Account account) {
+        System.out.println("account = " + account);
         return responseService.getSingleResult(userService.findById(userId));
     }
 

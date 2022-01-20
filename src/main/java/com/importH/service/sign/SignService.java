@@ -1,12 +1,11 @@
 package com.importH.service.sign;
 
 import com.importH.config.security.JwtProvider;
+import com.importH.domain.Account;
 import com.importH.domain.RefreshToken;
-import com.importH.domain.User;
 import com.importH.dto.jwt.TokenDto;
 import com.importH.dto.jwt.TokenRequestDto;
 import com.importH.dto.sign.UserSignUpRequestDto;
-import com.importH.dto.user.UserLoginResponseDto;
 import com.importH.error.code.JwtErrorCode;
 import com.importH.error.exception.JwtException;
 import com.importH.error.exception.UserException;
@@ -38,18 +37,18 @@ public class SignService {
 
 
     public TokenDto login(String email, String password) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserException(EMAIL_LOGIN_FAILED));
+        Account account = userRepository.findByEmail(email).orElseThrow(() -> new UserException(EMAIL_LOGIN_FAILED));
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password, account.getPassword())) {
             throw new UserException(EMAIL_LOGIN_FAILED);
         }
 
         // AccessToken, RefreshToken 발급
-        TokenDto tokenDto = jwtProvider.createToken(user.getEmail(), user.getRoles());
+        TokenDto tokenDto = jwtProvider.createToken(account.getEmail(), account.getRoles());
 
         // RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
-                .key(user.getId())
+                .key(account.getId())
                 .token(tokenDto.getRefreshToken())
                 .build();
         tokenRepository.save(refreshToken);
@@ -67,8 +66,8 @@ public class SignService {
         Authentication authentication = jwtProvider.getAuthentication(accessToken);
 
         // user pk로 유저 검색 / RefreshToken 이 없음
-        User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
-        RefreshToken refreshToken = tokenRepository.findByKey(user.getId()).orElseThrow(() -> new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID));
+        Account account = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
+        RefreshToken refreshToken = tokenRepository.findByKey(account.getId()).orElseThrow(() -> new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID));
 
         // 리프레시 토큰 불일치
         if (!refreshToken.getToken().equals(tokenRequestDto.getRefreshToken())) {
@@ -76,7 +75,7 @@ public class SignService {
         }
 
         // AccessToken, RefreshToken 재발급 , 저장
-        TokenDto newToken = jwtProvider.createToken(user.getEmail(), user.getRoles());
+        TokenDto newToken = jwtProvider.createToken(account.getEmail(), account.getRoles());
         RefreshToken updateRefreshToken = refreshToken.updateToken(newToken.getRefreshToken());
         tokenRepository.save(updateRefreshToken);
 

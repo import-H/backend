@@ -1,16 +1,21 @@
 package com.importH.config.security;
 
+import com.importH.domain.Account;
 import com.importH.dto.jwt.TokenDto;
 import com.importH.error.code.ErrorCode;
 import com.importH.error.code.JwtErrorCode;
 
+import com.importH.error.code.UserErrorCode;
 import com.importH.error.exception.JwtException;
+import com.importH.error.exception.UserException;
+import com.importH.repository.UserRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -20,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.importH.error.code.JwtErrorCode.AUTHENTICATION_ENTRYPOINT;
 
@@ -39,10 +45,10 @@ public class JwtProvider {
     private String secretKey;
 
     // 토큰 유효시간 30분
-    private Long accessTokenValidTime = 1 * 60 * 1000L; // 30 min
+    private Long accessTokenValidTime = 60 * 60 * 1000L; // 30 min
     private Long refreshTokenValidTime = 14 * 24 * 60 * 60 * 1000L; // 14day
 
-    private final UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
 
     @PostConstruct
     protected void init() {
@@ -90,8 +96,10 @@ public class JwtProvider {
         }
 
         // 권한 정보가 없음
-        UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        Account account = userRepository.findByEmail(claims.getSubject()).orElse(null);
+        return new UsernamePasswordAuthenticationToken(new UserAccount(account), "", account.getRoles()
+                .stream().map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList()));
     }
 
     // jwt 에서 회원 구분 PK 추출

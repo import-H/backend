@@ -20,6 +20,11 @@ public class ExceptionAdvice {
 
     private final ResponseService responseService;
 
+    @ExceptionHandler(Exception.class)
+    protected CommonResult globalException() {
+
+        return null;
+    }
     @ExceptionHandler(UserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected CommonResult userException(HttpServletRequest request, UserException e) {

@@ -1,6 +1,6 @@
 package com.importH.dto.user;
 
-import com.importH.domain.User;
+import com.importH.domain.Account;
 import lombok.Getter;
 
 import java.util.List;
@@ -10,8 +10,8 @@ public class UserLoginResponseDto {
     private final String email;
     private final List<String> roles;
 
-    public UserLoginResponseDto(User user) {
-        email = user.getEmail();
-        this.roles = user.getRoles();
+    public UserLoginResponseDto(Account account) {
+        email = account.getEmail();
+        this.roles = account.getRoles();
     }
 }

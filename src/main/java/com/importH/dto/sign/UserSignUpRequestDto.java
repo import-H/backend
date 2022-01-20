@@ -1,6 +1,6 @@
 package com.importH.dto.sign;
 
-import com.importH.domain.User;
+import com.importH.domain.Account;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -33,8 +33,8 @@ public class UserSignUpRequestDto {
     private String nickname;
 
 
-    public User toEntity() {
-        return User.builder()
+    public Account toEntity() {
+        return Account.builder()
                 .email(email)
                 .password(password)
                 .nickName(nickname)

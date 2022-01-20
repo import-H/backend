@@ -1,10 +1,9 @@
 package com.importH.dto.user;
 
-import com.importH.domain.User;
+import com.importH.domain.Account;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,13 +13,11 @@ public class UserResponseDto {
     private final String email;
     private final String nickName;
     private List<String> roles;
-    private Collection<? extends GrantedAuthority> authorities;
 
-    public UserResponseDto(User user) {
-        this.id = user.getId();
-        this.email = user.getEmail();
-        this.nickName = user.getNickName();
-        this.roles = user.getRoles();
-        this.authorities = user.getAuthorities();
+    public UserResponseDto(Account account) {
+        this.id = account.getId();
+        this.email = account.getEmail();
+        this.nickName = account.getNickName();
+        this.roles = account.getRoles();
     }
 }
