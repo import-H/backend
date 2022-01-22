@@ -1,23 +1,19 @@
 package com.importH.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.importH.dto.sign.UserLoginRequestDto;
 import com.importH.dto.sign.UserSignUpRequestDto;
 import com.importH.error.code.UserErrorCode;
 import com.importH.repository.UserRepository;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.importH.service.sign.SignService;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -37,6 +33,17 @@ class SignControllerTest {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    SignService signService;
+
+    @BeforeEach
+    void setup() {
+        UserSignUpRequestDto requestDto = UserSignUpRequestDto.builder()
+                .email("user@hongik.ac.kr")
+                .nickname("test")
+                .password("12341234").build();
+        signService.signup(requestDto);
+    }
     @AfterEach
     void afterAll() {
         userRepository.deleteAll();
@@ -45,10 +52,7 @@ class SignControllerTest {
     @Test
     void 회원가입요청_성공() throws Exception {
 
-        UserSignUpRequestDto requestDto = UserSignUpRequestDto.builder()
-                .email("test@hongik.ac.kr")
-                .nickname("test")
-                .password("12341234").build();
+        UserSignUpRequestDto requestDto = getSignUpRequestDto("12341234");
 
         mockMvc.perform(post("/v1/signup")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -56,7 +60,6 @@ class SignControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data").value(1))
                 .andExpect(jsonPath("$.msg").exists());
 
     }
@@ -64,10 +67,7 @@ class SignControllerTest {
     @Test
     void 회원가입요청_실패_조건만족_X() throws Exception {
 
-        UserSignUpRequestDto requestDto = UserSignUpRequestDto.builder()
-                .email("test@hongik.ac.kr")
-                .nickname("test")
-                .password("1234").build();
+        UserSignUpRequestDto requestDto = getSignUpRequestDto("1234");
 
         mockMvc.perform(post("/v1/signup")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -82,10 +82,7 @@ class SignControllerTest {
 
 
         UserErrorCode userErrorCode = UserErrorCode.USER_EMAIL_DUPLICATED;
-        UserSignUpRequestDto requestDto = UserSignUpRequestDto.builder()
-                .email("test@hongik.ac.kr")
-                .nickname("test")
-                .password("12341234").build();
+        UserSignUpRequestDto requestDto = getSignUpRequestDto("12341234");
 
         userRepository.save(requestDto.toEntity("1234"));
 
@@ -98,8 +95,52 @@ class SignControllerTest {
                 .andExpect(jsonPath("$.msg").value(userErrorCode.getDescription()));
     }
 
+    private UserSignUpRequestDto getSignUpRequestDto(String password) {
+        return UserSignUpRequestDto.builder()
+                .email("test@hongik.ac.kr")
+                .nickname("test")
+                .password(password).build();
+    }
+
     @Test
-    void login() {
+    void 로그인_성공() throws Exception {
+
+
+        UserLoginRequestDto requestDto = getUserLoginRequestDto("user@hongik.ac.kr");
+
+        mockMvc.perform(post("/v1/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.msg").exists())
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.refreshToken").exists());
+
+    }
+
+    @Test
+    void 로그인_실패() throws Exception {
+
+        UserErrorCode userErrorCode = UserErrorCode.EMAIL_LOGIN_FAILED;
+        UserLoginRequestDto requestDto = getUserLoginRequestDto("user1@hongik.ac.kr");
+
+        mockMvc.perform(post("/v1/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().is4xxClientError())
+                .andDo(print())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.msg").value(userErrorCode.getDescription()));
+
+    }
+
+    private UserLoginRequestDto getUserLoginRequestDto(String email) {
+        UserLoginRequestDto requestDto = UserLoginRequestDto.builder()
+                .email(email)
+                .password("12341234").build();
+        return requestDto;
     }
 
     @Test
