@@ -31,7 +31,8 @@ public class SignService {
 
     public Long signup(UserSignUpRequestDto userSignUpRequestDto) {
         if (userRepository.findByEmail(userSignUpRequestDto.getEmail()).orElse(null) == null) {
-            return userRepository.save(userSignUpRequestDto.toEntity()).getId();
+            String password = passwordEncoder.encode(userSignUpRequestDto.getPassword());
+            return userRepository.save(userSignUpRequestDto.toEntity(password)).getId();
         }
         throw new UserException(USER_EMAIL_DUPLICATED);
     }

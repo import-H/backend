@@ -3,7 +3,10 @@ package com.importH.dto.sign;
 import com.importH.domain.Account;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
@@ -11,8 +14,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.Collections;
 
-@Data
 @ApiModel("회원 가입 요청 DTO")
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserSignUpRequestDto {
 
     @ApiModelProperty(value = "홍익 이메일" , example = "abc@hongik.ac.kr", required = true)
@@ -32,7 +38,7 @@ public class UserSignUpRequestDto {
     private String nickname;
 
 
-    public Account toEntity() {
+    public Account toEntity(String password) {
         return Account.builder()
                 .email(email)
                 .password(password)
@@ -40,4 +46,5 @@ public class UserSignUpRequestDto {
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
     }
+
 }

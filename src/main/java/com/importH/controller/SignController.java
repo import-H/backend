@@ -53,7 +53,6 @@ public class SignController {
             throw new UserException(UserErrorCode.NOT_VALID_REQUEST_PARAMETERS);
         }
 
-        userSignUpRequestDto.setPassword(passwordEncoder.encode(userSignUpRequestDto.getPassword()));
         Long userId = signService.signup(userSignUpRequestDto);
         return responseService.getSingleResult(userId);
     }
