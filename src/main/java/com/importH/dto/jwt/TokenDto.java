@@ -1,8 +1,7 @@
 package com.importH.dto.jwt;
 
-import lombok.*;
-
-import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder

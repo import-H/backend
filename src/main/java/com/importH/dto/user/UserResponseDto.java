@@ -2,9 +2,7 @@ package com.importH.dto.user;
 
 import com.importH.domain.Account;
 import lombok.Getter;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
 import java.util.List;
 
 @Getter

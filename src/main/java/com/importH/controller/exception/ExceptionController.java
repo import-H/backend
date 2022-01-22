@@ -1,8 +1,6 @@
 package com.importH.controller.exception;
 
-import com.importH.error.code.UserErrorCode;
 import com.importH.error.exception.JwtException;
-import com.importH.error.exception.UserException;
 import com.importH.model.response.CommonResult;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;

@@ -4,12 +4,14 @@ import com.importH.config.security.CurrentAccount;
 import com.importH.domain.Account;
 import com.importH.dto.user.UserResponseDto;
 import com.importH.model.response.SingleResult;
-import com.importH.service.user.UserService;
 import com.importH.service.response.ResponseService;
+import com.importH.service.user.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = {"2. User"})
 @RestController

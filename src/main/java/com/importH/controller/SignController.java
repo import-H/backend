@@ -5,14 +5,13 @@ import com.importH.dto.jwt.TokenDto;
 import com.importH.dto.jwt.TokenRequestDto;
 import com.importH.dto.jwt.TokenResponseDto;
 import com.importH.dto.sign.UserLoginRequestDto;
-import com.importH.dto.user.UserLoginResponseDto;
 import com.importH.dto.sign.UserSignUpRequestDto;
 import com.importH.error.code.UserErrorCode;
 import com.importH.error.exception.UserException;
 import com.importH.model.response.SingleResult;
-import com.importH.service.user.UserService;
 import com.importH.service.response.ResponseService;
 import com.importH.service.sign.SignService;
+import com.importH.service.user.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -21,7 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = "1. SignUp / Login")
 @Slf4j
@@ -30,9 +32,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1")
 public class SignController {
 
-    private final UserService userService;
     private final SignService signService;
-    private final JwtProvider jwtProvider;
     private final ResponseService responseService;
     private final PasswordEncoder passwordEncoder;
 
