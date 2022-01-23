@@ -29,8 +29,8 @@ public class Account {
     @Column(length = 20)
     private String nickName;
 
-    @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
 

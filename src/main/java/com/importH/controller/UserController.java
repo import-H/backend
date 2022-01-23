@@ -24,7 +24,7 @@ public class UserController {
 
     @ApiImplicitParams({
             @ApiImplicitParam(
-                    name = "X-AUTH-TOKEN",
+                    name = "Authorization",
                     value = "로그인 성공 후 AccessToken",
                     required = true, dataType = "String", paramType = "header")
     })

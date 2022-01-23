@@ -17,18 +17,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.importH.error.code.UserErrorCode.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class SignService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository tokenRepository;
 
+    @Transactional
     public Long signup(UserSignUpRequestDto userSignUpRequestDto) {
         if (userRepository.findByEmail(userSignUpRequestDto.getEmail()).orElse(null) == null) {
             String password = passwordEncoder.encode(userSignUpRequestDto.getPassword());
@@ -38,6 +41,7 @@ public class SignService {
     }
 
 
+    @Transactional
     public TokenDto login(String email, String password) {
         Account account = userRepository.findByEmail(email).orElseThrow(() -> new UserException(EMAIL_LOGIN_FAILED));
 
@@ -49,13 +53,22 @@ public class SignService {
         TokenDto tokenDto = jwtProvider.createToken(account.getEmail(), account.getRoles());
 
         // RefreshToken 저장
-        RefreshToken refreshToken = RefreshToken.builder()
-                .key(account.getId())
-                .token(tokenDto.getRefreshToken())
-                .build();
-        tokenRepository.save(refreshToken);
+
+        RefreshToken refreshToken = tokenRepository.findByKey(account.getId()).orElse(null);
+        if (refreshToken == null) {
+            RefreshToken newRefreshToken = RefreshToken.builder()
+                    .key(account.getId())
+                    .token(tokenDto.getRefreshToken())
+                    .build();
+            tokenRepository.save(newRefreshToken);
+        } else {
+            refreshToken.updateToken(tokenDto.getRefreshToken());
+        }
+
         return tokenDto;
     }
+
+    @Transactional
     public TokenResponseDto reissue(TokenRequestDto tokenRequestDto) {
 
         // 만료된  refresh token 에러
@@ -67,8 +80,12 @@ public class SignService {
         String accessToken = tokenRequestDto.getAccessToken();
         UserAccount userAccount = (UserAccount) jwtProvider.getAuthentication(accessToken).getPrincipal();
 
-        // user pk로 유저 검색 / RefreshToken 이 없음
-        Account account = userRepository.findByEmail(userAccount.getAccount().getEmail()).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
+        Account account = userAccount.getAccount();
+        if (account == null) {
+            throw new UserException(NOT_FOUND_USERID);
+        }
+
+        // 현재 유저에 해당하는 RefreshToken 확인
         RefreshToken refreshToken = tokenRepository.findByKey(account.getId()).orElseThrow(() -> new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID));
 
         // 리프레시 토큰 불일치
@@ -78,8 +95,7 @@ public class SignService {
 
         // AccessToken, RefreshToken 재발급 , 저장
         TokenDto newToken = jwtProvider.createToken(account.getEmail(), account.getRoles());
-        RefreshToken updateRefreshToken = refreshToken.updateToken(newToken.getRefreshToken());
-        tokenRepository.save(updateRefreshToken);
+        refreshToken.updateToken(newToken.getRefreshToken());
 
         return TokenResponseDto.builder().accessToken(newToken.getAccessToken()).refreshToken(newToken.getRefreshToken()).build();
     }

@@ -41,7 +41,7 @@ public class JwtProvider {
     private String secretKey;
 
     // 토큰 유효시간 30분
-    private Long accessTokenValidTime = 60 * 60 * 1000L; // 30 min
+    private Long accessTokenValidTime = 1 * 30 * 1000L; // 30 sec
     private Long refreshTokenValidTime = 14 * 24 * 60 * 60 * 1000L; // 14day
 
     private final UserRepository userRepository;
@@ -75,7 +75,6 @@ public class JwtProvider {
                 .compact();
 
         return TokenDto.builder()
-                .grantType("bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .accessTokenExpireDate(accessTokenValidTime)
@@ -114,7 +113,7 @@ public class JwtProvider {
 
     // HTTP request 의 Header 에서 Token Parsing -> "X-AUTH-TOKEN: jwt"
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        return request.getHeader("Authorization");
     }
 
     // Jwt 의 유효성 및 만료일자 확인
