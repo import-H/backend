@@ -1,4 +1,4 @@
-package com.importH.domain;
+package com.importH.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

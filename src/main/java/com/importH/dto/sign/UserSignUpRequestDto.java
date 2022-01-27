@@ -1,6 +1,6 @@
 package com.importH.dto.sign;
 
-import com.importH.domain.Account;
+import com.importH.entity.Account;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

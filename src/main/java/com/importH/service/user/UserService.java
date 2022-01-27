@@ -1,8 +1,8 @@
 package com.importH.service.user;
 
 import com.importH.config.security.UserAccount;
-import com.importH.domain.Account;
 import com.importH.dto.user.UserResponseDto;
+import com.importH.entity.Account;
 import com.importH.error.exception.UserException;
 import com.importH.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    // TODO
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = userRepository.findByEmail(email).orElseThrow(() -> new UserException(NOT_FOUND_USERID));

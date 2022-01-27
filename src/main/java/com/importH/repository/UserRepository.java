@@ -1,6 +1,6 @@
 package com.importH.repository;
 
-import com.importH.domain.Account;
+import com.importH.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -2,12 +2,19 @@ package com.importH.dto.jwt;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@NoArgsConstructor
 public class TokenDto {
 
     private String accessToken;
     private String refreshToken;
-    private Long accessTokenExpireDate;
+
+
+    @Builder
+    public TokenDto(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 }

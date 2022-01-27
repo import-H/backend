@@ -2,17 +2,16 @@ package com.importH.service.sign;
 
 import com.importH.config.security.JwtProvider;
 import com.importH.config.security.UserAccount;
-import com.importH.domain.Account;
-import com.importH.domain.RefreshToken;
+import com.importH.entity.Account;
+import com.importH.entity.RefreshToken;
 import com.importH.dto.jwt.TokenDto;
-import com.importH.dto.jwt.TokenRequestDto;
-import com.importH.dto.jwt.TokenResponseDto;
 import com.importH.dto.sign.UserSignUpRequestDto;
 import com.importH.error.code.JwtErrorCode;
 import com.importH.error.exception.JwtException;
 import com.importH.error.exception.UserException;
 import com.importH.repository.RefreshTokenRepository;
 import com.importH.repository.UserRepository;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,77 +25,124 @@ import static com.importH.error.code.UserErrorCode.*;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class SignService {
+
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository tokenRepository;
 
+
+    /** 회원가입 */
     @Transactional
     public Long signup(UserSignUpRequestDto userSignUpRequestDto) {
-        if (userRepository.findByEmail(userSignUpRequestDto.getEmail()).orElse(null) == null) {
-            String password = passwordEncoder.encode(userSignUpRequestDto.getPassword());
-            return userRepository.save(userSignUpRequestDto.toEntity(password)).getId();
+        String password = passwordEncoder.encode(userSignUpRequestDto.getPassword());
+        duplicatedEmail(userSignUpRequestDto.getEmail());
+        return saveUser(userSignUpRequestDto.toEntity(password)).getId();
+    }
+
+    private void duplicatedEmail(String email) {
+        if (userRepository.findByEmail(email).orElse(null) != null) {
+            throw new UserException(USER_EMAIL_DUPLICATED);
         }
-        throw new UserException(USER_EMAIL_DUPLICATED);
+    }
+
+    private Account saveUser(Account account) {
+        return userRepository.save(account);
     }
 
 
+    /** 로그인 */
     @Transactional
     public TokenDto login(String email, String password) {
-        Account account = userRepository.findByEmail(email).orElseThrow(() -> new UserException(EMAIL_LOGIN_FAILED));
+        Account account = getAccount(email);
+        validatePassword(password,account);
+        
+        TokenDto tokenDto = getToken(account);
+        RefreshToken refreshToken = getRefreshToken(account);
 
-        if (!passwordEncoder.matches(password, account.getPassword())) {
-            throw new UserException(EMAIL_LOGIN_FAILED);
-        }
-
-        // AccessToken, RefreshToken 발급
-        TokenDto tokenDto = jwtProvider.createToken(account.getEmail(), account.getRoles());
-
-        // RefreshToken 저장
-
-        RefreshToken refreshToken = tokenRepository.findByKey(account.getId()).orElse(null);
-        if (refreshToken == null) {
-            RefreshToken newRefreshToken = RefreshToken.builder()
-                    .key(account.getId())
-                    .token(tokenDto.getRefreshToken())
-                    .build();
-            tokenRepository.save(newRefreshToken);
-        } else {
-            refreshToken.updateToken(tokenDto.getRefreshToken());
-        }
+        generateRefreshToken(account, tokenDto, refreshToken);
 
         return tokenDto;
     }
 
+    private void generateRefreshToken(Account account, TokenDto tokenDto, RefreshToken refreshToken) {
+        if (refreshToken == null) {
+            RefreshToken newRefreshToken = RefreshToken.create(account.getId(), tokenDto.getRefreshToken());
+            saveRefreshToken(newRefreshToken);
+        } else {
+            refreshToken.updateToken(tokenDto.getRefreshToken());
+        }
+    }
+
+    private void saveRefreshToken(RefreshToken newRefreshToken) {
+        tokenRepository.save(newRefreshToken);
+    }
+
+    private RefreshToken getRefreshToken(Account account) {
+        return tokenRepository.findByKey(account.getId()).orElse(null);
+    }
+
+    private TokenDto getToken(Account account) {
+        return jwtProvider.createToken(account.getEmail(), account.getRoles());
+    }
+
+    private void validatePassword(String password, Account account) {
+        if (!isMatchPassword(password, account.getPassword())) {
+            throw new UserException(EMAIL_LOGIN_FAILED);
+        }
+    }
+
+    private boolean isMatchPassword(String password, String accountPassword) {
+        return passwordEncoder.matches(password, accountPassword);
+    }
+
+    private Account getAccount(String email) {
+        Account account = userRepository.findByEmail(email).orElseThrow(() -> new UserException(EMAIL_LOGIN_FAILED));
+        return account;
+    }
+
+    /** 토큰 재발급 */
     @Transactional
-    public TokenResponseDto reissue(TokenRequestDto tokenRequestDto) {
+    public TokenDto reissue(TokenDto tokenRequestDto) {
 
-        // 만료된  refresh token 에러
-        if (!jwtProvider.validationToken(tokenRequestDto.getRefreshToken())) {
-            throw new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID);
-        }
+        Claims claims = jwtProvider.parseClaims(tokenRequestDto.getRefreshToken());
+        String email = claims.getSubject();
 
-        // AccessToken 에서 email(pk) 가져오기
-        String accessToken = tokenRequestDto.getAccessToken();
-        UserAccount userAccount = (UserAccount) jwtProvider.getAuthentication(accessToken).getPrincipal();
+        Account account = getAccount(email);
 
-        Account account = userAccount.getAccount();
-        if (account == null) {
-            throw new UserException(NOT_FOUND_USERID);
-        }
+        RefreshToken refreshToken = getValidateRefreshToken(account, tokenRequestDto.getRefreshToken());
 
-        // 현재 유저에 해당하는 RefreshToken 확인
-        RefreshToken refreshToken = tokenRepository.findByKey(account.getId()).orElseThrow(() -> new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID));
-
-        // 리프레시 토큰 불일치
-        if (!refreshToken.getToken().equals(tokenRequestDto.getRefreshToken())) {
-            throw new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID);
-        }
-
-        // AccessToken, RefreshToken 재발급 , 저장
-        TokenDto newToken = jwtProvider.createToken(account.getEmail(), account.getRoles());
+        TokenDto newToken = getToken(account);
         refreshToken.updateToken(newToken.getRefreshToken());
 
-        return TokenResponseDto.builder().accessToken(newToken.getAccessToken()).refreshToken(newToken.getRefreshToken()).build();
+        return newToken;
+    }
+
+
+    private RefreshToken getValidateRefreshToken(Account account,String requestRefreshToken) {
+        RefreshToken refreshToken = getRefreshToken(account);
+        validateRefreshToken(refreshToken, requestRefreshToken);
+        return refreshToken;
+    }
+
+    private void validateRefreshToken(RefreshToken refreshToken, String requestRefreshToken) {
+        if (refreshToken == null) {
+            throw new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID);
+        }
+        if (!isValidationRefreshToken(requestRefreshToken)) {
+            throw new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID);
+        }
+        if (!isEqualsRefreshToken(refreshToken, requestRefreshToken)) {
+            throw new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID);
+        }
+    }
+
+    private boolean isValidationRefreshToken(String refreshToken) {
+        return jwtProvider.validationToken(refreshToken);
+    }
+
+    private boolean isEqualsRefreshToken(RefreshToken refreshToken, String requestRefreshToken) {
+        return refreshToken.getToken().equals(requestRefreshToken);
     }
 }

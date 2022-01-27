@@ -1,4 +1,4 @@
-package com.importH.domain;
+package com.importH.entity;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +20,13 @@ public class RefreshToken {
 
     @Column(nullable = false)
     private String token;
+
+    public static RefreshToken create(Long userId, String refreshToken) {
+        return RefreshToken.builder()
+                .key(userId)
+                .token(refreshToken)
+                .build();
+    }
 
     public RefreshToken updateToken(String token) {
         this.token = token;

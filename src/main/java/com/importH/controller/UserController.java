@@ -1,7 +1,7 @@
 package com.importH.controller;
 
 import com.importH.config.security.CurrentAccount;
-import com.importH.domain.Account;
+import com.importH.entity.Account;
 import com.importH.dto.user.UserResponseDto;
 import com.importH.model.response.SingleResult;
 import com.importH.service.response.ResponseService;

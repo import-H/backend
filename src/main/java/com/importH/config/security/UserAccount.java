@@ -1,6 +1,6 @@
 package com.importH.config.security;
 
-import com.importH.domain.Account;
+import com.importH.entity.Account;
 import lombok.Getter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

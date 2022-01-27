@@ -1,7 +1,6 @@
 package com.importH.config.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.importH.domain.Account;
+import com.importH.entity.Account;
 import com.importH.dto.jwt.TokenDto;
 import com.importH.error.code.UserErrorCode;
 import com.importH.error.exception.JwtException;
@@ -45,7 +44,6 @@ public class JwtProvider {
     private Long refreshTokenValidTime = 14 * 24 * 60 * 60 * 1000L; // 14day
 
     private final UserRepository userRepository;
-    private final ObjectMapper objectMapper;
 
     @PostConstruct
     protected void init() {
@@ -77,7 +75,6 @@ public class JwtProvider {
         return TokenDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .accessTokenExpireDate(accessTokenValidTime)
                 .build();
     }
 
