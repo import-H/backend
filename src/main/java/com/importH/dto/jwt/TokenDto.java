@@ -3,14 +3,15 @@ package com.importH.dto.jwt;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class TokenDto {
 
     private String accessToken;
     private String refreshToken;
-
 
     @Builder
     public TokenDto(String accessToken, String refreshToken) {
@@ -18,3 +19,4 @@ public class TokenDto {
         this.refreshToken = refreshToken;
     }
 }
+

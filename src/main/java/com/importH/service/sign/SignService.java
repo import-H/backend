@@ -1,7 +1,6 @@
 package com.importH.service.sign;
 
 import com.importH.config.security.JwtProvider;
-import com.importH.config.security.UserAccount;
 import com.importH.entity.Account;
 import com.importH.entity.RefreshToken;
 import com.importH.dto.jwt.TokenDto;
@@ -58,15 +57,15 @@ public class SignService {
         Account account = getAccount(email);
         validatePassword(password,account);
         
-        TokenDto tokenDto = getToken(account);
+        TokenDto tokenDto = createToken(account);
         RefreshToken refreshToken = getRefreshToken(account);
 
-        generateRefreshToken(account, tokenDto, refreshToken);
+        saveRefreshToken(account, tokenDto, refreshToken);
 
         return tokenDto;
     }
 
-    private void generateRefreshToken(Account account, TokenDto tokenDto, RefreshToken refreshToken) {
+    private void saveRefreshToken(Account account, TokenDto tokenDto, RefreshToken refreshToken) {
         if (refreshToken == null) {
             RefreshToken newRefreshToken = RefreshToken.create(account.getId(), tokenDto.getRefreshToken());
             saveRefreshToken(newRefreshToken);
@@ -83,7 +82,7 @@ public class SignService {
         return tokenRepository.findByKey(account.getId()).orElse(null);
     }
 
-    private TokenDto getToken(Account account) {
+    private TokenDto createToken(Account account) {
         return jwtProvider.createToken(account.getEmail(), account.getRoles());
     }
 
@@ -113,7 +112,7 @@ public class SignService {
 
         RefreshToken refreshToken = getValidateRefreshToken(account, tokenRequestDto.getRefreshToken());
 
-        TokenDto newToken = getToken(account);
+        TokenDto newToken = createToken(account);
         refreshToken.updateToken(newToken.getRefreshToken());
 
         return newToken;

@@ -36,7 +36,7 @@ import static com.importH.error.code.JwtErrorCode.AUTHENTICATION_ENTRYPOINT;
 public class JwtProvider {
 
     public static final String ROLES = "roles";
-    @Value("spring.jwt.secret")
+    @Value("${spring.jwt.secret}")
     private String secretKey;
 
     // 토큰 유효시간 30분
@@ -68,6 +68,7 @@ public class JwtProvider {
         String refreshToken = Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims) // 정보 저장
+                .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
