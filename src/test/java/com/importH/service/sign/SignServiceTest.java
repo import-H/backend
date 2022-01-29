@@ -1,16 +1,17 @@
 package com.importH.service.sign;
 
 import com.importH.config.security.JwtProvider;
-import com.importH.dto.jwt.TokenDto;
-import com.importH.dto.sign.UserSignUpRequestDto;
-import com.importH.entity.Account;
-import com.importH.entity.RefreshToken;
-import com.importH.error.code.JwtErrorCode;
-import com.importH.error.code.UserErrorCode;
-import com.importH.error.exception.JwtException;
-import com.importH.error.exception.UserException;
-import com.importH.repository.RefreshTokenRepository;
-import com.importH.repository.UserRepository;
+import com.importH.core.dto.jwt.TokenDto;
+import com.importH.core.dto.sign.UserSignUpRequestDto;
+import com.importH.core.entity.Account;
+import com.importH.core.entity.RefreshToken;
+import com.importH.core.error.code.JwtErrorCode;
+import com.importH.core.error.code.UserErrorCode;
+import com.importH.core.error.exception.JwtException;
+import com.importH.core.error.exception.UserException;
+import com.importH.core.repository.RefreshTokenRepository;
+import com.importH.core.repository.UserRepository;
+import com.importH.core.service.sign.SignService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

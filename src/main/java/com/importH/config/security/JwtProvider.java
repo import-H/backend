@@ -1,11 +1,11 @@
 package com.importH.config.security;
 
-import com.importH.entity.Account;
-import com.importH.dto.jwt.TokenDto;
-import com.importH.error.code.UserErrorCode;
-import com.importH.error.exception.JwtException;
-import com.importH.error.exception.UserException;
-import com.importH.repository.UserRepository;
+import com.importH.core.entity.Account;
+import com.importH.core.dto.jwt.TokenDto;
+import com.importH.core.error.code.UserErrorCode;
+import com.importH.core.error.exception.JwtException;
+import com.importH.core.error.exception.UserException;
+import com.importH.core.repository.UserRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.importH.error.code.JwtErrorCode.AUTHENTICATION_ENTRYPOINT;
+import static com.importH.core.error.code.JwtErrorCode.AUTHENTICATION_ENTRYPOINT;
 
 
 /**

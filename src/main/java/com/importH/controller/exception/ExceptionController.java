@@ -1,15 +1,15 @@
 package com.importH.controller.exception;
 
-import com.importH.error.exception.JwtException;
-import com.importH.model.response.CommonResult;
+import com.importH.core.error.exception.JwtException;
+import com.importH.core.model.response.CommonResult;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.importH.error.code.JwtErrorCode.ACCESS_DENIED;
-import static com.importH.error.code.JwtErrorCode.AUTHENTICATION_ENTRYPOINT;
+import static com.importH.core.error.code.JwtErrorCode.ACCESS_DENIED;
+import static com.importH.core.error.code.JwtErrorCode.AUTHENTICATION_ENTRYPOINT;
 
 @Api(tags = {"3. Exception"})
 @RequiredArgsConstructor

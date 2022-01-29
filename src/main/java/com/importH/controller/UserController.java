@@ -1,11 +1,11 @@
 package com.importH.controller;
 
 import com.importH.config.security.CurrentAccount;
-import com.importH.entity.Account;
-import com.importH.dto.user.UserResponseDto;
-import com.importH.model.response.SingleResult;
-import com.importH.service.response.ResponseService;
-import com.importH.service.user.UserService;
+import com.importH.core.entity.Account;
+import com.importH.core.dto.user.UserResponseDto;
+import com.importH.core.model.response.SingleResult;
+import com.importH.core.service.response.ResponseService;
+import com.importH.core.service.user.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

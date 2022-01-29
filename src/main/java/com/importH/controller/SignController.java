@@ -1,30 +1,24 @@
 package com.importH.controller;
 
-import com.importH.dto.jwt.TokenDto;
-import com.importH.dto.sign.UserLoginRequestDto;
-import com.importH.dto.sign.UserSignUpRequestDto;
-import com.importH.entity.Account;
-import com.importH.error.code.UserErrorCode;
-import com.importH.error.exception.UserException;
-import com.importH.model.response.SingleResult;
-import com.importH.repository.UserRepository;
-import com.importH.service.response.ResponseService;
-import com.importH.service.sign.SignService;
+import com.importH.core.dto.jwt.TokenDto;
+import com.importH.core.dto.sign.UserLoginRequestDto;
+import com.importH.core.dto.sign.UserSignUpRequestDto;
+import com.importH.core.error.code.UserErrorCode;
+import com.importH.core.error.exception.UserException;
+import com.importH.core.model.response.SingleResult;
+import com.importH.core.service.response.ResponseService;
+import com.importH.core.service.sign.SignService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import static com.importH.error.code.UserErrorCode.USER_EMAIL_DUPLICATED;
 
 @Api(tags = "1. SignUp / Login")
 @Slf4j
