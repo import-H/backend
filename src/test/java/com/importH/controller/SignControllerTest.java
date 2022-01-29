@@ -5,7 +5,9 @@ import com.importH.dto.jwt.TokenDto;
 import com.importH.dto.sign.UserLoginRequestDto;
 import com.importH.dto.sign.UserSignUpRequestDto;
 import com.importH.entity.Account;
+import com.importH.error.code.JwtErrorCode;
 import com.importH.error.code.UserErrorCode;
+import com.importH.error.exception.JwtException;
 import com.importH.repository.RefreshTokenRepository;
 import com.importH.repository.UserRepository;
 import com.importH.service.sign.SignService;
@@ -30,6 +32,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -226,13 +229,17 @@ class SignControllerTest {
 
     }
 
-    //TODO 
+    //TODO
     @Test
-    @DisplayName("[실패] 토큰 재발급 - 잘못된 파라미터")
+    @DisplayName("[실패] 토큰 재발급 - 잘못된 리프레시 토큰")
     void 토큰재발급_실패 () throws Exception {
         // given
         TokenDto tokenDto = signService.login("user@hongik.ac.kr","12341234");
-        tokenDto.setRefreshToken(createRefreshToken(account.getEmail(),account.getRoles(),14 * 24 * 60 * 60 * 1000L));
+        tokenDto.setRefreshToken(createRefreshToken(account.getEmail(),account.getRoles(),30 * 1000L));
+
+        assertThat(tokenRepository.findByKey(account.getId())).isNotNull();
+        assertThat(tokenRepository.existsByToken(tokenDto.getRefreshToken())).isFalse();
+        JwtErrorCode errorCode = JwtErrorCode.REFRESH_TOKEN_VALID;
 
         // when
         ResultActions perform = mockMvc.perform(post("/v1/reissue")
@@ -240,7 +247,10 @@ class SignControllerTest {
                 .content(objectMapper.writeValueAsString(tokenDto)));
 
         //then
-        perform.andExpect();
+        perform.andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.msg").value(errorCode.getDescription()))
+                .andDo(print());
     }
 
 
