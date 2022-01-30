@@ -1,6 +1,5 @@
-package com.importH.core.repository;
+package com.importH.core.domain.token;
 
-import com.importH.core.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 

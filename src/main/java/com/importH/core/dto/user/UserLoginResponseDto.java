@@ -1,6 +1,6 @@
 package com.importH.core.dto.user;
 
-import com.importH.core.entity.Account;
+import com.importH.core.domain.account.Account;
 import lombok.Getter;
 
 import java.util.List;

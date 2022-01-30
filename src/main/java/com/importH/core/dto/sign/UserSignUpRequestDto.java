@@ -1,6 +1,6 @@
 package com.importH.core.dto.sign;
 
-import com.importH.core.entity.Account;
+import com.importH.core.domain.account.Account;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -44,6 +44,7 @@ public class UserSignUpRequestDto {
                 .password(password)
                 .nickName(nickname)
                 .roles(Collections.singletonList("ROLE_USER"))
+                .weekAgree(false)
                 .build();
     }
 

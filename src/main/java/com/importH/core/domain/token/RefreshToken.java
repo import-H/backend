@@ -1,6 +1,6 @@
-package com.importH.core.entity;
+package com.importH.core.domain.token;
 
-import com.importH.core.entity.base.BaseTimeEntity;
+import com.importH.core.domain.base.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +14,7 @@ public class RefreshToken extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "refresh_token_id")
     private Long id;
 
     @Column(nullable = false)

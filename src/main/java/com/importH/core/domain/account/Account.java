@@ -1,24 +1,26 @@
-package com.importH.core.entity;
+package com.importH.core.domain.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.importH.core.entity.base.BaseTimeEntity;
+import com.importH.core.domain.base.BaseTimeEntity;
+import com.importH.core.domain.tag.Tag;
 import lombok.*;
 
-import javax.annotation.PreDestroy;
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@ToString
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Account extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
+    @Column(name = "account_id")
     private Long id;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -43,5 +45,8 @@ public class Account extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Boolean weekAgree;
+
+    @ManyToMany
+    private Set<Tag> tags = new HashSet<>();
 
 }

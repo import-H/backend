@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.sign.UserLoginRequestDto;
 import com.importH.core.dto.sign.UserSignUpRequestDto;
-import com.importH.core.entity.Account;
+import com.importH.core.domain.account.Account;
 import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.code.UserErrorCode;
-import com.importH.core.repository.RefreshTokenRepository;
-import com.importH.core.repository.UserRepository;
+import com.importH.core.domain.token.RefreshTokenRepository;
+import com.importH.core.domain.account.AccountRepository;
 import com.importH.core.service.sign.SignService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
@@ -49,7 +49,7 @@ class SignControllerTest {
     ObjectMapper objectMapper;
 
     @Autowired
-    UserRepository userRepository;
+    AccountRepository accountRepository;
 
     @Autowired
     SignService signService;
@@ -70,12 +70,12 @@ class SignControllerTest {
                 .password("12341234").build();
         signService.signup(requestDto);
 
-        account = userRepository.findByEmail(requestDto.getEmail()).get();
+        account = accountRepository.findByEmail(requestDto.getEmail()).get();
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
     @AfterEach
     void afterAll() {
-        userRepository.deleteAll();
+        accountRepository.deleteAll();
     }
 
     @Test
@@ -91,7 +91,7 @@ class SignControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.msg").exists());
 
-        Optional<Account> account = userRepository.findByEmail(requestDto.getEmail());
+        Optional<Account> account = accountRepository.findByEmail(requestDto.getEmail());
         assertThat(account).isNotNull();
         assertThat(tokenRepository.findByKey(account.get().getId())).isNotNull();
     }
@@ -109,7 +109,7 @@ class SignControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.msg").exists());
 
-        assertThat(userRepository.findByEmail(requestDto.getEmail())).isEmpty();
+        assertThat(accountRepository.findByEmail(requestDto.getEmail())).isEmpty();
     }
     @Test
     void 회원가입요청_실패_중복이메일() throws Exception {
@@ -118,9 +118,9 @@ class SignControllerTest {
         UserErrorCode userErrorCode = UserErrorCode.USER_EMAIL_DUPLICATED;
         UserSignUpRequestDto requestDto = getSignUpRequestDto("12341234");
 
-        userRepository.save(requestDto.toEntity("1234"));
+        accountRepository.save(requestDto.toEntity("1234"));
 
-        assertThat(userRepository.findByEmail(requestDto.getEmail())).isNotNull();
+        assertThat(accountRepository.findByEmail(requestDto.getEmail())).isNotNull();
 
         mockMvc.perform(post("/v1/signup")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -130,7 +130,7 @@ class SignControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.msg").value(userErrorCode.getDescription()));
 
-        assertThat(userRepository.count()).isEqualTo(2);
+        assertThat(accountRepository.count()).isEqualTo(2);
     }
 
     private UserSignUpRequestDto getSignUpRequestDto(String password) {
@@ -176,7 +176,7 @@ class SignControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.msg").value(userErrorCode.getDescription()));
 
-        assertThat(userRepository.findByEmail(requestDto.getEmail())).isEmpty();
+        assertThat(accountRepository.findByEmail(requestDto.getEmail())).isEmpty();
     }
 
 
@@ -186,7 +186,7 @@ class SignControllerTest {
 
         UserErrorCode userErrorCode = UserErrorCode.EMAIL_LOGIN_FAILED;
         UserLoginRequestDto requestDto = getUserLoginRequestDto("user@hongik.ac.kr", "123123");
-        Optional<Account> account = userRepository.findByEmail(requestDto.getEmail());
+        Optional<Account> account = accountRepository.findByEmail(requestDto.getEmail());
 
         mockMvc.perform(post("/v1/login")
                         .contentType(MediaType.APPLICATION_JSON)

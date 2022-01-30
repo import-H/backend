@@ -2,14 +2,14 @@ package com.importH.core.service.sign;
 
 import com.importH.config.security.JwtProvider;
 import com.importH.core.dto.jwt.TokenDto;
-import com.importH.core.repository.RefreshTokenRepository;
-import com.importH.core.entity.Account;
-import com.importH.core.entity.RefreshToken;
+import com.importH.core.domain.token.RefreshTokenRepository;
+import com.importH.core.domain.account.Account;
+import com.importH.core.domain.token.RefreshToken;
 import com.importH.core.dto.sign.UserSignUpRequestDto;
 import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.exception.JwtException;
 import com.importH.core.error.exception.UserException;
-import com.importH.core.repository.UserRepository;
+import com.importH.core.domain.account.AccountRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ import static com.importH.core.error.code.UserErrorCode.*;
 public class SignService {
 
 
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository tokenRepository;
@@ -41,13 +41,13 @@ public class SignService {
     }
 
     private void duplicatedEmail(String email) {
-        if (userRepository.findByEmail(email).orElse(null) != null) {
+        if (accountRepository.findByEmail(email).orElse(null) != null) {
             throw new UserException(USER_EMAIL_DUPLICATED);
         }
     }
 
     private Account saveUser(Account account) {
-        return userRepository.save(account);
+        return accountRepository.save(account);
     }
 
 
@@ -97,7 +97,7 @@ public class SignService {
     }
 
     private Account getAccount(String email) {
-        Account account = userRepository.findByEmail(email).orElseThrow(() -> new UserException(EMAIL_LOGIN_FAILED));
+        Account account = accountRepository.findByEmail(email).orElseThrow(() -> new UserException(EMAIL_LOGIN_FAILED));
         return account;
     }
 

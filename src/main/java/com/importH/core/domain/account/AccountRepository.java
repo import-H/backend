@@ -1,13 +1,12 @@
-package com.importH.core.repository;
+package com.importH.core.domain.account;
 
-import com.importH.core.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Transactional(readOnly = true)
-public interface UserRepository extends JpaRepository<Account,Long> {
+public interface AccountRepository extends JpaRepository<Account,Long> {
     Optional<Account> findByEmail(String email);
 
     boolean existsByEmail(String email);

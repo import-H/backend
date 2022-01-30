@@ -3,14 +3,14 @@ package com.importH.service.sign;
 import com.importH.config.security.JwtProvider;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.sign.UserSignUpRequestDto;
-import com.importH.core.entity.Account;
-import com.importH.core.entity.RefreshToken;
+import com.importH.core.domain.account.Account;
+import com.importH.core.domain.token.RefreshToken;
 import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.JwtException;
 import com.importH.core.error.exception.UserException;
-import com.importH.core.repository.RefreshTokenRepository;
-import com.importH.core.repository.UserRepository;
+import com.importH.core.domain.token.RefreshTokenRepository;
+import com.importH.core.domain.account.AccountRepository;
 import com.importH.core.service.sign.SignService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.verify;
 class SignServiceTest {
 
     @Autowired
-    UserRepository userRepository;
+    AccountRepository accountRepository;
 
     @Autowired
     EntityManager em;
@@ -58,12 +58,12 @@ class SignServiceTest {
     void before() {
         requestDto = getSignUpRequestDto("abc@naver.com", "12341234");
         signService.signup(requestDto);
-        user = userRepository.findByEmail(requestDto.getEmail()).get();
+        user = accountRepository.findByEmail(requestDto.getEmail()).get();
     }
 
     @AfterEach
     void after() {
-        userRepository.deleteAll();
+        accountRepository.deleteAll();
         tokenRepository.deleteAll();
 
     }
@@ -78,7 +78,7 @@ class SignServiceTest {
         Long id = signService.signup(requestDto);
 
         //then
-        assertThat(userRepository.existsByEmail(requestDto.getEmail())).isTrue();
+        assertThat(accountRepository.existsByEmail(requestDto.getEmail())).isTrue();
         assertThat(id).isNotNull();
     }
 

@@ -1,11 +1,11 @@
 package com.importH.config.security;
 
-import com.importH.core.entity.Account;
+import com.importH.core.domain.account.Account;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.JwtException;
 import com.importH.core.error.exception.UserException;
-import com.importH.core.repository.UserRepository;
+import com.importH.core.domain.account.AccountRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,7 @@ public class JwtProvider {
     private Long accessTokenValidTime = 1 * 30 * 1000L; // 30 sec
     private Long refreshTokenValidTime = 14 * 24 * 60 * 60 * 1000L; // 14day
 
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
     @PostConstruct
     protected void init() {
@@ -90,7 +90,7 @@ public class JwtProvider {
         }
 
         // 권한 정보가 없음
-        Account account = userRepository.findByEmail(claims.getSubject()).orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_USERID));
+        Account account = accountRepository.findByEmail(claims.getSubject()).orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_USERID));
         return new UsernamePasswordAuthenticationToken(new UserAccount(account), "", account.getRoles()
                 .stream().map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList()));
