@@ -5,7 +5,9 @@ Content-Type: application/json
 {
   "email": "abc@hongik.ac.kr",
   "nickname": "string",
-  "password": "12341234"
+  "password": "123412341",
+  "confirmPassword": "12341234",
+  "agree" : "true"
 }
 
 ### 로그인 정상 요청

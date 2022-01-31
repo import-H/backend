@@ -12,6 +12,7 @@ import com.importH.core.error.exception.UserException;
 import com.importH.core.domain.token.RefreshTokenRepository;
 import com.importH.core.domain.account.AccountRepository;
 import com.importH.core.service.sign.SignService;
+import org.hibernate.validator.constraints.Length;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
@@ -56,7 +58,7 @@ class SignServiceTest {
 
     @BeforeEach
     void before() {
-        requestDto = getSignUpRequestDto("abc@naver.com", "12341234");
+        requestDto = getSignUpRequestDto("test","abc@naver.com", "12341234");
         signService.signup(requestDto);
         user = accountRepository.findByEmail(requestDto.getEmail()).get();
     }
@@ -72,7 +74,7 @@ class SignServiceTest {
     @DisplayName("[성공] 회원가입 요청")
     void signup_success() throws Exception {
         // given
-        requestDto = getSignUpRequestDto("test@naver.com", "21341234");
+        requestDto = getSignUpRequestDto("test123","test@naver.com", "21341234");
 
         // when
         Long id = signService.signup(requestDto);
@@ -99,6 +101,41 @@ class SignServiceTest {
 
     }
 
+    @Test
+    @DisplayName("[실패] 회원가입 요청 - 중복된 닉네임")
+    void signup_fail_nickname() throws Exception {
+
+        //given
+        UserErrorCode errorCode = UserErrorCode.USER_NICKNAME_DUPLICATED;
+        requestDto = getSignUpRequestDto("test","abc1@naver.com", "12341234");
+
+        //when
+        UserException userException = assertThrows(UserException.class, () -> signService.signup(requestDto));
+
+        //then
+        assertThat(userException)
+                .hasFieldOrPropertyWithValue("errorCode", errorCode)
+                .hasFieldOrPropertyWithValue("errorMessage", errorCode.getDescription());
+
+    }
+
+    @Test
+    @DisplayName("[실패] 회원가입 요청 - 비밀번호 미일치")
+    void signup_fail_password_notValid() throws Exception {
+
+        //given
+        UserErrorCode errorCode = UserErrorCode.USER_PASSWORD_CHECK;
+        requestDto = getSignUpRequestDto("test","abc1@naver.com", "12341234");
+        requestDto.setConfirmPassword("1234");
+        //when
+        UserException userException = assertThrows(UserException.class, () -> signService.signup(requestDto));
+
+        //then
+        assertThat(userException)
+                .hasFieldOrPropertyWithValue("errorCode", errorCode)
+                .hasFieldOrPropertyWithValue("errorMessage", errorCode.getDescription());
+
+    }
 
 
     @Test
@@ -176,11 +213,12 @@ class SignServiceTest {
         return signService.login("abc@naver.com", "12341234");
     }
 
-    private UserSignUpRequestDto getSignUpRequestDto(String email, String password) {
+    private UserSignUpRequestDto getSignUpRequestDto(String nickname, String email, String password) {
         return UserSignUpRequestDto.builder()
+                .nickname(nickname)
                 .email(email)
                 .password(password)
-                .nickname("test")
+                .confirmPassword(password)
                 .build();
     }
 

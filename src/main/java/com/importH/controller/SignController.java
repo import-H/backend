@@ -47,6 +47,8 @@ public class SignController {
             throw new UserException(UserErrorCode.NOT_VALID_REQUEST_PARAMETERS);
         }
 
+
+
         Long userId = signService.signup(userSignUpRequestDto);
         return responseService.getSingleResult(userId);
     }

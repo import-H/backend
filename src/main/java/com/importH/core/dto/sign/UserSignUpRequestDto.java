@@ -3,19 +3,18 @@ package com.importH.core.dto.sign;
 import com.importH.core.domain.account.Account;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.Collections;
 
 @ApiModel("회원 가입 요청 DTO")
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,11 +30,21 @@ public class UserSignUpRequestDto {
     @Length(min = 8, max = 50, message = "8자 이상 50자 이내로 입력 해주세요")
     private String password;
 
+    @ApiModelProperty(value = "위와 동일한 비밀번호를 입력 해주세요" , required = true ,example = "12341234")
+    @NotBlank(message = "비밀번호 확인은 필수 입력 값 입니다.")
+    @Length(min = 8, max = 50, message = "8자 이상 50자 이내로 입력 해주세요")
+    private String confirmPassword;
+
+
     @ApiModelProperty(value = "닉네임 : 영어 또는 한글로만 3~20자로 입력해주세요", required = true, example = "닉네임")
     @NotBlank(message = "닉네임은 필수 입력 값 입니다.")
     @Pattern(regexp = "^[a-zA-zㄱ-ㅎ가-힣0-9]*$", message = "영어 또는 한글로만 입력이 가능합니다.")
     @Length(min = 3, max = 20, message = "3글자 이상 20글자 이하로 입력 해 주세요")
     private String nickname;
+
+    @ApiModelProperty(value = "주 1회 활동 동의", required = true, example = "true , false")
+    @NotNull
+    private boolean agree;
 
 
     public Account toEntity(String password) {

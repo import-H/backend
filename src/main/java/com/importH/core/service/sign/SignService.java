@@ -35,9 +35,27 @@ public class SignService {
     /** 회원가입 */
     @Transactional
     public Long signup(UserSignUpRequestDto userSignUpRequestDto) {
+        validateSignup(userSignUpRequestDto);
         String password = passwordEncoder.encode(userSignUpRequestDto.getPassword());
-        duplicatedEmail(userSignUpRequestDto.getEmail());
         return saveUser(userSignUpRequestDto.toEntity(password)).getId();
+    }
+
+    private void validateSignup(UserSignUpRequestDto userSignUpRequestDto) {
+        passwordCheck(userSignUpRequestDto.getPassword(), userSignUpRequestDto.getConfirmPassword());
+        duplicatedEmail(userSignUpRequestDto.getEmail());
+        duplicatedNickname(userSignUpRequestDto.getNickname());
+    }
+
+    private void passwordCheck(String password, String confirmPassword) {
+        if (!password.equals(confirmPassword)) {
+            throw new UserException(USER_PASSWORD_CHECK);
+        }
+    }
+
+    private void duplicatedNickname(String nickname) {
+        if (accountRepository.existsByNickName(nickname)) {
+            throw new UserException(USER_NICKNAME_DUPLICATED);
+        }
     }
 
     private void duplicatedEmail(String email) {
