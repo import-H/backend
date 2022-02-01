@@ -9,15 +9,13 @@ import com.importH.core.error.exception.PostException;
 import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.PostService;
 import com.importH.core.service.response.ResponseService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Api(tags = "3. Post")
 @Slf4j
@@ -42,7 +40,10 @@ public class PostController {
     })
     @ApiOperation(value = "게시글 등록", notes = "boardId 게시판에 게시글을 등록합니다.")
     @PostMapping("/{boardId}/posts")
-    public SingleResult<Long> savePost(@CurrentAccount Account account, @PathVariable int boardId, @RequestBody @Validated PostRequestDto postRequestDto, BindingResult bindingResult) {
+    public SingleResult<Long> savePost(@ApiIgnore @CurrentAccount Account account,
+                                       @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
+                                       @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostRequestDto postRequestDto,
+                                       BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             throw new PostException(PostErrorCode.POST_NOT_VALIDATE);
@@ -53,7 +54,8 @@ public class PostController {
 
     @ApiOperation(value = "게시글 조회", notes = "boardId 게시판에 postId 게시글을 조회합니다.")
     @GetMapping("/{boardId}/posts/{postId}")
-    public SingleResult<PostResponseDto> findPost(@PathVariable int boardId, @PathVariable Long postId) {
+    public SingleResult<PostResponseDto> findPost(@ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
+                                                  @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId) {
 
         return responseService.getSingleResult(postService.getPost(boardId, postId));
     }

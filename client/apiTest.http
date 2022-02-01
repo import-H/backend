@@ -41,14 +41,7 @@ Content-Type: application/json
 
 {
   "title": "샘플 포스트",
-  "tags": [
-    {
-      "name": "aa"
-    },
-    {
-      "name": "bb"
-    }
-  ],
+  "tags": ["aa","bb"],
   "content": "샘플 포스트 컨텐츠"
 }
 

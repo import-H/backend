@@ -6,6 +6,7 @@ import com.importH.core.domain.post.Post;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.tag.TagDto;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,11 +22,14 @@ import java.util.Set;
 public class PostRequestDto {
 
 
+    @ApiModelProperty(value = "게시글 제목", example = "테스트 게시글")
     @NotBlank(message = "제목은 필수 입력값 입니다.")
     private String title;
 
+    @ApiModelProperty(value = "게시글 태그 정보")
     private List<TagDto> tags;
 
+    @ApiModelProperty(value = "내용", example = "테스트 게시글 입니다.")
     @NotBlank(message = "내용은 필수 입력값 입니다.")
     private String content;
 
