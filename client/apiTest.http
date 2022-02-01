@@ -36,13 +36,24 @@ Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFj
 
 ### 게시글 저장
 POST http://localhost:8090/v1/boards/1/posts
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcwMzg1NywiZXhwIjoxNjQzNzExMDU3fQ.oKI2X7hkDuMwt2PPPt0VVb8ubDwgxPcXxUib-NyLRhQ
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcxMzExOSwiZXhwIjoxNjQzNzk5NTE5fQ.lmoI8SylBcTx2n1-YSGqfYnggGnJ9CIAmfzzjzSgxis
 Content-Type: application/json
 
 {
   "title": "샘플 포스트",
   "tags": ["aa","bb"],
   "content": "샘플 포스트 컨텐츠"
+}
+
+### 게시글 수정
+PUT http://localhost:8090/v1/boards/1/posts/4
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcxMzExOSwiZXhwIjoxNjQzNzk5NTE5fQ.lmoI8SylBcTx2n1-YSGqfYnggGnJ9CIAmfzzjzSgxis
+Content-Type: application/json
+
+{
+  "title": "샘플 포스트1",
+  "tags": ["aa1","bb2"],
+  "content": "샘플 포스트 컨텐츠2"
 }
 
 ### 게시글 조회

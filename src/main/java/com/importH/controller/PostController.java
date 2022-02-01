@@ -6,6 +6,7 @@ import com.importH.core.dto.post.PostRequestDto;
 import com.importH.core.dto.post.PostResponseDto;
 import com.importH.core.error.code.PostErrorCode;
 import com.importH.core.error.exception.PostException;
+import com.importH.core.model.response.CommonResult;
 import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.PostService;
 import com.importH.core.service.response.ResponseService;
@@ -46,7 +47,7 @@ public class PostController {
                                        BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            throw new PostException(PostErrorCode.POST_NOT_VALIDATE);
+            throw new PostException(PostErrorCode.NOT_VALIDATE_PARAM);
         }
 
         return responseService.getSingleResult(postService.registerPost(account, boardId, postRequestDto));
@@ -60,5 +61,27 @@ public class PostController {
         return responseService.getSingleResult(postService.getPost(boardId, postId));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "Authorization",
+                    value = "로그인 성공 후 AccessToken",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(value = "게시글 수정", notes = "boardId 게시판에 postId 게시글을 수정합니다.")
+    @PutMapping("/{boardId}/posts/{postId}")
+    public CommonResult updatePost(@ApiIgnore @CurrentAccount Account account,
+                                   @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
+                                   @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId,
+                                   @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostRequestDto postRequestDto,
+                                   BindingResult bindingResult
+                                        ) {
+
+        if (bindingResult.hasErrors()) {
+            throw new PostException(PostErrorCode.NOT_VALIDATE_PARAM);
+        }
+
+        return responseService.getSingleResult(postService.updatePost(account, boardId, postId, postRequestDto));
+
+    }
 
 }
