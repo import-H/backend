@@ -37,6 +37,8 @@ public class Post extends BaseTimeEntity {
 
     private int likeCount;
 
+    private int type;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;

@@ -1,4 +1,4 @@
-package com.importH.core.service.sign;
+package com.importH.core.service;
 
 import com.importH.config.security.JwtProvider;
 import com.importH.core.dto.jwt.TokenDto;
@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
+
 import static com.importH.core.error.code.UserErrorCode.*;
 
 @Slf4j
@@ -31,6 +33,19 @@ public class SignService {
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository tokenRepository;
 
+    @PostConstruct
+    public void init() {
+        initAccount();
+    }
+
+    private void initAccount() {
+        UserSignUpRequestDto test =
+                UserSignUpRequestDto
+                        .builder().email("abc@hongik.ac.kr").password("12341234").confirmPassword("12341234").nickname("test").build();
+        saveUser(test.toEntity(passwordEncoder.encode(test.getPassword())));
+        TokenDto tokenDto = login("abc@hongik.ac.kr", "12341234");
+        tokenDto.setAccessToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzY5Mjc5NSwiZXhwIjoxNjQzNjk5OTk1fQ.9rmYLZJKHCniSUkLNH-lje_x9i7cn2tyAg09hZKXPlo");
+    }
 
     /** 회원가입 */
     @Transactional

@@ -1,4 +1,4 @@
-package com.importH.core.dto.user;
+package com.importH.core.dto.sign;
 
 import com.importH.core.domain.account.Account;
 import lombok.Getter;

@@ -9,7 +9,7 @@ import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.domain.token.RefreshTokenRepository;
 import com.importH.core.domain.account.AccountRepository;
-import com.importH.core.service.sign.SignService;
+import com.importH.core.service.SignService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;

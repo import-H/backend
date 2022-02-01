@@ -5,9 +5,9 @@ Content-Type: application/json
 {
   "email": "abc@hongik.ac.kr",
   "nickname": "string",
-  "password": "123412341",
+  "password": "12341234",
   "confirmPassword": "12341234",
-  "agree" : "true"
+  "agree": "true"
 }
 
 ### 로그인 정상 요청
@@ -26,13 +26,29 @@ Content-Type: application/json
 {
   "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzI4NDgwOSwiZXhwIjoxNjQzMjg0ODM5fQ.x2IgY-CWDyq0HUIY2wY90ELmGsvIS3ovP30KvkmKLOg",
   "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzI4NDgwOSwiZXhwIjoxNjQ0NDk0NDA5fQ.6rqhONW9Afh7PtZ0d7p-ZWsy1eqSItNQ_OlKnxlvTsw"
-
 }
 
 
 ### 회원 정보 조회
 GET http://localhost:8090/v1/user/id/1
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0Mjk0Njg0OSwiZXhwIjoxNjQyOTQ2ODc5fQ.MhsHScgfvmm2WfHQPwUgjhDPpEYYCt6DlaBy9132tqs
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzY5Mjc5NSwiZXhwIjoxNjQzNjk5OTk1fQ.9rmYLZJKHCniSUkLNH-lje_x9i7cn2tyAg09hZKXPlo
 
 
+### 게시글 저장
+POST http://localhost:8090/v1/boards/1/posts
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzY5Mjc5NSwiZXhwIjoxNjQzNjk5OTk1fQ.9rmYLZJKHCniSUkLNH-lje_x9i7cn2tyAg09hZKXPlo
+Content-Type: application/json
+
+{
+  "title": "샘플 포스트",
+  "tags": [
+    {
+      "name": "aa"
+    },
+    {
+      "name": "bb"
+    }
+  ],
+  "content": "샘플 포스트 컨텐츠"
+}
 

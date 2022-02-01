@@ -11,8 +11,7 @@ import com.importH.core.error.exception.JwtException;
 import com.importH.core.error.exception.UserException;
 import com.importH.core.domain.token.RefreshTokenRepository;
 import com.importH.core.domain.account.AccountRepository;
-import com.importH.core.service.sign.SignService;
-import org.hibernate.validator.constraints.Length;
+import com.importH.core.service.SignService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 import static java.lang.Thread.sleep;

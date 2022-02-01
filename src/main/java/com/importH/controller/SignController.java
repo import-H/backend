@@ -7,7 +7,7 @@ import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.UserException;
 import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.response.ResponseService;
-import com.importH.core.service.sign.SignService;
+import com.importH.core.service.SignService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
