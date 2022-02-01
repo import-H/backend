@@ -69,11 +69,11 @@ public class PostController {
     })
     @ApiOperation(value = "게시글 수정", notes = "boardId 게시판에 postId 게시글을 수정합니다.")
     @PutMapping("/{boardId}/posts/{postId}")
-    public CommonResult updatePost(@ApiIgnore @CurrentAccount Account account,
-                                   @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
-                                   @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId,
-                                   @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostRequestDto postRequestDto,
-                                   BindingResult bindingResult
+    public SingleResult<Long> updatePost(@ApiIgnore @CurrentAccount Account account,
+                                         @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
+                                         @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId,
+                                         @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostRequestDto postRequestDto,
+                                         BindingResult bindingResult
                                         ) {
 
         if (bindingResult.hasErrors()) {
@@ -84,4 +84,18 @@ public class PostController {
 
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "Authorization",
+                    value = "로그인 성공 후 AccessToken",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(value = "게시글 삭제", notes = "boardId 게시판에 postId 게시글을 삭제합니다.")
+    @DeleteMapping("/{boardId}/posts/{postId}")
+    public CommonResult deletePost(@ApiIgnore @CurrentAccount Account account,
+                                   @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
+                                   @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId) {
+        postService.deletePost(account, boardId, postId);
+        return responseService.getSuccessResult();
+    }
 }

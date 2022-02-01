@@ -59,3 +59,8 @@ Content-Type: application/json
 ### 게시글 조회
 GET http://localhost:8090/v1/boards/1/posts/4
 
+### 게시글 삭제
+DELETE http://localhost:8090/v1/boards/1/posts/4
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcxMzExOSwiZXhwIjoxNjQzNzk5NTE5fQ.lmoI8SylBcTx2n1-YSGqfYnggGnJ9CIAmfzzjzSgxis
+
+

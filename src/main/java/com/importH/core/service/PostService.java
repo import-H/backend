@@ -72,6 +72,9 @@ public class PostService {
         return postRepository.findByIdAndType(postId, boardId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
     }
 
+    /**
+     * 게시글 수정
+     */
     @Transactional
     public Long updatePost(Account account, int boardId, Long postId, PostRequestDto postRequestDto) {
 
@@ -92,6 +95,17 @@ public class PostService {
 
     private boolean isEqualsAccount(Account account, Post findPost) {
         return findPost.getAccount().equals(account);
+    }
+
+
+    /**
+     * 게시글 삭제
+     */
+    @Transactional
+    public void deletePost(Account account, int boardId, Long postId) {
+        Post findPost = findByTypeAndId(boardId, postId);
+        validateAccount(account, findPost);
+        postRepository.delete(findPost);
     }
 
 
