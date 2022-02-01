@@ -5,6 +5,7 @@ import com.importH.core.domain.file.File;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.tag.TagDto;
+import io.swagger.annotations.ApiModel;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Set;
 
+@ApiModel("게시글 요청 DTO")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostRequestDto {

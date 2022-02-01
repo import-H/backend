@@ -3,12 +3,16 @@ package com.importH.controller;
 import com.importH.config.security.CurrentAccount;
 import com.importH.core.domain.account.Account;
 import com.importH.core.dto.post.PostRequestDto;
+import com.importH.core.dto.post.PostResponseDto;
 import com.importH.core.error.code.PostErrorCode;
 import com.importH.core.error.exception.PostException;
 import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.PostService;
 import com.importH.core.service.response.ResponseService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -30,6 +34,13 @@ public class PostController {
 //        return responseService.getListResult(postService.findAllPost(boardId));
 //    }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "Authorization",
+                    value = "로그인 성공 후 AccessToken",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(value = "게시글 등록", notes = "boardId 게시판에 게시글을 등록합니다.")
     @PostMapping("/{boardId}/posts")
     public SingleResult<Long> savePost(@CurrentAccount Account account, @PathVariable int boardId, @RequestBody @Validated PostRequestDto postRequestDto, BindingResult bindingResult) {
 
@@ -37,7 +48,14 @@ public class PostController {
             throw new PostException(PostErrorCode.POST_NOT_VALIDATE);
         }
 
-        return responseService.getSingleResult(postService.registerPost(account,boardId,postRequestDto));
+        return responseService.getSingleResult(postService.registerPost(account, boardId, postRequestDto));
+    }
+
+    @ApiOperation(value = "게시글 조회", notes = "boardId 게시판에 postId 게시글을 조회합니다.")
+    @GetMapping("/{boardId}/posts/{postId}")
+    public SingleResult<PostResponseDto> findPost(@PathVariable int boardId, @PathVariable Long postId) {
+
+        return responseService.getSingleResult(postService.getPost(boardId, postId));
     }
 
 

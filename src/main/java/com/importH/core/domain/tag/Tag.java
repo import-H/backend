@@ -1,6 +1,5 @@
 package com.importH.core.domain.tag;
 
-import com.importH.core.domain.account.Account;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +15,7 @@ public class Tag {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String title;
+    private String name;
 
 }
 

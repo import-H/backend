@@ -23,13 +23,24 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Account account = accountRepository.findByEmail(email).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
+        Account account = findByEmail(email);
         return new UserAccount(account);
     }
 
-
-    public UserResponseDto findById(Long userId) {
-        Account account = accountRepository.findById(userId).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
-        return new UserResponseDto(account);
+    public Account findByEmail(String email) {
+        return accountRepository.findByEmail(email).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
     }
+
+
+    /**
+     * 유저 정보 조회
+     */
+    public UserResponseDto findUserById(Long userId) {
+        return new UserResponseDto(findById(userId));
+    }
+
+    public Account findById(Long userId) {
+        return accountRepository.findById(userId).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
+    }
+
 }

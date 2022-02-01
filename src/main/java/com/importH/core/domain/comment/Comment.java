@@ -1,5 +1,6 @@
 package com.importH.core.domain.comment;
 
+import com.importH.core.domain.account.Account;
 import com.importH.core.domain.base.BaseTimeEntity;
 import com.importH.core.domain.post.Post;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,8 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
 }

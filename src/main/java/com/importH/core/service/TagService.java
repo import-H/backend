@@ -30,6 +30,6 @@ public class TagService {
     }
 
     private Tag findByTitle(Tag tag) {
-        return tagRepository.findByTitle(tag.getTitle()).orElse(null);
+        return tagRepository.findByName(tag.getName()).orElse(null);
     }
 }

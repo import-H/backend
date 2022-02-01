@@ -33,8 +33,7 @@ public class UserController {
     public SingleResult<UserResponseDto> findUserById
             (@ApiParam(value = "회원 ID", required = true) @PathVariable Long userId,
              @CurrentAccount Account account) {
-        System.out.println("account = " + account);
-        return responseService.getSingleResult(userService.findById(userId));
+        return responseService.getSingleResult(userService.findUserById(userId));
     }
 
 }

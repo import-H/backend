@@ -2,6 +2,7 @@ package com.importH.core.domain.post;
 
 import com.importH.core.domain.account.Account;
 import com.importH.core.domain.base.BaseTimeEntity;
+import com.importH.core.domain.comment.Comment;
 import com.importH.core.domain.file.File;
 import com.importH.core.domain.tag.Tag;
 import lombok.AllArgsConstructor;
@@ -49,4 +50,6 @@ public class Post extends BaseTimeEntity {
     @ManyToMany
     private List<File> files = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 }

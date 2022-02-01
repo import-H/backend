@@ -36,7 +36,7 @@ Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFj
 
 ### 게시글 저장
 POST http://localhost:8090/v1/boards/1/posts
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzY5Mjc5NSwiZXhwIjoxNjQzNjk5OTk1fQ.9rmYLZJKHCniSUkLNH-lje_x9i7cn2tyAg09hZKXPlo
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcwMzg1NywiZXhwIjoxNjQzNzExMDU3fQ.oKI2X7hkDuMwt2PPPt0VVb8ubDwgxPcXxUib-NyLRhQ
 Content-Type: application/json
 
 {
@@ -51,4 +51,7 @@ Content-Type: application/json
   ],
   "content": "샘플 포스트 컨텐츠"
 }
+
+### 게시글 조회
+GET http://localhost:8090/v1/boards/1/posts/4
 
