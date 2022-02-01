@@ -2,11 +2,13 @@ package com.importH.controller;
 
 import com.importH.config.security.CurrentAccount;
 import com.importH.core.domain.account.Account;
+import com.importH.core.dto.post.PostAllResponseDto;
 import com.importH.core.dto.post.PostRequestDto;
 import com.importH.core.dto.post.PostResponseDto;
 import com.importH.core.error.code.PostErrorCode;
 import com.importH.core.error.exception.PostException;
 import com.importH.core.model.response.CommonResult;
+import com.importH.core.model.response.ListResult;
 import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.PostService;
 import com.importH.core.service.response.ResponseService;
@@ -27,11 +29,15 @@ public class PostController {
 
     private final ResponseService responseService;
     private final PostService postService;
-//    @GetMapping("/{boardId}/posts")
-//    public ListResult<PostResponseDto> findAllPosts(@PathVariable String boardId) {
-//
-//        return responseService.getListResult(postService.findAllPost(boardId));
-//    }
+
+
+    @GetMapping("/{boardId}/posts")
+    @ApiOperation(value = "전체 게시글 조회", notes = "boardId 게시판에 게시글을 모두 조회합니다.")
+    public ListResult<PostAllResponseDto> findAllPosts(@PathVariable int boardId) {
+        //TODO 페이징
+
+        return responseService.getListResult(postService.findAllPost(boardId));
+    }
 
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -98,4 +104,7 @@ public class PostController {
         postService.deletePost(account, boardId, postId);
         return responseService.getSuccessResult();
     }
+
+
+
 }

@@ -5,6 +5,7 @@ import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostRepository;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.post.CommentDto;
+import com.importH.core.dto.post.PostAllResponseDto;
 import com.importH.core.dto.post.PostRequestDto;
 import com.importH.core.dto.post.PostResponseDto;
 import com.importH.core.dto.tag.TagDto;
@@ -29,7 +30,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final TagService tagService;
     private final UserService userService;
-
+    private final FileService fileService;
     /**
      * 게시글 저장
      */
@@ -37,6 +38,9 @@ public class PostService {
     public Long registerPost(Account account, int type, PostRequestDto postRequestDto) {
 
         //TODO 이미지 파일 저장
+        if (!postRequestDto.getImageFiles().isEmpty()) {
+            fileService.saveImage(postRequestDto.getImageFiles());
+        }
         Set<Tag> tags = getTags(postRequestDto);
         Post post = postRequestDto.toEntity(account, new ArrayList<>(), tags, type);
         return savePost(post);
@@ -109,13 +113,19 @@ public class PostService {
     }
 
 
-    /*    *//**
-     *
-     * 전체 게시글 조회
-     *//*
-    public List<PostResponseDto> findAllPost(String boardId) {
 
-    }*/
+    public List<PostAllResponseDto> findAllPost(int boardId) {
 
+        List<Post> posts = postRepository.findAllByType(boardId);
+
+
+        return posts.stream()
+                .map(post ->
+                        PostAllResponseDto.fromEntity(
+                                post,
+                                post.getAccount(),
+                                post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet())))
+                .collect(Collectors.toList());
+    }
 
 }

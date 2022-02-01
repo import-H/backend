@@ -31,12 +31,17 @@ Content-Type: application/json
 
 ### 회원 정보 조회
 GET http://localhost:8090/v1/user/id/1
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzY5Mjc5NSwiZXhwIjoxNjQzNjk5OTk1fQ.9rmYLZJKHCniSUkLNH-lje_x9i7cn2tyAg09hZKXPlo
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcyMjMxMywiZXhwIjoxNjQzODA4NzEzfQ.MFO7tBYjPAwToNPIUGM63R3-DZwFSE5VrR6zzo-PvHU
 
+### 게시글 조회
+GET http://localhost:8090/v1/boards/1/posts/4
+
+### 게시글 전체 조회
+GET http://localhost:8090/v1/boards/1/posts
 
 ### 게시글 저장
 POST http://localhost:8090/v1/boards/1/posts
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcxMzExOSwiZXhwIjoxNjQzNzk5NTE5fQ.lmoI8SylBcTx2n1-YSGqfYnggGnJ9CIAmfzzjzSgxis
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcyMjMxMywiZXhwIjoxNjQzODA4NzEzfQ.MFO7tBYjPAwToNPIUGM63R3-DZwFSE5VrR6zzo-PvHU
 Content-Type: application/json
 
 {
@@ -56,11 +61,10 @@ Content-Type: application/json
   "content": "샘플 포스트 컨텐츠2"
 }
 
-### 게시글 조회
-GET http://localhost:8090/v1/boards/1/posts/4
 
 ### 게시글 삭제
 DELETE http://localhost:8090/v1/boards/1/posts/4
 Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcxMzExOSwiZXhwIjoxNjQzNzk5NTE5fQ.lmoI8SylBcTx2n1-YSGqfYnggGnJ9CIAmfzzjzSgxis
+
 
 

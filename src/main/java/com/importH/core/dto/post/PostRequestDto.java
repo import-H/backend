@@ -11,8 +11,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +34,9 @@ public class PostRequestDto {
     @ApiModelProperty(value = "내용", example = "테스트 게시글 입니다.")
     @NotBlank(message = "내용은 필수 입력값 입니다.")
     private String content;
+
+    @ApiModelProperty(value = "이미지", example = "image")
+    private List<MultipartFile> imageFiles = new ArrayList<>();
 
 
     @Builder
