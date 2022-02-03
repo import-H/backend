@@ -5,9 +5,7 @@ import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostRepository;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.post.CommentDto;
-import com.importH.core.dto.post.PostAllResponseDto;
-import com.importH.core.dto.post.PostRequestDto;
-import com.importH.core.dto.post.PostResponseDto;
+import com.importH.core.dto.post.PostDto;
 import com.importH.core.dto.tag.TagDto;
 import com.importH.core.error.code.PostErrorCode;
 import com.importH.core.error.exception.PostException;
@@ -35,7 +33,7 @@ public class PostService {
      * 게시글 저장
      */
     @Transactional
-    public Long registerPost(Account account, int type, PostRequestDto postRequestDto) {
+    public Long registerPost(Account account, int type, PostDto.Request postRequestDto) {
 
         //TODO 이미지 파일 저장
         if (!postRequestDto.getImageFiles().isEmpty()) {
@@ -46,7 +44,7 @@ public class PostService {
         return savePost(post);
     }
 
-    private Set<Tag> getTags(PostRequestDto postRequestDto) {
+    private Set<Tag> getTags(PostDto.Request postRequestDto) {
         Set<Tag> tags = postRequestDto.getTags().stream().map(TagDto::toEntity).map(tag -> tagService.getTag(tag)).collect(Collectors.toSet());
         return tags;
     }
@@ -60,7 +58,7 @@ public class PostService {
     /**
      * 게시글 조회
      */
-    public PostResponseDto getPost(int boardId, Long postId) {
+    public PostDto.Response getPost(int boardId, Long postId) {
 
         Post post = findByTypeAndId(boardId, postId);
         Account findAccount = userService.findById(post.getAccount().getId());
@@ -69,7 +67,7 @@ public class PostService {
         List<CommentDto> comments = post.getComments().stream().map(comment -> CommentDto.fromEntity(comment)).collect(Collectors.toList());
 
 
-        return PostResponseDto.fromEntity(post, findAccount, tags, comments);
+        return PostDto.Response.fromEntity(post, findAccount, tags, comments);
     }
 
     private Post findByTypeAndId(int boardId, Long postId) {
@@ -80,7 +78,7 @@ public class PostService {
      * 게시글 수정
      */
     @Transactional
-    public Long updatePost(Account account, int boardId, Long postId, PostRequestDto postRequestDto) {
+    public Long updatePost(Account account, int boardId, Long postId, PostDto.Request postRequestDto) {
 
         Post findPost = findByTypeAndId(boardId, postId);
 
@@ -114,14 +112,14 @@ public class PostService {
 
 
 
-    public List<PostAllResponseDto> findAllPost(int boardId) {
+    public List<PostDto.ResponseAll> findAllPost(int boardId) {
 
         List<Post> posts = postRepository.findAllByType(boardId);
 
 
         return posts.stream()
                 .map(post ->
-                        PostAllResponseDto.fromEntity(
+                        PostDto.ResponseAll.fromEntity(
                                 post,
                                 post.getAccount(),
                                 post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet())))

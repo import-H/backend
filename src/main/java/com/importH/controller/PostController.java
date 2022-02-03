@@ -2,9 +2,7 @@ package com.importH.controller;
 
 import com.importH.config.security.CurrentAccount;
 import com.importH.core.domain.account.Account;
-import com.importH.core.dto.post.PostAllResponseDto;
-import com.importH.core.dto.post.PostRequestDto;
-import com.importH.core.dto.post.PostResponseDto;
+import com.importH.core.dto.post.PostDto;
 import com.importH.core.error.code.PostErrorCode;
 import com.importH.core.error.exception.PostException;
 import com.importH.core.model.response.CommonResult;
@@ -33,7 +31,7 @@ public class PostController {
 
     @GetMapping("/{boardId}/posts")
     @ApiOperation(value = "전체 게시글 조회", notes = "boardId 게시판에 게시글을 모두 조회합니다.")
-    public ListResult<PostAllResponseDto> findAllPosts(@PathVariable int boardId) {
+    public ListResult<PostDto.ResponseAll> findAllPosts(@PathVariable int boardId) {
         //TODO 페이징
 
         return responseService.getListResult(postService.findAllPost(boardId));
@@ -49,7 +47,7 @@ public class PostController {
     @PostMapping("/{boardId}/posts")
     public SingleResult<Long> savePost(@ApiIgnore @CurrentAccount Account account,
                                        @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
-                                       @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostRequestDto postRequestDto,
+                                       @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
                                        BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -61,8 +59,8 @@ public class PostController {
 
     @ApiOperation(value = "게시글 조회", notes = "boardId 게시판에 postId 게시글을 조회합니다.")
     @GetMapping("/{boardId}/posts/{postId}")
-    public SingleResult<PostResponseDto> findPost(@ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
-                                                  @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId) {
+    public SingleResult<PostDto.Response> findPost(@ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
+                                                   @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId) {
 
         return responseService.getSingleResult(postService.getPost(boardId, postId));
     }
@@ -78,7 +76,7 @@ public class PostController {
     public SingleResult<Long> updatePost(@ApiIgnore @CurrentAccount Account account,
                                          @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                          @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId,
-                                         @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostRequestDto postRequestDto,
+                                         @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
                                          BindingResult bindingResult
                                         ) {
 

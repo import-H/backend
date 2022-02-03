@@ -41,7 +41,7 @@ GET http://localhost:8090/v1/boards/1/posts
 
 ### 게시글 저장
 POST http://localhost:8090/v1/boards/1/posts
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcyMjMxMywiZXhwIjoxNjQzODA4NzEzfQ.MFO7tBYjPAwToNPIUGM63R3-DZwFSE5VrR6zzo-PvHU
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0Mzg4ODkyOCwiZXhwIjoxNjQzOTc1MzI4fQ.6vTpUk5_iqEAM2DMEYRlXqomGujVedLbiMovC-lvzCc
 Content-Type: application/json
 
 {
@@ -52,7 +52,7 @@ Content-Type: application/json
 
 ### 게시글 수정
 PUT http://localhost:8090/v1/boards/1/posts/4
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcxMzExOSwiZXhwIjoxNjQzNzk5NTE5fQ.lmoI8SylBcTx2n1-YSGqfYnggGnJ9CIAmfzzjzSgxis
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0Mzg4ODkyOCwiZXhwIjoxNjQzOTc1MzI4fQ.6vTpUk5_iqEAM2DMEYRlXqomGujVedLbiMovC-lvzCc
 Content-Type: application/json
 
 {
@@ -64,7 +64,7 @@ Content-Type: application/json
 
 ### 게시글 삭제
 DELETE http://localhost:8090/v1/boards/1/posts/4
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcxMzExOSwiZXhwIjoxNjQzNzk5NTE5fQ.lmoI8SylBcTx2n1-YSGqfYnggGnJ9CIAmfzzjzSgxis
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0Mzg4ODkyOCwiZXhwIjoxNjQzOTc1MzI4fQ.6vTpUk5_iqEAM2DMEYRlXqomGujVedLbiMovC-lvzCc
 
 
 
