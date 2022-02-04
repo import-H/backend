@@ -1,0 +1,40 @@
+package com.importH.controller;
+
+import com.importH.config.security.CurrentAccount;
+import com.importH.core.domain.account.Account;
+import com.importH.core.dto.post.CommentDto;
+import com.importH.core.model.response.CommonResult;
+import com.importH.core.service.CommentService;
+import com.importH.core.service.response.ResponseService;
+import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
+
+@Api(tags = "5. Comments")
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/v1/posts/{postsId}/comments")
+public class CommentController {
+
+    private final CommentService commentService;
+    private final ResponseService responseService;
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "Authorization",
+                    value = "로그인 성공 후 AccessToken",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(value = "댓글 등록", notes = "postsId 게시글에 댓글을 등록합니다.")
+    @PostMapping
+    public CommonResult saveComment(@ApiParam(value = "게시글 ID", example = "1") @PathVariable Long  postsId,
+                                    @ApiIgnore @CurrentAccount Account account,
+                                    @ApiParam("댓글 요청 Dto") @RequestBody CommentDto.Request commentDto) {
+        commentService.registerComment(postsId, account, commentDto);
+        return responseService.getSuccessResult();
+    }
+
+}

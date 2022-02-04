@@ -34,6 +34,7 @@ Content-Type: application/json
 GET http://localhost:8090/v1/user/id/1
 Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcyMjMxMywiZXhwIjoxNjQzODA4NzEzfQ.MFO7tBYjPAwToNPIUGM63R3-DZwFSE5VrR6zzo-PvHU
 
+
 ### 게시글 조회
 GET http://localhost:8090/v1/boards/1/posts/4
 
@@ -62,7 +63,16 @@ Content-Type: application/json
   "content": "샘플 포스트 컨텐츠2"
 }
 
-
 ### 게시글 삭제
 DELETE http://localhost:8090/v1/boards/1/posts/4
 Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0Mzg4ODkyOCwiZXhwIjoxNjQzOTc1MzI4fQ.6vTpUk5_iqEAM2DMEYRlXqomGujVedLbiMovC-lvzCc
+
+
+### 댓글 등록
+POST http://localhost:8090/v1/posts/4/comments
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0Mzg4ODkyOCwiZXhwIjoxNjQzOTc1MzI4fQ.6vTpUk5_iqEAM2DMEYRlXqomGujVedLbiMovC-lvzCc
+Content-Type: application/json
+
+{
+  "content" : "댓글 테스트1 ."
+}

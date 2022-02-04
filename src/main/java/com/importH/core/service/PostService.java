@@ -60,7 +60,7 @@ public class PostService {
         Account findAccount = userService.findById(post.getAccount().getId());
 
         Set<TagDto> tags = post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet());
-        List<CommentDto> comments = post.getComments().stream().map(comment -> CommentDto.fromEntity(comment)).collect(Collectors.toList());
+        List<CommentDto.Response> comments = post.getComments().stream().map(comment -> CommentDto.Response.fromEntity(comment)).collect(Collectors.toList());
 
 
         return PostDto.Response.fromEntity(post, findAccount, tags, comments);
@@ -107,7 +107,9 @@ public class PostService {
     }
 
 
-
+    /**
+     * 전체 게시글 조회
+     */
     public List<PostDto.ResponseAll> findAllPost(int boardId) {
 
         List<Post> posts = postRepository.findAllByType(boardId);
@@ -120,6 +122,10 @@ public class PostService {
                                 post.getAccount(),
                                 post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet())))
                 .collect(Collectors.toList());
+    }
+
+    public Post findByPostId(Long postsId) {
+        return postRepository.findById(postsId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
     }
 
 }
