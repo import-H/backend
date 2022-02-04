@@ -76,3 +76,12 @@ Content-Type: application/json
 {
   "content" : "댓글 테스트1 ."
 }
+
+### 댓글 수정
+PUT http://localhost:8090/v1/posts/4/comments/5
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0Mzg4ODkyOCwiZXhwIjoxNjQzOTc1MzI4fQ.6vTpUk5_iqEAM2DMEYRlXqomGujVedLbiMovC-lvzCc
+Content-Type: application/json
+
+{
+  "content" : "댓글 테스트1234 ."
+}

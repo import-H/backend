@@ -3,6 +3,7 @@ package com.importH.core.domain.comment;
 import com.importH.core.domain.account.Account;
 import com.importH.core.domain.base.BaseTimeEntity;
 import com.importH.core.domain.post.Post;
+import com.importH.core.dto.post.CommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,4 +31,8 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
+
+    public void updateComment(CommentDto.Request commentDto) {
+        this.content = commentDto.getContent();
+    }
 }

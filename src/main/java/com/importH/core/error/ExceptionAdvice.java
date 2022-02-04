@@ -1,11 +1,8 @@
 package com.importH.core.error;
 
-import com.importH.core.error.exception.FileException;
-import com.importH.core.error.exception.PostException;
-import com.importH.core.error.exception.UserException;
+import com.importH.core.error.exception.*;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.service.response.ResponseService;
-import com.importH.core.error.exception.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -47,6 +44,14 @@ public class ExceptionAdvice {
     @ExceptionHandler(FileException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected CommonResult FileException(HttpServletRequest request, FileException e) {
+        log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
+        return responseService.getFailResult(e.getErrorCode());
+    }
+
+
+    @ExceptionHandler(CommentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected CommonResult CommentException(HttpServletRequest request, CommentException e) {
         log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
         return responseService.getFailResult(e.getErrorCode());
     }
