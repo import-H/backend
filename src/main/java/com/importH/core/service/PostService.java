@@ -60,7 +60,7 @@ public class PostService {
         Account findAccount = userService.findById(post.getAccount().getId());
 
         Set<TagDto> tags = post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet());
-        List<CommentDto.Response> comments = post.getComments().stream().map(comment -> CommentDto.Response.fromEntity(comment)).collect(Collectors.toList());
+        List<CommentDto.Response> comments = post.getComments().stream().map(comment -> CommentDto.Response.fromEntity(comment, comment.getAccount())).collect(Collectors.toList());
 
 
         return PostDto.Response.fromEntity(post, findAccount, tags, comments);

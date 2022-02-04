@@ -83,8 +83,8 @@ public class PostDto {
 
         private ResponseInfo responseInfo;
 
-        @ApiModelProperty(value = "댓글", example = "[댓글1,댓글2]")
-        private List<CommentDto.Response> comments = new ArrayList<>();
+        @ApiModelProperty(value = "댓글", example = "[{닉네임1,댓글1},{닉네임2,댓글2}]")
+        private List<CommentDto.Response> comments;
 
 
         public static Response fromEntity(Post post, Account account, Set<TagDto> tags, List<CommentDto.Response> comments) {
