@@ -28,17 +28,13 @@ public class PostService {
     private final PostRepository postRepository;
     private final TagService tagService;
     private final UserService userService;
-    private final FileService fileService;
+
     /**
      * 게시글 저장
      */
     @Transactional
     public Long registerPost(Account account, int type, PostDto.Request postRequestDto) {
 
-        //TODO 이미지 파일 저장
-        if (!postRequestDto.getImageFiles().isEmpty()) {
-            fileService.saveImage(postRequestDto.getImageFiles());
-        }
         Set<Tag> tags = getTags(postRequestDto);
         Post post = postRequestDto.toEntity(account, new ArrayList<>(), tags, type);
         return savePost(post);

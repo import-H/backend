@@ -1,4 +1,4 @@
-package com.importH.core.domain.file;
+package com.importH.core.domain.image;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class File {
+public class Image {
 
     @Id @GeneratedValue
     private Long id;
