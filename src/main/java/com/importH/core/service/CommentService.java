@@ -41,12 +41,12 @@ public class CommentService {
         Post post = postService.findByPostId(postsId);
         Comment comment = findByCommentId(commentId);
 
-        isUpdatableComment(account, post, comment);
+        canModifiableComment(account, post, comment);
 
         comment.updateComment(commentDto);
     }
 
-    private void isUpdatableComment(Account account, Post post, Comment comment) {
+    private void canModifiableComment(Account account, Post post, Comment comment) {
         if (!isEqualsAccount(account, comment)) {
             throw new CommentException(CommentErrorCode.NOT_AUTHORITY);
         }
@@ -65,5 +65,19 @@ public class CommentService {
 
     private Comment findByCommentId(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(() -> new CommentException(CommentErrorCode.NOT_FOUND));
+    }
+
+    /**
+     * 댓글 삭제
+     */
+    @Transactional
+    public void deleteComment(Long postsId, Long commentId, Account account) {
+        Post post = postService.findByPostId(postsId);
+        Comment comment = findByCommentId(commentId);
+
+        canModifiableComment(account, post, comment);
+
+        commentRepository.delete(comment);
+
     }
 }

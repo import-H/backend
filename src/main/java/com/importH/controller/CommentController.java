@@ -54,6 +54,20 @@ public class CommentController {
     }
 
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "Authorization",
+                    value = "로그인 성공 후 AccessToken",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(value = "댓글 삭제", notes = "postsId 게시글에 댓글을 삭제합니다.")
+    @DeleteMapping("/{commentId}")
+    public CommonResult deleteComment(@ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postsId,
+                                      @ApiParam(value = "댓글 ID", example = "1") @PathVariable Long commentId,
+                                      @ApiIgnore @CurrentAccount Account account) {
+        commentService.deleteComment(postsId, commentId, account);
+        return responseService.getSuccessResult();
 
+    }
 
 }
