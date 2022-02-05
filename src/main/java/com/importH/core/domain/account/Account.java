@@ -32,7 +32,7 @@ public class Account extends BaseTimeEntity {
     private String email;
 
     @Column(length = 20,nullable = false)
-    private String nickName;
+    private String nickname;
 
     @Builder.Default
     @ElementCollection(fetch = FetchType.EAGER)

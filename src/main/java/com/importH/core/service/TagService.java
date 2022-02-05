@@ -17,7 +17,7 @@ public class TagService {
     @Transactional
     public Tag getTag(Tag tag) {
 
-        Tag findTag = findByTitle(tag);
+        Tag findTag = findByTitle(tag.getName());
         if (findTag == null) {
             return saveTag(tag);
         }
@@ -29,7 +29,7 @@ public class TagService {
         return save;
     }
 
-    private Tag findByTitle(Tag tag) {
-        return tagRepository.findByName(tag.getName()).orElse(null);
+    public Tag findByTitle(String name) {
+        return tagRepository.findByName(name).orElse(null);
     }
 }

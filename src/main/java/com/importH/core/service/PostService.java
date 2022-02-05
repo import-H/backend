@@ -35,6 +35,7 @@ public class PostService {
     @Transactional
     public Long registerPost(Account account, int type, PostDto.Request postRequestDto) {
 
+        //TODO 이미지 저장
         Set<Tag> tags = getTags(postRequestDto);
         Post post = postRequestDto.toEntity(account, new ArrayList<>(), tags, type);
         return savePost(post);
@@ -57,13 +58,20 @@ public class PostService {
     public PostDto.Response getPost(int boardId, Long postId) {
 
         Post post = findByTypeAndId(boardId, postId);
-        Account findAccount = userService.findById(post.getAccount().getId());
 
-        Set<TagDto> tags = post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet());
-        List<CommentDto.Response> comments = post.getComments().stream().map(comment -> CommentDto.Response.fromEntity(comment, comment.getAccount())).collect(Collectors.toList());
+        Set<TagDto> tags = getTagDtos(post);
+        List<CommentDto.Response> comments = getCommentDtos(post);
 
+        //TODO 계정 삭제시에 조회 어떻게 처리할것인지 생각
+        return PostDto.Response.fromEntity(post, post.getAccount(), tags, comments);
+    }
 
-        return PostDto.Response.fromEntity(post, findAccount, tags, comments);
+    public List<CommentDto.Response> getCommentDtos(Post post) {
+        return post.getComments().stream().map(comment -> CommentDto.Response.fromEntity(comment, comment.getAccount())).collect(Collectors.toList());
+    }
+
+    public Set<TagDto> getTagDtos(Post post) {
+        return post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet());
     }
 
     private Post findByTypeAndId(int boardId, Long postId) {
@@ -104,6 +112,8 @@ public class PostService {
         Post findPost = findByTypeAndId(boardId, postId);
         validateAccount(account, findPost);
         postRepository.delete(findPost);
+
+        //TODO 이미지 서버에서 삭제
     }
 
 

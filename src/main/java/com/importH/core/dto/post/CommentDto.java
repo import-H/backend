@@ -41,7 +41,7 @@ public class CommentDto {
 
         public static Response fromEntity(Comment comment, Account account) {
             return Response.builder()
-                    .nickname(account.getNickName())
+                    .nickname(account.getNickname())
                     .content(comment.getContent())
                     .build();
         }

@@ -43,6 +43,7 @@ public class PostDto {
                     .type(type)
                     .images(images)
                     .content(content)
+                    .comments(new ArrayList<>())
                     .title(title)
                     .tags(tags).build();
         }
@@ -63,6 +64,7 @@ public class PostDto {
         @ApiModelProperty(value = "게시글 내용", example = "샘플 포스트 입니다.")
         private String content;
 
+        // TODO 글쓴이 정보 수정 (닉네임,프로필 이미지)
         @ApiModelProperty(value = "글쓴이", example = "글쓴이")
         private String author;
 
@@ -91,7 +93,7 @@ public class PostDto {
             return Response.builder()
                     .responseInfo(ResponseInfo.builder()
                             .id(post.getId())
-                            .author(account.getNickName())
+                            .author(account.getNickname())
                             .content(post.getContent())
                             .createdAt(post.getCreatedAt())
                             .title(post.getTitle())
@@ -121,7 +123,7 @@ public class PostDto {
             return ResponseAll.builder()
                     .responseInfo(ResponseInfo.builder()
                             .id(post.getId())
-                            .author(account.getNickName())
+                            .author(account.getNickname())
                             .content(post.getContent())
                             .createdAt(post.getCreatedAt())
                             .title(post.getTitle())

@@ -6,6 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = "name")
 public class TagDto {
 
     private String name;

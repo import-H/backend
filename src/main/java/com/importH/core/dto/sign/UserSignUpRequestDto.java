@@ -51,7 +51,7 @@ public class UserSignUpRequestDto {
         return Account.builder()
                 .email(email)
                 .password(password)
-                .nickName(nickname)
+                .nickname(nickname)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .weekAgree(false)
                 .build();

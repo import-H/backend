@@ -68,7 +68,7 @@ public class SignService {
     }
 
     private void duplicatedNickname(String nickname) {
-        if (accountRepository.existsByNickName(nickname)) {
+        if (accountRepository.existsByNickname(nickname)) {
             throw new UserException(USER_NICKNAME_DUPLICATED);
         }
     }

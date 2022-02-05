@@ -1,4 +1,4 @@
-package com.importH.service.sign;
+package com.importH.core.service.sign;
 
 import com.importH.config.security.JwtProvider;
 import com.importH.core.dto.jwt.TokenDto;
