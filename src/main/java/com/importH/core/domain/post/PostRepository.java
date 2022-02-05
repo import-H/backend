@@ -12,4 +12,6 @@ public interface PostRepository extends JpaRepository<Post,Long > {
     Optional<Post> findByIdAndType(Long postId, int type);
 
     List<Post> findAllByType(int type);
+
+    boolean existsByTitle(String title);
 }

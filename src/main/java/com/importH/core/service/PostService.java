@@ -42,8 +42,10 @@ public class PostService {
     }
 
     private Set<Tag> getTags(PostDto.Request postRequestDto) {
-        Set<Tag> tags = postRequestDto.getTags().stream().map(TagDto::toEntity).map(tag -> tagService.getTag(tag)).collect(Collectors.toSet());
-        return tags;
+        return postRequestDto.getTags().stream()
+                .map(TagDto::toEntity)
+                .map(tag -> tagService.getTag(tag))
+                .collect(Collectors.toSet());
     }
 
     private Post savePost(Post post) {

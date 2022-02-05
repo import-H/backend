@@ -31,8 +31,8 @@ public class FileService {
 
     public ImageDto.Response uploadImage(ImageDto.Request requestDto, HttpServletRequest request) throws URISyntaxException {
 
-        if (requestDto.getImage().isEmpty()) {
-            return null;
+        if (requestDto.getImage() == null) {
+            throw new FileException(FileErrorCode.NOT_FOUND_IMAGE);
         }
 
         String originalFilename = requestDto.getImage().getOriginalFilename();

@@ -25,6 +25,7 @@ public class PostDto {
     @AllArgsConstructor
     @ApiModel(value = "게시글 요청 DTO")
     public static class Request {
+
         @ApiModelProperty(value = "게시글 제목", example = "테스트 게시글")
         @NotBlank(message = "제목은 필수 입력값 입니다.")
         private String title;
