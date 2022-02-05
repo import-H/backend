@@ -4,11 +4,11 @@ import com.importH.core.AccountFactory;
 import com.importH.core.domain.account.Account;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostRepository;
+import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.post.PostDto;
 import com.importH.core.dto.tag.TagDto;
 import com.importH.core.error.code.PostErrorCode;
 import com.importH.core.error.exception.PostException;
-import org.h2.util.ThreadDeadlockDetector;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +22,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.refEq;
 
 @SpringBootTest
 @Transactional
@@ -42,10 +41,12 @@ class PostServiceTest {
     TagService tagService;
 
     Account account;
+    Post post;
 
     @BeforeEach
     void before() {
         account = accountFactory.createNewAccount("test");
+        post = postService.registerPost(account, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
     }
 
     @AfterEach
@@ -57,27 +58,25 @@ class PostServiceTest {
     @DisplayName("[성공] 게시글 등록 정상적인 요청")
     void registerPost_success() throws Exception {
         // given
-        PostDto.Request request = getRequest();
+        PostDto.Request request = getRequest("테스트", "테스트 게시글 입니다.", "자바");
 
         // when
-        Long postId = postService.registerPost(account, 1, request);
+        Post post = postService.registerPost(account, 1, request);
 
-        Post post = postService.findByPostId(postId);
 
         //then
-        assertThat(post.getId()).isEqualTo(postId);
         assertThat(post).hasFieldOrPropertyWithValue("title", request.getTitle())
                 .hasFieldOrPropertyWithValue("content", request.getContent());
         assertThat(post.getTags()).contains(tagService.findByTitle("자바"));
     }
 
-    private PostDto.Request getRequest() {
+    private PostDto.Request getRequest(String title, String content, String tagName) {
         return PostDto.Request.
                 builder()
-                .title("테스트")
-                .content("테스트 게시글 입니다.")
+                .title(title)
+                .content(content)
                 .tags(List.of(TagDto.builder()
-                        .name("자바")
+                        .name(tagName)
                         .build()))
                 .build();
     }
@@ -87,16 +86,15 @@ class PostServiceTest {
     @DisplayName("[성공] 게시글 조회 정상적인 요청")
     void getPost_success() throws Exception {
         // given
-        Long postId = postService.registerPost(account, 1, getRequest());
-        Post post = postService.findByPostId(postId);
+        Post post =  postService.registerPost(account, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
 
         // when
-        PostDto.Response response = postService.getPost(1, postId);
+        PostDto.Response response = postService.getPost(1, post.getId());
 
         //then
         assertThat(response)
 
-                .hasFieldOrPropertyWithValue("responseInfo.id", postId)
+                .hasFieldOrPropertyWithValue("responseInfo.id", post.getId())
                 .hasFieldOrPropertyWithValue("responseInfo.title", post.getTitle())
                 .hasFieldOrPropertyWithValue("responseInfo.content", post.getContent())
                 .hasFieldOrPropertyWithValue("responseInfo.author", post.getAccount().getNickname())
@@ -122,5 +120,87 @@ class PostServiceTest {
         //then
         assertThat(postException).hasMessageContaining(notFoundPost.getDescription());
 
+    }
+
+
+    @Test
+    @DisplayName("[성공] 게시글 수정")
+    void updatePost_success() throws Exception {
+        // given
+        PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1");
+
+        // when
+        postService.updatePost(account, 1, post.getId(), request);
+
+        //then
+        assertThat(post)
+                .hasFieldOrPropertyWithValue("title", request.getTitle())
+                .hasFieldOrPropertyWithValue("content", request.getContent());
+
+        Tag tagBefore = tagService.findByTitle("자바");
+        Tag tagAfter = tagService.findByTitle("자바1");
+        assertThat(post.getTags()).contains(tagAfter);
+        assertThat(post.getTags()).doesNotContain(tagBefore);
+    }
+
+    @Test
+    @DisplayName("[실패] 게시글 수정 - 글 작성자 아닌경우")
+    void updatePost_fail() throws Exception {
+        // given
+        PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1");
+        Account test2 = Account.builder().nickname("test2").build();
+        // when
+        PostException postException = assertThrows(PostException.class, () -> postService.updatePost(test2, 1, post.getId(), request));
+
+        //then
+        assertThat(postException).hasMessageContaining(PostErrorCode.NOT_ACCORD_ACCOUNT.getDescription());
+    }
+
+    @Test
+    @DisplayName("[성공] 게시글 삭제")
+    void deletePost_success() throws Exception {
+        // given
+        // when
+        postService.deletePost(account, 1, post.getId());
+
+        //then
+        assertThat(postRepository.existsById(post.getId())).isFalse();
+
+    }
+
+    @Test
+    @DisplayName("[실패] 게시글 삭제 - 글 작성자가 아닌경우")
+    void deletePost_fail() throws Exception {
+        // given
+        Account test2 = Account.builder().nickname("test2").build();
+        // when
+        PostException postException = assertThrows(PostException.class, () -> postService.deletePost(test2, 1, post.getId()));
+
+        //then
+        assertThat(postException).hasMessageContaining(PostErrorCode.NOT_ACCORD_ACCOUNT.getDescription());
+
+    }
+
+    @Test
+    @DisplayName("[성공] 전체 게시글 조회")
+    void findAll_success() throws Exception {
+        // given
+        for (int i = 0; i < 10; i++) {
+            postService.registerPost(account, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
+        }
+        // when
+        List<PostDto.ResponseAll> allPost = postService.findAllPost(1);
+
+        //then
+        assertThat(allPost.size()).isEqualTo(11);
+        allPost.stream().forEach(responseAll -> assertThat(responseAll)
+                .hasFieldOrProperty("responseInfo.id")
+                .hasFieldOrProperty("responseInfo.title")
+                .hasFieldOrProperty("responseInfo.content")
+                .hasFieldOrProperty("responseInfo.author")
+                .hasFieldOrProperty("responseInfo.likeCount")
+                .hasFieldOrProperty("responseInfo.viewCount")
+                .hasFieldOrProperty("commentsCount")
+                .hasFieldOrProperty("thumbnail"));
     }
 }

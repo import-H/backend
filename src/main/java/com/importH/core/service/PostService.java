@@ -33,7 +33,7 @@ public class PostService {
      * 게시글 저장
      */
     @Transactional
-    public Long registerPost(Account account, int type, PostDto.Request postRequestDto) {
+    public Post registerPost(Account account, int type, PostDto.Request postRequestDto) {
 
         //TODO 이미지 저장
         Set<Tag> tags = getTags(postRequestDto);
@@ -46,10 +46,10 @@ public class PostService {
         return tags;
     }
 
-    private Long savePost(Post post) {
+    private Post savePost(Post post) {
         Post save = postRepository.save(post);
 
-        return save.getId();
+        return save;
     }
 
     /**

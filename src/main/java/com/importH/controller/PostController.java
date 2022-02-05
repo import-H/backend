@@ -45,7 +45,7 @@ public class PostController {
     })
     @ApiOperation(value = "게시글 등록", notes = "boardId 게시판에 게시글을 등록합니다.")
     @PostMapping("/{boardId}/posts")
-    public SingleResult<Long> savePost(@ApiIgnore @CurrentAccount Account account,
+    public CommonResult savePost(@ApiIgnore @CurrentAccount Account account,
                                        @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                        @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
                                        BindingResult bindingResult) {
@@ -53,8 +53,8 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             throw new PostException(PostErrorCode.NOT_VALIDATE_PARAM);
         }
-
-        return responseService.getSingleResult(postService.registerPost(account, boardId, postRequestDto));
+        postService.registerPost(account, boardId, postRequestDto);
+        return responseService.getSuccessResult();
     }
 
     @ApiOperation(value = "게시글 조회", notes = "boardId 게시판에 postId 게시글을 조회합니다.")
