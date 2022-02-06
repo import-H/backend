@@ -39,9 +39,9 @@ public class CommentDto {
         @ApiModelProperty(value = "댓글 내용", example = "댓글 입니다.")
         private String content;
 
-        public static Response fromEntity(Comment comment, Account account) {
+        public static Response fromEntity(Comment comment) {
             return Response.builder()
-                    .nickname(account.getNickname())
+                    .nickname(comment.getAccount().getNickname())
                     .content(comment.getContent())
                     .build();
         }

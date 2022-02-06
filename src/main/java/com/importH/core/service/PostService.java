@@ -69,7 +69,7 @@ public class PostService {
     }
 
     public List<CommentDto.Response> getCommentDtos(Post post) {
-        return post.getComments().stream().map(comment -> CommentDto.Response.fromEntity(comment, comment.getAccount())).collect(Collectors.toList());
+        return post.getComments().stream().map(comment -> CommentDto.Response.fromEntity(comment)).collect(Collectors.toList());
     }
 
     public Set<TagDto> getTagDtos(Post post) {
