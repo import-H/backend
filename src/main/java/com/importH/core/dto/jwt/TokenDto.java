@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TokenDto {
 
-    //todo 로그인 닉네임 , 프로필 이미지도 전송
     private String accessToken;
     private String refreshToken;
 

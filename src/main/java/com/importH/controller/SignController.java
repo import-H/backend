@@ -1,6 +1,7 @@
 package com.importH.controller;
 
 import com.importH.core.dto.jwt.TokenDto;
+import com.importH.core.dto.sign.LoginDto;
 import com.importH.core.dto.sign.UserLoginRequestDto;
 import com.importH.core.dto.sign.UserSignUpRequestDto;
 import com.importH.core.error.code.UserErrorCode;
@@ -32,11 +33,16 @@ public class SignController {
 
     @ApiOperation(value = "로그인", notes = "로그인을 합니다.")
     @PostMapping("/login")
-    public SingleResult<TokenDto> login(
-            @ApiParam(value = "로그인 요청 DTO", required = true) @RequestBody UserLoginRequestDto userLoginRequestDto
+    public SingleResult<LoginDto.Response> login(
+            @ApiParam(value = "로그인 요청 DTO", required = true) @RequestBody @Validated LoginDto.Request request
+            ,BindingResult bindingResult
             ) {
-        TokenDto tokenDto = signService.login(userLoginRequestDto.getEmail(), userLoginRequestDto.getPassword());
-        return responseService.getSingleResult(tokenDto);
+
+        if (bindingResult.hasErrors()) {
+            throw new UserException(UserErrorCode.NOT_VALID_REQUEST_PARAMETERS);
+        }
+
+        return responseService.getSingleResult((LoginDto.Response) signService.login(request.getEmail(), request.getPassword()));
     }
 
     @ApiOperation(value = "회원가입 ", notes = "회원가입을 합니다.")

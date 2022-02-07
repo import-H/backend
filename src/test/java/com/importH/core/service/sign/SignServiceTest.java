@@ -2,6 +2,7 @@ package com.importH.core.service.sign;
 
 import com.importH.config.security.JwtProvider;
 import com.importH.core.dto.jwt.TokenDto;
+import com.importH.core.dto.sign.LoginDto;
 import com.importH.core.dto.sign.UserSignUpRequestDto;
 import com.importH.core.domain.account.Account;
 import com.importH.core.domain.token.RefreshToken;
@@ -141,7 +142,8 @@ class SignServiceTest {
     void login_success() throws Exception {
         // given
         // when
-        TokenDto tokenDto = signService.login(requestDto.getEmail(), requestDto.getPassword());
+        LoginDto.Response login = signService.login(requestDto.getEmail(), requestDto.getPassword());
+        TokenDto tokenDto = TokenDto.builder().accessToken(login.getAccessToken()).refreshToken(login.getRefreshToken()).build();
 
         //then
         assertThat(tokenDto)
@@ -204,7 +206,8 @@ class SignServiceTest {
     }
 
     private TokenDto loginUser() {
-        return signService.login("abc@naver.com", "12341234");
+        LoginDto.Response login = signService.login("abc@naver.com", "12341234");
+        return TokenDto.builder().accessToken(login.getAccessToken()).refreshToken(login.getRefreshToken()).build();
     }
 
     private UserSignUpRequestDto getSignUpRequestDto(String nickname, String email, String password) {

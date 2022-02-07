@@ -2,6 +2,7 @@ package com.importH.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.importH.core.dto.jwt.TokenDto;
+import com.importH.core.dto.sign.LoginDto;
 import com.importH.core.dto.sign.UserLoginRequestDto;
 import com.importH.core.dto.sign.UserSignUpRequestDto;
 import com.importH.core.domain.account.Account;
@@ -157,7 +158,6 @@ class SignControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andDo(print())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.msg").exists())
                 .andExpect(jsonPath("$.data.accessToken").exists())
@@ -219,14 +219,17 @@ class SignControllerTest {
     void 토큰재발급_성공() throws Exception {
 
         // given
-        TokenDto tokenDto = signService.login("user@hongik.ac.kr","12341234");
+        LoginDto.Response response = signService.login("user@hongik.ac.kr","12341234");
 
         // when
         ResultActions perform = mockMvc.perform(post("/v1/reissue")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(tokenDto)));
+                .content(objectMapper.writeValueAsString(response)));
 
-        TokenDto reissue = signService.reissue(tokenDto);
+        TokenDto reissue = signService.reissue(TokenDto.builder()
+                        .accessToken(response.getAccessToken())
+                        .refreshToken(response.getRefreshToken())
+                .build());
         //then
         perform.andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -239,7 +242,10 @@ class SignControllerTest {
     @DisplayName("[실패] 토큰 재발급 - 잘못된 리프레시 토큰")
     void 토큰재발급_실패 () throws Exception {
         // given
-        TokenDto tokenDto = signService.login("user@hongik.ac.kr","12341234");
+        LoginDto.Response login = signService.login("user@hongik.ac.kr", "12341234");
+        TokenDto tokenDto = TokenDto.builder()
+                .accessToken(login.getAccessToken())
+                .refreshToken(login.getRefreshToken()).build();
         tokenDto.setRefreshToken(createRefreshToken(account.getEmail(),account.getRoles(),30 * 1000L));
 
         assertThat(tokenRepository.findByKey(account.getId())).isNotNull();

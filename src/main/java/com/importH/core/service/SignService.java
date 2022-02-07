@@ -5,6 +5,7 @@ import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.domain.token.RefreshTokenRepository;
 import com.importH.core.domain.account.Account;
 import com.importH.core.domain.token.RefreshToken;
+import com.importH.core.dto.sign.LoginDto;
 import com.importH.core.dto.sign.UserSignUpRequestDto;
 import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.exception.JwtException;
@@ -43,8 +44,6 @@ public class SignService {
                 UserSignUpRequestDto
                         .builder().email("abc@hongik.ac.kr").password("12341234").confirmPassword("12341234").nickname("test").build();
         saveUser(test.toEntity(passwordEncoder.encode(test.getPassword())));
-        TokenDto tokenDto = login("abc@hongik.ac.kr", "12341234");
-        tokenDto.setAccessToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzY5Mjc5NSwiZXhwIjoxNjQzNjk5OTk1fQ.9rmYLZJKHCniSUkLNH-lje_x9i7cn2tyAg09hZKXPlo");
     }
 
     /** 회원가입 */
@@ -86,7 +85,7 @@ public class SignService {
 
     /** 로그인 */
     @Transactional
-    public TokenDto login(String email, String password) {
+    public LoginDto.Response login(String email, String password) {
         Account account = getAccount(email);
         validatePassword(password,account);
         
@@ -95,7 +94,12 @@ public class SignService {
 
         saveRefreshToken(account, tokenDto, refreshToken);
 
-        return tokenDto;
+        return LoginDto.Response.builder()
+                .accessToken(tokenDto.getAccessToken())
+                .refreshToken(tokenDto.getRefreshToken())
+                .nickname(account.getNickname())
+                .profileImage(account.getProfileImage())
+                .build();
     }
 
     private void saveRefreshToken(Account account, TokenDto tokenDto, RefreshToken refreshToken) {
