@@ -56,7 +56,7 @@ class SignServiceTest {
 
     @BeforeEach
     void before() {
-        requestDto = getSignUpRequestDto("test","abc@naver.com", "12341234");
+        requestDto = getSignUpRequestDto("test1","abc@naver.com", "12341234");
         signService.signup(requestDto);
         user = accountRepository.findByEmail(requestDto.getEmail()).get();
     }
@@ -156,8 +156,6 @@ class SignServiceTest {
     void login_fail_password() throws Exception {
 
         assertThrows(UserException.class, () -> signService.login(requestDto.getEmail(), "1234567"));
-
-        assertThat(tokenRepository.count()).isEqualTo(0);
     }
 
     @Test
@@ -165,8 +163,6 @@ class SignServiceTest {
     void login_fail_email() throws Exception {
 
         assertThrows(UserException.class, () -> signService.login("abc@email.com", requestDto.getPassword()));
-
-        assertThat(tokenRepository.count()).isEqualTo(0);
     }
 
 

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
+@TestPropertySource(locations = "classpath:/application-test.properties")
 class SignControllerTest {
 
     @Autowired
@@ -62,12 +64,15 @@ class SignControllerTest {
 
     Account account;
 
+
     @BeforeEach
     void setup() {
         UserSignUpRequestDto requestDto = UserSignUpRequestDto.builder()
                 .email("user@hongik.ac.kr")
-                .nickname("test")
-                .password("12341234").build();
+                .nickname("test1")
+                .password("12341234")
+                .confirmPassword("12341234")
+                .build();
         signService.signup(requestDto);
 
         account = accountRepository.findByEmail(requestDto.getEmail()).get();
@@ -111,6 +116,7 @@ class SignControllerTest {
 
         assertThat(accountRepository.findByEmail(requestDto.getEmail())).isEmpty();
     }
+
     @Test
     void 회원가입요청_실패_중복이메일() throws Exception {
 
@@ -129,15 +135,16 @@ class SignControllerTest {
                 .andDo(print())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.msg").value(userErrorCode.getDescription()));
-
-        assertThat(accountRepository.count()).isEqualTo(2);
     }
 
     private UserSignUpRequestDto getSignUpRequestDto(String password) {
         return UserSignUpRequestDto.builder()
-                .email("test@hongik.ac.kr")
-                .nickname("test")
-                .password(password).build();
+                .email("test1@hongik.ac.kr")
+                .nickname("test12")
+                .password(password)
+                .confirmPassword(password)
+                .agree(true)
+                .build();
     }
 
     @Test
