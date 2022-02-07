@@ -60,4 +60,8 @@ public class Post extends BaseTimeEntity {
         this.title = postRequestDto.getTitle();
         return id;
     }
+
+    public void increaseView() {
+        this.viewCount++;
+    }
 }

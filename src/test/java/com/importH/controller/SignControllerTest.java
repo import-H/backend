@@ -228,7 +228,6 @@ class SignControllerTest {
 
     }
 
-    //TODO
     @Test
     @DisplayName("[실패] 토큰 재발급 - 잘못된 리프레시 토큰")
     void 토큰재발급_실패 () throws Exception {

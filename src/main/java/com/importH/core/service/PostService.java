@@ -57,15 +57,28 @@ public class PostService {
     /**
      * 게시글 조회
      */
-    public PostDto.Response getPost(int boardId, Long postId) {
+    @Transactional
+    public PostDto.Response getPost(Account account, int boardId, Long postId) {
 
         Post post = findByTypeAndId(boardId, postId);
+
+        increaseViewCount(account, post);
 
         Set<TagDto> tags = getTagDtos(post);
         List<CommentDto.Response> comments = getCommentDtos(post);
 
         //TODO 계정 삭제시에 조회 어떻게 처리할것인지 생각
         return PostDto.Response.fromEntity(post, post.getAccount(), tags, comments);
+    }
+
+    private void increaseViewCount(Account account, Post post) {
+        if (isNotAuthor(account, post)) {
+            post.increaseView();
+        }
+    }
+
+    private boolean isNotAuthor(Account account, Post post) {
+        return account == null || account.getNickname() != post.getAccount().getNickname();
     }
 
     public List<CommentDto.Response> getCommentDtos(Post post) {

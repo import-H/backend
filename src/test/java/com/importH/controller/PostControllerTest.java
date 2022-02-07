@@ -16,6 +16,8 @@ import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.code.PostErrorCode;
 import com.importH.core.service.PostService;
 import com.importH.core.service.TagService;
+import org.hamcrest.Matchers;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +37,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -144,8 +147,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.data.responseInfo.content").value(post.getContent()))
                 .andExpect(jsonPath("$.data.responseInfo.author").value(post.getAccount().getNickname()))
                 .andExpect(jsonPath("$.data.responseInfo.likeCount").value(post.getLikeCount()))
-                //TODO
-                .andExpect(jsonPath("$.data.responseInfo.tags[*].name").value(post.getTags().stream().map(Tag::getName).collect(Collectors.toList())))
+                .andExpect(jsonPath("$.data.responseInfo.tags[*].name").exists())
                 .andExpect(jsonPath("$.data.responseInfo.viewCount").value(post.getViewCount()))
                 .andExpect(jsonPath("$.data.comments[*]").value(postService.getCommentDtos(post)));
 
@@ -247,7 +249,9 @@ class PostControllerTest {
 
 
     // TODO 전체게시글 조회 테스트
-    
+
+
+
     private PostDto.Request getRequest(String title, String content, String... tagName) {
         return PostDto.Request.
                 builder()

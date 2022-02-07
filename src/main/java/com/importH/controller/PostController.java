@@ -46,9 +46,9 @@ public class PostController {
     @ApiOperation(value = "게시글 등록", notes = "boardId 게시판에 게시글을 등록합니다.")
     @PostMapping("/{boardId}/posts")
     public CommonResult savePost(@ApiIgnore @CurrentAccount Account account,
-                                       @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
-                                       @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
-                                       BindingResult bindingResult) {
+                                 @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
+                                 @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
+                                 BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             throw new PostException(PostErrorCode.NOT_VALIDATE_PARAM);
@@ -59,10 +59,11 @@ public class PostController {
 
     @ApiOperation(value = "게시글 조회", notes = "boardId 게시판에 postId 게시글을 조회합니다.")
     @GetMapping("/{boardId}/posts/{postId}")
-    public SingleResult<PostDto.Response> findPost(@ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
+    public SingleResult<PostDto.Response> findPost(@ApiIgnore @CurrentAccount Account account,
+                                                   @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                                    @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId) {
 
-        return responseService.getSingleResult(postService.getPost(boardId, postId));
+        return responseService.getSingleResult(postService.getPost(account,boardId, postId));
     }
 
     @ApiImplicitParams({
@@ -78,7 +79,7 @@ public class PostController {
                                          @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId,
                                          @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
                                          BindingResult bindingResult
-                                        ) {
+    ) {
 
         if (bindingResult.hasErrors()) {
             throw new PostException(PostErrorCode.NOT_VALIDATE_PARAM);
@@ -102,8 +103,6 @@ public class PostController {
         postService.deletePost(account, boardId, postId);
         return responseService.getSuccessResult();
     }
-
-
 
 
 }

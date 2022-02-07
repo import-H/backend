@@ -9,7 +9,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-@ToString(of = {"name"})
 public class Tag {
 
     @Id @GeneratedValue

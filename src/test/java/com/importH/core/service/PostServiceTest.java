@@ -89,7 +89,7 @@ class PostServiceTest {
         Post post =  postService.registerPost(account, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
 
         // when
-        PostDto.Response response = postService.getPost(1, post.getId());
+        PostDto.Response response = postService.getPost(account, 1, post.getId());
 
         //then
         assertThat(response)
@@ -115,7 +115,7 @@ class PostServiceTest {
         // when
         PostErrorCode notFoundPost = PostErrorCode.NOT_FOUND_POST;
 
-        PostException postException = assertThrows(PostException.class, () -> postService.getPost(boardId, postId));
+        PostException postException = assertThrows(PostException.class, () -> postService.getPost(account, boardId, postId));
 
         //then
         assertThat(postException).hasMessageContaining(notFoundPost.getDescription());
