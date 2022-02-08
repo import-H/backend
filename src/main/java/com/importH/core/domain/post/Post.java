@@ -79,4 +79,8 @@ public class Post extends BaseTimeEntity {
     public void addComment(Comment comment) {
         this.getComments().add(comment);
     }
+
+    public void deleteComment(Comment comment) {
+        this.getComments().remove(comment);
+    }
 }

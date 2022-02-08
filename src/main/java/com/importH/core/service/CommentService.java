@@ -76,10 +76,9 @@ public class CommentService {
         Post post = postService.findByPostId(postsId);
         Comment comment = findByCommentId(commentId);
 
-        //TODO 연관관계 끊기
         canModifiableComment(account, post, comment);
 
+        post.deleteComment(comment);
         commentRepository.delete(comment);
-
     }
 }
