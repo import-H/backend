@@ -4,8 +4,8 @@ POST http://localhost:8090/v1/signup
 Content-Type: application/json
 
 {
-  "email": "abc@hongik.ac.kr",
-  "nickname": "string",
+  "email": "abc3@hongik.ac.kr",
+  "nickname": "자몽",
   "password": "12341234",
   "confirmPassword": "12341234",
   "agree": "true"
@@ -44,7 +44,7 @@ GET http://localhost:8090/v1/boards/1/posts
 
 ### 게시글 저장
 POST http://localhost:8090/v1/boards/1/posts
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0NDIzNDc4OSwiZXhwIjoxNjQ0MzIxMTg5fQ.wNF4GVdrOv9E3x839g7Y__vYU2D_XYqHszZuR5HH8Iw
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0NDMxNjM5NywiZXhwIjoxNjQ0NDAyNzk3fQ.aHah4DFntmRd4zBue6LYm-x-KQzgbNCGgA68nM_XajI
 Content-Type: application/json
 
 {
@@ -55,7 +55,7 @@ Content-Type: application/json
 
 ### 게시글 수정
 PUT http://localhost:8090/v1/boards/1/posts/4
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0Mzk4MDEyOSwiZXhwIjoxNjQ0MDY2NTI5fQ.vawWyp83-W7jRyB0Jx9JRQRltrRRQqA0MBZ-ui6zUsQ
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0NDMxNjM5NywiZXhwIjoxNjQ0NDAyNzk3fQ.aHah4DFntmRd4zBue6LYm-x-KQzgbNCGgA68nM_XajI
 Content-Type: application/json
 
 {
@@ -91,3 +91,7 @@ Content-Type: application/json
 DELETE http://localhost:8090/v1/posts/4/comments/8
 Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0Mzk4MDEyOSwiZXhwIjoxNjQ0MDY2NTI5fQ.vawWyp83-W7jRyB0Jx9JRQRltrRRQqA0MBZ-ui6zUsQ
 Content-Type: application/json
+
+### 게시글 좋아요 요청
+POST http://localhost:8090/v1/posts/4/like
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0NDMxNjM5NywiZXhwIjoxNjQ0NDAyNzk3fQ.aHah4DFntmRd4zBue6LYm-x-KQzgbNCGgA68nM_XajI

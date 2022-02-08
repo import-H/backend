@@ -6,10 +6,7 @@ import com.importH.core.domain.comment.Comment;
 import com.importH.core.domain.image.Image;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.post.PostDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,7 +16,7 @@ import java.util.Set;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class Post extends BaseTimeEntity {
@@ -51,8 +48,12 @@ public class Post extends BaseTimeEntity {
     @ManyToMany
     private List<Image> images = new ArrayList<>();
 
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLike> postLikes = new ArrayList<>();
 
     public Long updatePost(PostDto.Request postRequestDto, Set<Tag> tags) {
         this.tags = tags;
@@ -63,5 +64,19 @@ public class Post extends BaseTimeEntity {
 
     public void increaseView() {
         this.viewCount++;
+    }
+
+    public void addLike(PostLike like) {
+        this.postLikes.add(like);
+        this.likeCount++;
+    }
+
+    public void deleteLike(PostLike like) {
+        this.postLikes.remove(like);
+        this.likeCount--;
+    }
+
+    public void addComment(Comment comment) {
+        this.getComments().add(comment);
     }
 }

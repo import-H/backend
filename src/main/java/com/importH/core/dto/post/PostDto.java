@@ -45,6 +45,7 @@ public class PostDto {
                     .images(images)
                     .content(content)
                     .comments(new ArrayList<>())
+                    .postLikes(new ArrayList<>())// TODO 게시글 수정시 댓글 남아있는지 확인
                     .title(title)
                     .tags(tags).build();
         }

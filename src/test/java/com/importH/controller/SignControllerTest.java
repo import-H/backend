@@ -3,7 +3,6 @@ package com.importH.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.sign.LoginDto;
-import com.importH.core.dto.sign.UserLoginRequestDto;
 import com.importH.core.dto.sign.UserSignUpRequestDto;
 import com.importH.core.domain.account.Account;
 import com.importH.core.error.code.JwtErrorCode;
@@ -152,7 +151,7 @@ class SignControllerTest {
     void 로그인_성공() throws Exception {
 
 
-        UserLoginRequestDto requestDto = getUserLoginRequestDto("user@hongik.ac.kr", "12341234");
+        LoginDto.Request requestDto = getUserLoginRequestDto("user@hongik.ac.kr", "12341234");
 
         mockMvc.perform(post("/v1/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -173,7 +172,7 @@ class SignControllerTest {
     void 로그인_실패() throws Exception {
 
         UserErrorCode userErrorCode = UserErrorCode.EMAIL_LOGIN_FAILED;
-        UserLoginRequestDto requestDto = getUserLoginRequestDto("user1@hongik.ac.kr", "12341234");
+        LoginDto.Request requestDto = getUserLoginRequestDto("user1@hongik.ac.kr", "12341234");
 
         mockMvc.perform(post("/v1/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -192,7 +191,7 @@ class SignControllerTest {
     void 로그인_실패_비밀번호() throws Exception {
 
         UserErrorCode userErrorCode = UserErrorCode.EMAIL_LOGIN_FAILED;
-        UserLoginRequestDto requestDto = getUserLoginRequestDto("user@hongik.ac.kr", "123123");
+        LoginDto.Request requestDto = getUserLoginRequestDto("user@hongik.ac.kr", "123123");
         Optional<Account> account = accountRepository.findByEmail(requestDto.getEmail());
 
         mockMvc.perform(post("/v1/login")
@@ -206,8 +205,8 @@ class SignControllerTest {
         assertThat(tokenRepository.findByKey(account.get().getId())).isEmpty();
     }
 
-    private UserLoginRequestDto getUserLoginRequestDto(String email, String password) {
-        UserLoginRequestDto requestDto = UserLoginRequestDto.builder()
+    private LoginDto.Request getUserLoginRequestDto(String email, String password) {
+        LoginDto.Request requestDto = LoginDto.Request.builder()
                 .email(email)
                 .password(password).build();
         return requestDto;

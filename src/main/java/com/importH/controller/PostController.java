@@ -22,14 +22,14 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/boards")
+@RequestMapping("/v1/boards/{boardId}/posts")
 public class PostController {
 
     private final ResponseService responseService;
     private final PostService postService;
 
 
-    @GetMapping("/{boardId}/posts")
+    @GetMapping
     @ApiOperation(value = "전체 게시글 조회", notes = "boardId 게시판에 게시글을 모두 조회합니다.")
     public ListResult<PostDto.ResponseAll> findAllPosts(@PathVariable int boardId) {
         //TODO 페이징
@@ -44,7 +44,7 @@ public class PostController {
                     required = true, dataType = "String", paramType = "header")
     })
     @ApiOperation(value = "게시글 등록", notes = "boardId 게시판에 게시글을 등록합니다.")
-    @PostMapping("/{boardId}/posts")
+    @PostMapping
     public CommonResult savePost(@ApiIgnore @CurrentAccount Account account,
                                  @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                  @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
@@ -58,7 +58,7 @@ public class PostController {
     }
 
     @ApiOperation(value = "게시글 조회", notes = "boardId 게시판에 postId 게시글을 조회합니다.")
-    @GetMapping("/{boardId}/posts/{postId}")
+    @GetMapping("/{postId}")
     public SingleResult<PostDto.Response> findPost(@ApiIgnore @CurrentAccount Account account,
                                                    @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                                    @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId) {
@@ -73,7 +73,7 @@ public class PostController {
                     required = true, dataType = "String", paramType = "header")
     })
     @ApiOperation(value = "게시글 수정", notes = "boardId 게시판에 postId 게시글을 수정합니다.")
-    @PutMapping("/{boardId}/posts/{postId}")
+    @PutMapping("/{postId}")
     public SingleResult<Long> updatePost(@ApiIgnore @CurrentAccount Account account,
                                          @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                          @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId,
@@ -96,7 +96,7 @@ public class PostController {
                     required = true, dataType = "String", paramType = "header")
     })
     @ApiOperation(value = "게시글 삭제", notes = "boardId 게시판에 postId 게시글을 삭제합니다.")
-    @DeleteMapping("/{boardId}/posts/{postId}")
+    @DeleteMapping("/{postId}")
     public CommonResult deletePost(@ApiIgnore @CurrentAccount Account account,
                                    @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                    @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId) {

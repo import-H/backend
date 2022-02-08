@@ -2,7 +2,6 @@ package com.importH.controller;
 
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.sign.LoginDto;
-import com.importH.core.dto.sign.UserLoginRequestDto;
 import com.importH.core.dto.sign.UserSignUpRequestDto;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.UserException;
@@ -42,7 +41,7 @@ public class SignController {
             throw new UserException(UserErrorCode.NOT_VALID_REQUEST_PARAMETERS);
         }
 
-        return responseService.getSingleResult((LoginDto.Response) signService.login(request.getEmail(), request.getPassword()));
+        return responseService.getSingleResult(signService.login(request.getEmail(), request.getPassword()));
     }
 
     @ApiOperation(value = "회원가입 ", notes = "회원가입을 합니다.")

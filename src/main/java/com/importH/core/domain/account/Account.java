@@ -47,6 +47,8 @@ public class Account extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean weekAgree;
 
+    private boolean deleted;
+
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
 

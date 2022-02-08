@@ -152,5 +152,4 @@ public class PostService {
     public Post findByPostId(Long postsId) {
         return postRepository.findById(postsId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
     }
-
 }

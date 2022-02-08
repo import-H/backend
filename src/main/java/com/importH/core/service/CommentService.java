@@ -29,7 +29,8 @@ public class CommentService {
     }
 
     private void saveComment(Account account, CommentDto.Request commentDto, Post post) {
-        commentRepository.save(commentDto.toEntity(account, post));
+        Comment comment = commentRepository.save(commentDto.toEntity(account, post));
+        post.addComment(comment);
     }
 
     /**
@@ -75,6 +76,7 @@ public class CommentService {
         Post post = postService.findByPostId(postsId);
         Comment comment = findByCommentId(commentId);
 
+        //TODO 연관관계 끊기
         canModifiableComment(account, post, comment);
 
         commentRepository.delete(comment);
