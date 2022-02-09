@@ -34,20 +34,6 @@ public class SignService {
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository tokenRepository;
 
-    @PostConstruct
-    public void init() {
-        initAccount();
-    }
-
-    private void initAccount() {
-        UserSignUpRequestDto test =
-                UserSignUpRequestDto
-                        .builder().email("abc@hongik.ac.kr").password("12341234").confirmPassword("12341234").nickname("test").build();
-        User user = test.toEntity();
-        user.setPassword(passwordEncoder.encode(test.getPassword()));
-        saveUser(user);
-    }
-
     /** 회원가입 */
     @Transactional
     public Long signup(UserSignUpRequestDto userSignUpRequestDto) {

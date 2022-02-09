@@ -34,18 +34,6 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final UserRepository userRepository;
 
-    @PostConstruct
-    void testData() {
-        for (int i = 0; i < 50; i++) {
-            Post build = Post.builder()
-                    .title("test" + i)
-                    .content("test" + i)
-                    .user(userRepository.save(User.builder().nickname("test"+i).email("test@"+i).password("test"+i).weekAgree(false).build()))
-                    .likeCount(i)
-                    .build();
-            postRepository.save(build);
-        }
-    }
     /**
      * 게시글 저장
      */

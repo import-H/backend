@@ -43,7 +43,14 @@ class UserServiceTest {
 
         //then
         assertThat(user)
-                .hasFieldOrPropertyWithValue("nickname", account.getNickname());
+                .hasFieldOrPropertyWithValue("nickname", account.getNickname())
+                .hasFieldOrPropertyWithValue("email", account.getEmail())
+                .hasFieldOrPropertyWithValue("profileImage", account.getProfileImage())
+                .hasFieldOrPropertyWithValue("introduction", account.getIntroduction())
+                .hasFieldOrPropertyWithValue("personalUrl", account.getPersonalUrl())
+                .hasFieldOrPropertyWithValue("infoByEmail", account.getInfoAgree().isInfoByEmail())
+                .hasFieldOrPropertyWithValue("infoByWeb", account.getInfoAgree().isInfoByWeb());
+
     }
 
     @Test
