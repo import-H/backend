@@ -5,6 +5,7 @@ import com.importH.core.domain.image.Image;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.tag.TagDto;
+import com.importH.core.dto.user.UserDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -58,14 +59,14 @@ public class PostDto {
         private String title;
 
         @ApiModelProperty(value = "태그 정보", example = "[aa,bb]")
-        private Set<TagDto> tags = new HashSet<>();
+        private Set<TagDto> tags;
 
         @ApiModelProperty(value = "게시글 내용", example = "샘플 포스트 입니다.")
         private String content;
 
-        // TODO 글쓴이 정보 수정 (닉네임,프로필 이미지)
-        @ApiModelProperty(value = "글쓴이", example = "글쓴이")
-        private String author;
+        // TODO 글쓴이 정보 수정 (닉네임,프로필 이미지 )
+        @ApiModelProperty(value = "글쓴이", example = "[{닉네임1,닉네임1의 프로필이미지 주소},{닉네임2,닉네임2의 프로필이미지 주소}]")
+        private UserDto.Response user;
 
         @ApiModelProperty(value = "조회수", example = "10")
         private int viewCount;
@@ -75,6 +76,7 @@ public class PostDto {
 
         @ApiModelProperty(value = "작성시간", example = "yyyy-MM-dd/HH:mm")
         private LocalDateTime createdAt;
+
     }
 
     @Getter
@@ -87,20 +89,30 @@ public class PostDto {
         @ApiModelProperty(value = "댓글", example = "[{닉네임1,댓글1},{닉네임2,댓글2}]")
         private List<CommentDto.Response> comments;
 
+        @ApiModelProperty(value = "현재 유저 좋아요 여부", example = "true/false")
+        private boolean isLike;
 
-        public static Response fromEntity(Post post, Account account, Set<TagDto> tags, List<CommentDto.Response> comments) {
+        public static Response fromEntity(Post post, Set<TagDto> tagDtos, List<CommentDto.Response> commentDtos, boolean isLike) {
+
+            UserDto.Response user = UserDto.Response
+                    .builder()
+                    .nickname(post.getAccount().getNickname())
+                    .profileImage(post.getAccount().getProfileImage())
+                    .build();
+
             return Response.builder()
                     .responseInfo(ResponseInfo.builder()
                             .id(post.getId())
-                            .author(account.getNickname())
+                            .user(user)
                             .content(post.getContent())
                             .createdAt(post.getCreatedAt())
                             .title(post.getTitle())
-                            .tags(tags)
+                            .tags(tagDtos)
                             .viewCount(post.getViewCount())
                             .likeCount(post.getLikeCount())
                             .build())
-                    .comments(comments)
+                    .comments(commentDtos)
+                    .isLike(isLike)
                     .build();
         }
     }
@@ -117,12 +129,18 @@ public class PostDto {
 
         @ApiModelProperty(value = "썸네일", example = "")
         private String thumbnail;
-        public static ResponseAll fromEntity(Post post, Account account, Set<TagDto> tags) {
+        public static ResponseAll fromEntity(Post post, Set<TagDto> tags) {
+
+            UserDto.Response user = UserDto.Response
+                    .builder()
+                    .nickname(post.getAccount().getNickname())
+                    .profileImage(post.getAccount().getProfileImage())
+                    .build();
 
             return ResponseAll.builder()
                     .responseInfo(ResponseInfo.builder()
                             .id(post.getId())
-                            .author(account.getNickname())
+                            .user(user)
                             .content(post.getContent())
                             .createdAt(post.getCreatedAt())
                             .title(post.getTitle())

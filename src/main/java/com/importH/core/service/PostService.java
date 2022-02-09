@@ -2,6 +2,8 @@ package com.importH.core.service;
 
 import com.importH.core.domain.account.Account;
 import com.importH.core.domain.post.Post;
+import com.importH.core.domain.post.PostLike;
+import com.importH.core.domain.post.PostLikeRepository;
 import com.importH.core.domain.post.PostRepository;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.post.CommentDto;
@@ -27,6 +29,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final TagService tagService;
+    private final PostLikeRepository postLikeRepository;
 
     /**
      * 게시글 저장
@@ -73,8 +76,14 @@ public class PostService {
         Set<TagDto> tags = getTagDtos(post);
         List<CommentDto.Response> comments = getCommentDtos(post);
 
+        boolean isLike = havePostLike(account, post);
         //TODO 계정 삭제시에 조회 어떻게 처리할것인지 생각
-        return PostDto.Response.fromEntity(post, post.getAccount(), tags, comments);
+
+        return PostDto.Response.fromEntity(post, tags, comments, isLike);
+    }
+
+    private boolean havePostLike(Account account, Post post) {
+        return postLikeRepository.existsByAccountAndPost(account, post);
     }
 
     private void increaseViewCount(Account account, Post post) {
@@ -150,7 +159,6 @@ public class PostService {
                 .map(post ->
                         PostDto.ResponseAll.fromEntity(
                                 post,
-                                post.getAccount(),
                                 post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet())))
                 .collect(Collectors.toList());
     }

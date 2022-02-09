@@ -97,7 +97,8 @@ class PostServiceTest {
                 .hasFieldOrPropertyWithValue("responseInfo.id", post.getId())
                 .hasFieldOrPropertyWithValue("responseInfo.title", post.getTitle())
                 .hasFieldOrPropertyWithValue("responseInfo.content", post.getContent())
-                .hasFieldOrPropertyWithValue("responseInfo.author", post.getAccount().getNickname())
+                .hasFieldOrPropertyWithValue("responseInfo.user.nickname", post.getAccount().getNickname())
+                .hasFieldOrPropertyWithValue("responseInfo.user.profileImage", post.getAccount().getProfileImage())
                 .hasFieldOrPropertyWithValue("responseInfo.likeCount", post.getLikeCount())
                 .hasFieldOrPropertyWithValue("responseInfo.viewCount", post.getViewCount());
 
@@ -197,7 +198,7 @@ class PostServiceTest {
                 .hasFieldOrProperty("responseInfo.id")
                 .hasFieldOrProperty("responseInfo.title")
                 .hasFieldOrProperty("responseInfo.content")
-                .hasFieldOrProperty("responseInfo.author")
+                .hasFieldOrProperty("responseInfo.user")
                 .hasFieldOrProperty("responseInfo.likeCount")
                 .hasFieldOrProperty("responseInfo.viewCount")
                 .hasFieldOrProperty("commentsCount")

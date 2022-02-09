@@ -145,10 +145,12 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.data.responseInfo.id").value(post.getId()))
                 .andExpect(jsonPath("$.data.responseInfo.title").value(post.getTitle()))
                 .andExpect(jsonPath("$.data.responseInfo.content").value(post.getContent()))
-                .andExpect(jsonPath("$.data.responseInfo.author").value(post.getAccount().getNickname()))
+                .andExpect(jsonPath("$.data.responseInfo.user.nickname").value(post.getAccount().getNickname()))
+                .andExpect(jsonPath("$.data.responseInfo.user.profileImage").value(post.getAccount().getProfileImage()))
                 .andExpect(jsonPath("$.data.responseInfo.likeCount").value(post.getLikeCount()))
                 .andExpect(jsonPath("$.data.responseInfo.tags[*].name").exists())
                 .andExpect(jsonPath("$.data.responseInfo.viewCount").value(post.getViewCount()))
+                .andExpect(jsonPath("$.data.like").value(false))
                 .andExpect(jsonPath("$.data.comments[*]").value(postService.getCommentDtos(post)));
 
     }
