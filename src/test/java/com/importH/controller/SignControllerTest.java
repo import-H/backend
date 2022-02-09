@@ -1,14 +1,14 @@
 package com.importH.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.importH.core.domain.user.User;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.sign.LoginDto;
 import com.importH.core.dto.sign.UserSignUpRequestDto;
-import com.importH.core.domain.account.Account;
 import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.domain.token.RefreshTokenRepository;
-import com.importH.core.domain.account.AccountRepository;
+import com.importH.core.domain.user.UserRepository;
 import com.importH.core.service.SignService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +50,7 @@ class SignControllerTest {
     ObjectMapper objectMapper;
 
     @Autowired
-    AccountRepository accountRepository;
+    UserRepository userRepository;
 
     @Autowired
     SignService signService;
@@ -62,25 +61,25 @@ class SignControllerTest {
     @Value("${spring.jwt.secret}")
     private String secretKey;
 
-    Account account;
+    User user;
 
 
     @BeforeEach
     void setup() {
         UserSignUpRequestDto requestDto = UserSignUpRequestDto.builder()
                 .email("user@hongik.ac.kr")
-                .nickname("test1")
+                .nickname("테스트")
                 .password("12341234")
                 .confirmPassword("12341234")
                 .build();
         signService.signup(requestDto);
 
-        account = accountRepository.findByEmail(requestDto.getEmail()).get();
+        user = userRepository.findByEmail(requestDto.getEmail()).get();
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
     @AfterEach
     void afterAll() {
-        accountRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -96,7 +95,7 @@ class SignControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.msg").exists());
 
-        Optional<Account> account = accountRepository.findByEmail(requestDto.getEmail());
+        Optional<User> account = userRepository.findByEmail(requestDto.getEmail());
         assertThat(account).isNotNull();
         assertThat(tokenRepository.findByKey(account.get().getId())).isNotNull();
     }
@@ -114,7 +113,7 @@ class SignControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.msg").exists());
 
-        assertThat(accountRepository.findByEmail(requestDto.getEmail())).isEmpty();
+        assertThat(userRepository.findByEmail(requestDto.getEmail())).isEmpty();
     }
 
     @Test
@@ -124,9 +123,9 @@ class SignControllerTest {
         UserErrorCode userErrorCode = UserErrorCode.USER_EMAIL_DUPLICATED;
         UserSignUpRequestDto requestDto = getSignUpRequestDto("12341234");
 
-        accountRepository.save(requestDto.toEntity());
+        userRepository.save(requestDto.toEntity());
 
-        assertThat(accountRepository.findByEmail(requestDto.getEmail())).isNotNull();
+        assertThat(userRepository.findByEmail(requestDto.getEmail())).isNotNull();
 
         mockMvc.perform(post("/v1/signup")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -139,8 +138,8 @@ class SignControllerTest {
 
     private UserSignUpRequestDto getSignUpRequestDto(String password) {
         return UserSignUpRequestDto.builder()
-                .email("test1@hongik.ac.kr")
-                .nickname("test12")
+                .email("테스트ACCOUNT@hongik.ac.kr")
+                .nickname("테스트ACCOUNT")
                 .password(password)
                 .confirmPassword(password)
                 .agree(true)
@@ -162,7 +161,7 @@ class SignControllerTest {
                 .andExpect(jsonPath("$.data.accessToken").exists())
                 .andExpect(jsonPath("$.data.refreshToken").exists());
 
-        assertThat(tokenRepository.findByKey(account.getId()).get().getToken()).isNotNull();
+        assertThat(tokenRepository.findByKey(user.getId()).get().getToken()).isNotNull();
 
 
     }
@@ -182,7 +181,7 @@ class SignControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.msg").value(userErrorCode.getDescription()));
 
-        assertThat(accountRepository.findByEmail(requestDto.getEmail())).isEmpty();
+        assertThat(userRepository.findByEmail(requestDto.getEmail())).isEmpty();
     }
 
 
@@ -192,7 +191,7 @@ class SignControllerTest {
 
         UserErrorCode userErrorCode = UserErrorCode.EMAIL_LOGIN_FAILED;
         LoginDto.Request requestDto = getUserLoginRequestDto("user@hongik.ac.kr", "123123");
-        Optional<Account> account = accountRepository.findByEmail(requestDto.getEmail());
+        Optional<User> account = userRepository.findByEmail(requestDto.getEmail());
 
         mockMvc.perform(post("/v1/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -245,9 +244,9 @@ class SignControllerTest {
         TokenDto tokenDto = TokenDto.builder()
                 .accessToken(login.getAccessToken())
                 .refreshToken(login.getRefreshToken()).build();
-        tokenDto.setRefreshToken(createRefreshToken(account.getEmail(),account.getRole(),30 * 1000L));
+        tokenDto.setRefreshToken(createRefreshToken(user.getEmail(), user.getRole(),30 * 1000L));
 
-        assertThat(tokenRepository.findByKey(account.getId())).isNotNull();
+        assertThat(tokenRepository.findByKey(user.getId())).isNotNull();
         assertThat(tokenRepository.existsByToken(tokenDto.getRefreshToken())).isFalse();
         JwtErrorCode errorCode = JwtErrorCode.REFRESH_TOKEN_VALID;
 
@@ -265,7 +264,7 @@ class SignControllerTest {
 
 
 
-    private String  createRefreshToken(String email, List<String> roles, Long refreshTokenValidTime) {
+    private String  createRefreshToken(String email, String roles, Long refreshTokenValidTime) {
 
         Claims claims = Jwts.claims().setSubject(email); // JWT PALYLOAD 에 저장되는 정보단위
         claims.put("roles", roles);

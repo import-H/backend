@@ -1,10 +1,10 @@
 package com.importH.core.service;
 
 import com.importH.config.security.UserAccount;
-import com.importH.core.dto.sign.UserResponseDto;
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
+import com.importH.core.dto.user.UserDto.Response;
 import com.importH.core.error.exception.UserException;
-import com.importH.core.domain.account.AccountRepository;
+import com.importH.core.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.importH.core.error.code.UserErrorCode.NOT_ACCORD_USERID;
 import static com.importH.core.error.code.UserErrorCode.NOT_FOUND_USERID;
 
 @Service
@@ -19,28 +20,39 @@ import static com.importH.core.error.code.UserErrorCode.NOT_FOUND_USERID;
 @Transactional(readOnly = true)
 public class UserService implements UserDetailsService {
 
-    private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Account account = findByEmail(email);
-        return new UserAccount(account);
+        User user = findByEmail(email);
+        return new UserAccount(user);
     }
 
-    public Account findByEmail(String email) {
-        return accountRepository.findByEmail(email).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
     }
 
 
     /**
-     * 유저 정보 조회
+     * 유저 프로필 정보 조회
      */
-    public UserResponseDto findUserById(Long userId) {
-        return new UserResponseDto(findById(userId));
+    public Response findUserById(Long userId, User user) {
+
+        User findUser = findById(userId);
+
+        isSameAccount(user, findUser);
+
+        return Response.fromEntity(findUser);
     }
 
-    public Account findById(Long userId) {
-        return accountRepository.findById(userId).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
+    private void isSameAccount(User user, User findUser) {
+        if(!findUser.equals(user)) {
+            throw new UserException(NOT_ACCORD_USERID);
+        }
+    }
+
+    public User findById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
     }
 
 }

@@ -1,7 +1,7 @@
 package com.importH.core.service;
 
-import com.importH.core.domain.account.Account;
-import com.importH.core.domain.account.AccountRepository;
+import com.importH.core.domain.user.User;
+import com.importH.core.domain.user.UserRepository;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostLikeRepository;
 import com.importH.core.domain.post.PostRepository;
@@ -32,7 +32,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final TagService tagService;
     private final PostLikeRepository postLikeRepository;
-    private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
     @PostConstruct
     void testData() {
@@ -40,7 +40,7 @@ public class PostService {
             Post build = Post.builder()
                     .title("test" + i)
                     .content("test" + i)
-                    .account(accountRepository.save(Account.builder().nickname("test"+i).email("test@"+i).password("test"+i).weekAgree(false).build()))
+                    .user(userRepository.save(User.builder().nickname("test"+i).email("test@"+i).password("test"+i).weekAgree(false).build()))
                     .likeCount(i)
                     .build();
             postRepository.save(build);
@@ -50,18 +50,18 @@ public class PostService {
      * 게시글 저장
      */
     @Transactional
-    public Post registerPost(Account account, int boardType, PostDto.Request postRequestDto) {
+    public Post registerPost(User user, int boardType, PostDto.Request postRequestDto) {
 
         Post post = postRequestDto.toEntity();
 
-        setPostRelation(account, boardType, postRequestDto, post);
+        setPostRelation(user, boardType, postRequestDto, post);
 
         return savePost(post);
     }
 
-    private void setPostRelation(Account account, int boardType, PostDto.Request postRequestDto, Post post) {
+    private void setPostRelation(User user, int boardType, PostDto.Request postRequestDto, Post post) {
         post.setTags(getTags(postRequestDto));
-        post.setAccount(account);
+        post.setUser(user);
         post.setBoardType(boardType);
     }
 
@@ -82,33 +82,33 @@ public class PostService {
      * 게시글 조회
      */
     @Transactional
-    public PostDto.Response getPost(Account account, int boardId, Long postId) {
+    public PostDto.Response getPost(User user, int boardId, Long postId) {
 
         Post post = findByTypeAndId(boardId, postId);
 
-        increaseViewCount(account, post);
+        increaseViewCount(user, post);
 
         Set<TagDto> tags = getTagDtos(post);
         List<CommentDto.Response> comments = getCommentDtos(post);
 
-        boolean isLike = havePostLike(account, post);
+        boolean isLike = havePostLike(user, post);
         //TODO 계정 삭제시에 조회 어떻게 처리할것인지 생각
 
         return PostDto.Response.fromEntity(post, tags, comments, isLike);
     }
 
-    private boolean havePostLike(Account account, Post post) {
-        return postLikeRepository.existsByAccountAndPost(account, post);
+    private boolean havePostLike(User user, Post post) {
+        return postLikeRepository.existsByUserAndPost(user, post);
     }
 
-    private void increaseViewCount(Account account, Post post) {
-        if (isNotAuthor(account, post)) {
+    private void increaseViewCount(User user, Post post) {
+        if (isNotAuthor(user, post)) {
             post.increaseView();
         }
     }
 
-    private boolean isNotAuthor(Account account, Post post) {
-        return account == null || account.getNickname() != post.getAccount().getNickname();
+    private boolean isNotAuthor(User user, Post post) {
+        return user == null || user.getNickname() != post.getUser().getNickname();
     }
 
     public List<CommentDto.Response> getCommentDtos(Post post) {
@@ -127,25 +127,25 @@ public class PostService {
      * 게시글 수정
      */
     @Transactional
-    public Long updatePost(Account account, int boardId, Long postId, PostDto.Request postRequestDto) {
+    public Long updatePost(User user, int boardId, Long postId, PostDto.Request postRequestDto) {
 
         Post findPost = findByTypeAndId(boardId, postId);
 
         Set<Tag> tags = getTags(postRequestDto);
 
-        validateAccount(account, findPost);
+        validateAccount(user, findPost);
 
         return findPost.updatePost(postRequestDto, tags);
     }
 
-    private void validateAccount(Account account, Post findPost) {
-        if (!isEqualsAccount(account, findPost)) {
+    private void validateAccount(User user, Post findPost) {
+        if (!isEqualsAccount(user, findPost)) {
             throw new PostException(PostErrorCode.NOT_ACCORD_ACCOUNT);
         }
     }
 
-    private boolean isEqualsAccount(Account account, Post findPost) {
-        return findPost.getAccount().equals(account);
+    private boolean isEqualsAccount(User user, Post findPost) {
+        return findPost.getUser().equals(user);
     }
 
 
@@ -153,9 +153,9 @@ public class PostService {
      * 게시글 삭제
      */
     @Transactional
-    public void deletePost(Account account, int boardId, Long postId) {
+    public void deletePost(User user, int boardId, Long postId) {
         Post findPost = findByTypeAndId(boardId, postId);
-        validateAccount(account, findPost);
+        validateAccount(user, findPost);
         postRepository.delete(findPost);
 
         //TODO 이미지 서버에서 삭제

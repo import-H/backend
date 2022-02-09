@@ -1,6 +1,6 @@
 package com.importH.core.domain.comment;
 
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import com.importH.core.domain.base.BaseTimeEntity;
 import com.importH.core.domain.post.Post;
 import com.importH.core.dto.post.CommentDto;
@@ -30,14 +30,14 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
-    private Account account;
+    private User user;
 
     public void updateComment(CommentDto.Request commentDto) {
         this.content = commentDto.getContent();
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setPost(Post post) {

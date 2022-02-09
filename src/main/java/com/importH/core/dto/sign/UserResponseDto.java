@@ -1,9 +1,7 @@
 package com.importH.core.dto.sign;
 
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import lombok.Getter;
-
-import java.util.List;
 
 @Getter
 public class UserResponseDto {
@@ -12,10 +10,10 @@ public class UserResponseDto {
     private final String nickName;
     private String roles;
 
-    public UserResponseDto(Account account) {
-        this.id = account.getId();
-        this.email = account.getEmail();
-        this.nickName = account.getNickname();
-        this.roles = account.getRole();
+    public UserResponseDto(User user) {
+        this.id = user.getId();
+        this.email = user.getEmail();
+        this.nickName = user.getNickname();
+        this.roles = user.getRole();
     }
 }

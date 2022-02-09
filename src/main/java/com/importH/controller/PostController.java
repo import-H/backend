@@ -1,7 +1,7 @@
 package com.importH.controller;
 
 import com.importH.config.security.CurrentAccount;
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.PostDto;
 import com.importH.core.error.code.PostErrorCode;
 import com.importH.core.error.exception.PostException;
@@ -45,7 +45,7 @@ public class PostController {
     })
     @ApiOperation(value = "게시글 등록", notes = "boardId 게시판에 게시글을 등록합니다.")
     @PostMapping
-    public CommonResult savePost(@ApiIgnore @CurrentAccount Account account,
+    public CommonResult savePost(@ApiIgnore @CurrentAccount User user,
                                  @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                  @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
                                  BindingResult bindingResult) {
@@ -53,17 +53,17 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             throw new PostException(PostErrorCode.NOT_VALIDATE_PARAM);
         }
-        postService.registerPost(account, boardId, postRequestDto);
+        postService.registerPost(user, boardId, postRequestDto);
         return responseService.getSuccessResult();
     }
 
     @ApiOperation(value = "게시글 조회", notes = "boardId 게시판에 postId 게시글을 조회합니다.")
     @GetMapping("/{postId}")
-    public SingleResult<PostDto.Response> findPost(@ApiIgnore @CurrentAccount Account account,
+    public SingleResult<PostDto.Response> findPost(@ApiIgnore @CurrentAccount User user,
                                                    @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                                    @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId) {
 
-        return responseService.getSingleResult(postService.getPost(account,boardId, postId));
+        return responseService.getSingleResult(postService.getPost(user,boardId, postId));
     }
 
     @ApiImplicitParams({
@@ -74,7 +74,7 @@ public class PostController {
     })
     @ApiOperation(value = "게시글 수정", notes = "boardId 게시판에 postId 게시글을 수정합니다.")
     @PutMapping("/{postId}")
-    public SingleResult<Long> updatePost(@ApiIgnore @CurrentAccount Account account,
+    public SingleResult<Long> updatePost(@ApiIgnore @CurrentAccount User user,
                                          @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                          @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId,
                                          @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
@@ -85,7 +85,7 @@ public class PostController {
             throw new PostException(PostErrorCode.NOT_VALIDATE_PARAM);
         }
 
-        return responseService.getSingleResult(postService.updatePost(account, boardId, postId, postRequestDto));
+        return responseService.getSingleResult(postService.updatePost(user, boardId, postId, postRequestDto));
 
     }
 
@@ -97,10 +97,10 @@ public class PostController {
     })
     @ApiOperation(value = "게시글 삭제", notes = "boardId 게시판에 postId 게시글을 삭제합니다.")
     @DeleteMapping("/{postId}")
-    public CommonResult deletePost(@ApiIgnore @CurrentAccount Account account,
+    public CommonResult deletePost(@ApiIgnore @CurrentAccount User user,
                                    @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                    @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId) {
-        postService.deletePost(account, boardId, postId);
+        postService.deletePost(user, boardId, postId);
         return responseService.getSuccessResult();
     }
 

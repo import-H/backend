@@ -2,7 +2,7 @@ package com.importH.controller;
 
 
 import com.importH.config.security.CurrentAccount;
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.service.PostLikeService;
 import com.importH.core.service.response.ResponseService;
@@ -33,10 +33,10 @@ public class PostLikeController {
                     required = true, dataType = "String", paramType = "header")})
     @ApiOperation(value = "게시글 좋아요 요청", notes = "postId 의 게시글 좋아요 요청을 보냅니다.")
     @PostMapping
-    public CommonResult requestLike(@ApiIgnore @CurrentAccount Account account,
+    public CommonResult requestLike(@ApiIgnore @CurrentAccount User user,
                                     @ApiParam(value = "게시글 ID" , example = "1") @PathVariable Long postId) {
 
-        postLikeService.changeLike(account,postId);
+        postLikeService.changeLike(user,postId);
         return responseService.getSuccessResult();
     }
 }

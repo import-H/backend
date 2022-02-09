@@ -1,9 +1,6 @@
 package com.importH.core.dto.post;
 
-import com.importH.core.domain.account.Account;
 import com.importH.core.domain.comment.Comment;
-import com.importH.core.domain.post.Post;
-import com.importH.core.domain.post.PostRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -55,8 +52,8 @@ public class CommentDto {
         public static Response fromEntity(Comment comment) {
             return Response.builder()
                     .id(comment.getId())
-                    .nickname(comment.getAccount().getNickname())
-                    .profileImageUrl(comment.getAccount().getProfileImage())
+                    .nickname(comment.getUser().getNickname())
+                    .profileImageUrl(comment.getUser().getProfileImage())
                     .content(comment.getContent())
                     .createdAt(comment.getCreatedAt())
                     .build();

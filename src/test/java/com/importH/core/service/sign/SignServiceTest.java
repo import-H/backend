@@ -4,14 +4,14 @@ import com.importH.config.security.JwtProvider;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.sign.LoginDto;
 import com.importH.core.dto.sign.UserSignUpRequestDto;
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import com.importH.core.domain.token.RefreshToken;
 import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.JwtException;
 import com.importH.core.error.exception.UserException;
 import com.importH.core.domain.token.RefreshTokenRepository;
-import com.importH.core.domain.account.AccountRepository;
+import com.importH.core.domain.user.UserRepository;
 import com.importH.core.service.SignService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 
 import static java.lang.Thread.sleep;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +33,7 @@ import static org.mockito.Mockito.verify;
 class SignServiceTest {
 
     @Autowired
-    AccountRepository accountRepository;
+    UserRepository userRepository;
 
     @Autowired
     EntityManager em;
@@ -53,18 +52,18 @@ class SignServiceTest {
 
 
     UserSignUpRequestDto requestDto;
-    Account user;
+    User user;
 
     @BeforeEach
     void before() {
-        requestDto = getSignUpRequestDto("test1","abc@naver.com", "12341234");
+        requestDto = getSignUpRequestDto("테스트","abc@naver.com", "12341234");
         signService.signup(requestDto);
-        user = accountRepository.findByEmail(requestDto.getEmail()).get();
+        user = userRepository.findByEmail(requestDto.getEmail()).get();
     }
 
     @AfterEach
     void after() {
-        accountRepository.deleteAll();
+        userRepository.deleteAll();
         tokenRepository.deleteAll();
 
     }
@@ -79,7 +78,7 @@ class SignServiceTest {
         Long id = signService.signup(requestDto);
 
         //then
-        assertThat(accountRepository.existsByEmail(requestDto.getEmail())).isTrue();
+        assertThat(userRepository.existsByEmail(requestDto.getEmail())).isTrue();
         assertThat(id).isNotNull();
     }
 
@@ -190,7 +189,7 @@ class SignServiceTest {
     void reissue_fail_1() throws Exception {
         // given
         TokenDto tokenDto = loginUser();
-        TokenDto newTokenDto = jwtProvider.createToken(user.getEmail(), List.of("USER"));
+        TokenDto newTokenDto = jwtProvider.createToken(user.getEmail(), "ADMIN");
         tokenDto.setRefreshToken(newTokenDto.getRefreshToken());
 
         JwtErrorCode errorCode = JwtErrorCode.REFRESH_TOKEN_VALID;

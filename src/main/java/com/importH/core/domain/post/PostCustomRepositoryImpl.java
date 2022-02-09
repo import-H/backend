@@ -1,16 +1,17 @@
 package com.importH.core.domain.post;
 
-import com.importH.core.domain.comment.QComment;
+import com.importH.core.domain.user.QUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.*;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static com.importH.core.domain.account.QAccount.account;
+import static com.importH.core.domain.user.QAccount.account;
 import static com.importH.core.domain.comment.QComment.comment;
 import static com.importH.core.domain.post.QPost.post;
 import static com.importH.core.domain.tag.QTag.tag;
+import static com.importH.core.domain.user.QUser.user;
 
 public class PostCustomRepositoryImpl implements PostCustomRepository{
 
@@ -27,7 +28,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository{
         List<Post> posts = queryFactory
                 .select(post)
                 .from(post)
-                .leftJoin(post.account, account).fetchJoin()
+                .leftJoin(post.user, user).fetchJoin()
                 .leftJoin(post.tags, tag).fetchJoin()
                 .leftJoin(post.comments, comment).fetchJoin()
                 .orderBy(post.likeCount.desc())

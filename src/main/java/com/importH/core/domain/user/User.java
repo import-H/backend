@@ -1,4 +1,4 @@
-package com.importH.core.domain.account;
+package com.importH.core.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.importH.core.domain.base.BaseTimeEntity;
@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = "id")
-public class Account extends BaseTimeEntity {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -42,6 +42,12 @@ public class Account extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Boolean weekAgree;
+
+    private String personalUrl;
+
+    @Embedded
+    @Builder.Default
+    private InfoAgree infoAgree = new InfoAgree();
 
     private boolean deleted;
 

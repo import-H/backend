@@ -1,11 +1,7 @@
 package com.importH.core.dto.post;
 
-import com.importH.core.domain.account.Account;
-import com.importH.core.domain.image.Image;
 import com.importH.core.domain.post.Post;
-import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.tag.TagDto;
-import com.importH.core.dto.user.UserDto;
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @ApiModel(value = "게시글 DTO")
 public class PostDto {
@@ -65,9 +60,11 @@ public class PostDto {
         @ApiModelProperty(value = "게시글 내용", example = "샘플 포스트 입니다.")
         private String content;
 
-        // TODO 글쓴이 정보 수정 (닉네임,프로필 이미지 )
-        @ApiModelProperty(value = "글쓴이", example = "[{닉네임1,닉네임1의 프로필이미지 주소},{닉네임2,닉네임2의 프로필이미지 주소}]")
-        private UserDto.Response user;
+        @ApiModelProperty(value = "닉네임", example = "닉네임")
+        private String nickname;
+
+        @ApiModelProperty(value = "프로필 이미지 주소", example = "http://localhost:8090/v1/profile/...")
+        private String profileImage;
 
         @ApiModelProperty(value = "조회수", example = "10")
         private int viewCount;
@@ -78,17 +75,6 @@ public class PostDto {
         @ApiModelProperty(value = "작성시간", example = "yyyy-MM-dd/HH:mm")
         private LocalDateTime createdAt;
 
-        @QueryProjection
-        public ResponseInfo(Long id, String title, Set<TagDto> tags, String content, UserDto.Response user, int viewCount, int likeCount, LocalDateTime createdAt) {
-            this.id = id;
-            this.title = title;
-            this.tags = tags;
-            this.content = content;
-            this.user = user;
-            this.viewCount = viewCount;
-            this.likeCount = likeCount;
-            this.createdAt = createdAt;
-        }
     }
 
     @Getter
@@ -106,16 +92,11 @@ public class PostDto {
 
         public static Response fromEntity(Post post, Set<TagDto> tagDtos, List<CommentDto.Response> commentDtos, boolean isLike) {
 
-            UserDto.Response user = UserDto.Response
-                    .builder()
-                    .nickname(post.getAccount().getNickname())
-                    .profileImage(post.getAccount().getProfileImage())
-                    .build();
-
             return Response.builder()
                     .responseInfo(ResponseInfo.builder()
                             .id(post.getId())
-                            .user(user)
+                            .nickname(post.getUser().getNickname())
+                            .profileImage(post.getUser().getProfileImage())
                             .content(post.getContent())
                             .createdAt(post.getCreatedAt())
                             .title(post.getTitle())
@@ -141,18 +122,14 @@ public class PostDto {
 
         @ApiModelProperty(value = "썸네일", example = "")
         private String thumbnail;
-        public static ResponseAll fromEntity(Post post, Set<TagDto> tags) {
 
-            UserDto.Response user = UserDto.Response
-                    .builder()
-                    .nickname(post.getAccount().getNickname())
-                    .profileImage(post.getAccount().getProfileImage())
-                    .build();
+        public static ResponseAll fromEntity(Post post, Set<TagDto> tags) {
 
             return ResponseAll.builder()
                     .responseInfo(ResponseInfo.builder()
                             .id(post.getId())
-                            .user(user)
+                            .nickname(post.getUser().getNickname())
+                            .profileImage(post.getUser().getProfileImage())
                             .content(post.getContent())
                             .createdAt(post.getCreatedAt())
                             .title(post.getTitle())

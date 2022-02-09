@@ -1,21 +1,19 @@
 package com.importH.config.security;
 
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import lombok.Getter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
-public class UserAccount extends User {
+public class UserAccount extends org.springframework.security.core.userdetails.User {
 
-    private Account account;
+    private User user;
 
-    public UserAccount(Account account) {
-        super(account.getNickname(), account.getPassword(), List.of(new SimpleGrantedAuthority(account.getRole())));
-        this.account = account;
+    public UserAccount(User user) {
+        super(user.getNickname(), user.getPassword(), List.of(new SimpleGrantedAuthority(user.getRole())));
+        this.user = user;
     }
 
 

@@ -2,8 +2,8 @@ package com.importH.core.service;
 
 import com.importH.core.PostFactory;
 import com.importH.core.WithAccount;
-import com.importH.core.domain.account.Account;
-import com.importH.core.domain.account.AccountRepository;
+import com.importH.core.domain.user.User;
+import com.importH.core.domain.user.UserRepository;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostLikeRepository;
 import com.importH.core.domain.post.PostRepository;
@@ -12,17 +12,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
+@TestPropertySource(locations = "classpath:/application-test.properties")
 class PostLikeServiceTest {
 
     @Autowired
-    AccountRepository accountRepository;
+    UserRepository userRepository;
 
     @Autowired
     PostLikeService postLikeService;
@@ -36,17 +37,17 @@ class PostLikeServiceTest {
     @Autowired
     PostLikeRepository postLikeRepository;
 
-    Account account;
+    User user;
     Post post;
 
     @BeforeEach
     void before() {
-        account = accountRepository.findByNickname("테스트").get();
+        user = userRepository.findByNickname("테스트").get();
         post = createPost();
     }
 
     private Post createPost() {
-        return postFactory.createPost(account, 1, postFactory.getRequest("test", "test", "테스트"));
+        return postFactory.createPost(user, 1, postFactory.getRequest("test", "test", "테스트"));
     }
 
     @Test
@@ -55,10 +56,10 @@ class PostLikeServiceTest {
     void increasePostLike() throws Exception {
 
         // when
-        postLikeService.changeLike(account,post.getId());
+        postLikeService.changeLike(user,post.getId());
 
         //then
-        assertThat(postLikeRepository.existsByAccountAndPost(account, post)).isTrue();
+        assertThat(postLikeRepository.existsByUserAndPost(user, post)).isTrue();
         assertThat(post.getLikeCount()).isEqualTo(1);
     }
 
@@ -69,14 +70,14 @@ class PostLikeServiceTest {
     void decreasePostLike() throws Exception {
 
         //given
-        postLikeService.changeLike(account,post.getId());
+        postLikeService.changeLike(user,post.getId());
 
         // when
-        postLikeService.changeLike(account,post.getId());
+        postLikeService.changeLike(user,post.getId());
 
 
         //then
-        assertThat(postLikeRepository.existsByAccountAndPost(account, post)).isFalse();
+        assertThat(postLikeRepository.existsByUserAndPost(user, post)).isFalse();
         assertThat(post.getLikeCount()).isEqualTo(0);
     }
 
@@ -85,7 +86,7 @@ class PostLikeServiceTest {
     @DisplayName("[성공] 게시글 삭제시 해당 게시글 좋아요 데이터 삭제")
     void deletePostWithPostLike() throws Exception {
         // given
-        postLikeService.changeLike(account,post.getId());
+        postLikeService.changeLike(user,post.getId());
 
         // when
         postRepository.delete(post);

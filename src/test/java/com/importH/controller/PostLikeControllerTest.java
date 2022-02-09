@@ -2,8 +2,8 @@ package com.importH.controller;
 
 import com.importH.core.PostFactory;
 import com.importH.core.WithAccount;
-import com.importH.core.domain.account.Account;
-import com.importH.core.domain.account.AccountRepository;
+import com.importH.core.domain.user.User;
+import com.importH.core.domain.user.UserRepository;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostLikeRepository;
 import com.importH.core.service.PostLikeService;
@@ -39,19 +39,19 @@ class PostLikeControllerTest {
     PostFactory postFactory;
 
     @Autowired
-    AccountRepository accountRepository;
+    UserRepository userRepository;
 
     @Autowired
     PostLikeRepository postLikeRepository;
 
     Post post;
 
-    Account account;
+    User user;
 
     @BeforeEach
     void before() {
-        account = accountRepository.findByNickname("테스트").get();
-        post = postFactory.createPost(account, 1, postFactory.getRequest("test", "test게시글", "스터디","자바2"));
+        user = userRepository.findByNickname("테스트").get();
+        post = postFactory.createPost(user, 1, postFactory.getRequest("test", "test게시글", "스터디","자바2"));
     }
 
     @Test
@@ -66,7 +66,7 @@ class PostLikeControllerTest {
                 .andExpect(jsonPath("$.success").value(true));
 
         assertEquals(post.getLikeCount(),1);
-        assertEquals(postLikeRepository.existsByAccountAndPost(account,post),true);
+        assertEquals(postLikeRepository.existsByUserAndPost(user,post),true);
     }
 
 
@@ -75,7 +75,7 @@ class PostLikeControllerTest {
     @DisplayName("[성공] 게시글 좋아요 취소")
     void decreaseLike() throws Exception {
         //given
-        postLikeService.changeLike(account, post.getId());
+        postLikeService.changeLike(user, post.getId());
 
         // when
         ResultActions perform = mockMvc.perform(post("/v1/posts/" + post.getId() + "/like"));
@@ -85,6 +85,6 @@ class PostLikeControllerTest {
                 .andExpect(jsonPath("$.success").value(true));
 
         assertEquals(post.getLikeCount(),0);
-        assertEquals(postLikeRepository.existsByAccountAndPost(account,post),false);
+        assertEquals(postLikeRepository.existsByUserAndPost(user,post),false);
     }
 }

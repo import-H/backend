@@ -1,6 +1,6 @@
 package com.importH.core.dto.sign;
 
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -10,7 +10,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.Collections;
 
 @ApiModel("회원 가입 요청 DTO")
 @Getter
@@ -47,8 +46,8 @@ public class UserSignUpRequestDto {
     private boolean agree;
 
 
-    public Account toEntity() {
-        return Account.builder()
+    public User toEntity() {
+        return User.builder()
                 .email(email)
                 .password(password)
                 .nickname(nickname)

@@ -1,7 +1,7 @@
 package com.importH.core.service;
 
 
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostLike;
 import com.importH.core.domain.post.PostLikeRepository;
@@ -23,21 +23,21 @@ public class PostLikeService {
      * 게시글 좋아요 요청
      */
     @Transactional
-    public void changeLike(Account account, Long postId) {
+    public void changeLike(User user, Long postId) {
 
         Post post = postService.findByPostId(postId);
 
-        Optional<PostLike> postLike = postLikeRepository.findByPostAndAccount(post, account);
+        Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
 
         if (postLike.isPresent()) {
             decreaseLike(post, postLike.get());
             return;
         }
-            increaseLike(account, post);
+            increaseLike(user, post);
     }
 
-    private void increaseLike(Account account, Post post) {
-        PostLike postLike = savePostLike(PostLike.builder().post(post).account(account).build());
+    private void increaseLike(User user, Post post) {
+        PostLike postLike = savePostLike(PostLike.builder().post(post).user(user).build());
         post.addLike(postLike);
     }
 

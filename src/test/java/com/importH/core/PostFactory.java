@@ -1,6 +1,6 @@
 package com.importH.core;
 
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import com.importH.core.domain.post.Post;
 import com.importH.core.dto.post.PostDto;
 import com.importH.core.dto.tag.TagDto;
@@ -19,8 +19,8 @@ public class PostFactory {
 
     private final PostService postService;
 
-    public Post createPost( Account account, int type,PostDto.Request request) {
-       return postService.registerPost(account, type,request);
+    public Post createPost(User user, int type, PostDto.Request request) {
+       return postService.registerPost(user, type,request);
     }
 
     public PostDto.Request getRequest(String title, String content, String... tagName) {

@@ -31,8 +31,8 @@ Content-Type: application/json
 
 
 ### 회원 정보 조회
-GET http://localhost:8090/v1/user/id/1
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzcyMjMxMywiZXhwIjoxNjQzODA4NzEzfQ.MFO7tBYjPAwToNPIUGM63R3-DZwFSE5VrR6zzo-PvHU
+GET http://localhost:8090/v1/users/101
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDQ0MTM2NDgsImV4cCI6MTY0NDUwMDA0OH0.du3E93086utBHDnxhNmrRJ1aHrsnkA2Po3WX043_loA
 
 
 ### 게시글 조회

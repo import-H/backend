@@ -1,7 +1,7 @@
 package com.importH.controller;
 
 import com.importH.config.security.CurrentAccount;
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.CommentDto;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.service.CommentService;
@@ -31,9 +31,9 @@ public class CommentController {
     @ApiOperation(value = "댓글 등록", notes = "postsId 게시글에 댓글을 등록합니다.")
     @PostMapping
     public CommonResult saveComment(@ApiParam(value = "게시글 ID", example = "1") @PathVariable Long  postsId,
-                                    @ApiIgnore @CurrentAccount Account account,
+                                    @ApiIgnore @CurrentAccount User user,
                                     @ApiParam("댓글 요청 Dto") @RequestBody CommentDto.Request commentDto) {
-        commentService.registerComment(postsId, account, commentDto);
+        commentService.registerComment(postsId, user, commentDto);
         return responseService.getSuccessResult();
     }
 
@@ -47,9 +47,9 @@ public class CommentController {
     @PutMapping("/{commentId}")
     public CommonResult updateComment(@ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postsId,
                                       @ApiParam(value = "댓글 ID", example = "1") @PathVariable Long commentId,
-                                      @ApiIgnore @CurrentAccount Account account,
+                                      @ApiIgnore @CurrentAccount User user,
                                       @ApiParam("댓글 요청 Dto") @RequestBody CommentDto.Request commentDto) {
-        commentService.updateComment(postsId,commentId, account, commentDto);
+        commentService.updateComment(postsId,commentId, user, commentDto);
         return responseService.getSuccessResult();
     }
 
@@ -64,8 +64,8 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public CommonResult deleteComment(@ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postsId,
                                       @ApiParam(value = "댓글 ID", example = "1") @PathVariable Long commentId,
-                                      @ApiIgnore @CurrentAccount Account account) {
-        commentService.deleteComment(postsId, commentId, account);
+                                      @ApiIgnore @CurrentAccount User user) {
+        commentService.deleteComment(postsId, commentId, user);
         return responseService.getSuccessResult();
 
     }

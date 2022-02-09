@@ -3,22 +3,15 @@ package com.importH.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.importH.core.PostFactory;
 import com.importH.core.WithAccount;
-import com.importH.core.domain.account.Account;
-import com.importH.core.domain.account.AccountRepository;
+import com.importH.core.domain.user.User;
+import com.importH.core.domain.user.UserRepository;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostRepository;
-import com.importH.core.domain.tag.Tag;
 import com.importH.core.domain.tag.TagRepository;
-import com.importH.core.dto.post.CommentDto;
 import com.importH.core.dto.post.PostDto;
 import com.importH.core.dto.tag.TagDto;
-import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.code.PostErrorCode;
 import com.importH.core.service.PostService;
-import com.importH.core.service.TagService;
-import org.hamcrest.Matchers;
-import org.hamcrest.core.Is;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,12 +25,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -68,14 +58,14 @@ class PostControllerTest {
     PostFactory postFactory;
 
     @Autowired
-    AccountRepository accountRepository;
+    UserRepository userRepository;
 
     Post post;
 
     @BeforeEach
     void before() {
-        Account account = accountRepository.findByNickname("test").get();
-        post = postFactory.createPost(account, 1, getRequest("test", "test게시글", "스터디","자바2"));
+        User user = userRepository.findByNickname("test").get();
+        post = postFactory.createPost(user, 1, getRequest("test", "test게시글", "스터디","자바2"));
     }
 
     @Test
@@ -145,8 +135,8 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.data.responseInfo.id").value(post.getId()))
                 .andExpect(jsonPath("$.data.responseInfo.title").value(post.getTitle()))
                 .andExpect(jsonPath("$.data.responseInfo.content").value(post.getContent()))
-                .andExpect(jsonPath("$.data.responseInfo.user.nickname").value(post.getAccount().getNickname()))
-                .andExpect(jsonPath("$.data.responseInfo.user.profileImage").value(post.getAccount().getProfileImage()))
+                .andExpect(jsonPath("$.data.responseInfo.nickname").value(post.getUser().getNickname()))
+                .andExpect(jsonPath("$.data.responseInfo.profileImage").value(post.getUser().getProfileImage()))
                 .andExpect(jsonPath("$.data.responseInfo.likeCount").value(post.getLikeCount()))
                 .andExpect(jsonPath("$.data.responseInfo.tags[*].name").exists())
                 .andExpect(jsonPath("$.data.responseInfo.viewCount").value(post.getViewCount()))
@@ -177,7 +167,7 @@ class PostControllerTest {
     @DisplayName("[성공] 게시글 수정")
     void updatePost_success() throws Exception {
         // given
-        post = postFactory.createPost(accountRepository.findByNickname("테스트").get(), 1, getRequest("test", "test게시글", "스터디", "자바2"));
+        post = postFactory.createPost(userRepository.findByNickname("테스트").get(), 1, getRequest("test", "test게시글", "스터디", "자바2"));
         PostDto.Request request = getRequest("테스트2", "테스트2", "스터디1","자바1");
 
         // when
@@ -216,7 +206,7 @@ class PostControllerTest {
     @DisplayName("[성공] 게시글 삭제")
     void deletePost_success() throws Exception {
         // given
-        post = postFactory.createPost(accountRepository.findByNickname("테스트").get(), 1, getRequest("test", "test게시글", "스터디", "자바2"));
+        post = postFactory.createPost(userRepository.findByNickname("테스트").get(), 1, getRequest("test", "test게시글", "스터디", "자바2"));
 
         // when
 

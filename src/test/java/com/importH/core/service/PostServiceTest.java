@@ -1,7 +1,7 @@
 package com.importH.core.service;
 
 import com.importH.core.AccountFactory;
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostRepository;
 import com.importH.core.domain.tag.Tag;
@@ -15,9 +15,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -28,6 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @Transactional
+@TestPropertySource(locations = "classpath:/application-test.properties")
 class PostServiceTest {
 
     @Autowired
@@ -43,13 +43,13 @@ class PostServiceTest {
     @Autowired
     TagService tagService;
 
-    Account account;
+    User user;
     Post post;
 
     @BeforeEach
     void before() {
-        account = accountFactory.createNewAccount("test");
-        post = postService.registerPost(account, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
+        user = accountFactory.createNewAccount("test");
+        post = postService.registerPost(user, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
     }
 
     @AfterEach
@@ -64,7 +64,7 @@ class PostServiceTest {
         PostDto.Request request = getRequest("테스트", "테스트 게시글 입니다.", "자바");
 
         // when
-        Post post = postService.registerPost(account, 1, request);
+        Post post = postService.registerPost(user, 1, request);
 
 
         //then
@@ -89,10 +89,10 @@ class PostServiceTest {
     @DisplayName("[성공] 게시글 조회 정상적인 요청")
     void getPost_success() throws Exception {
         // given
-        Post post =  postService.registerPost(account, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
+        Post post =  postService.registerPost(user, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
 
         // when
-        PostDto.Response response = postService.getPost(account, 1, post.getId());
+        PostDto.Response response = postService.getPost(user, 1, post.getId());
 
         //then
         assertThat(response)
@@ -100,8 +100,8 @@ class PostServiceTest {
                 .hasFieldOrPropertyWithValue("responseInfo.id", post.getId())
                 .hasFieldOrPropertyWithValue("responseInfo.title", post.getTitle())
                 .hasFieldOrPropertyWithValue("responseInfo.content", post.getContent())
-                .hasFieldOrPropertyWithValue("responseInfo.user.nickname", post.getAccount().getNickname())
-                .hasFieldOrPropertyWithValue("responseInfo.user.profileImage", post.getAccount().getProfileImage())
+                .hasFieldOrPropertyWithValue("responseInfo.nickname", post.getUser().getNickname())
+                .hasFieldOrPropertyWithValue("responseInfo.profileImage", post.getUser().getProfileImage())
                 .hasFieldOrPropertyWithValue("responseInfo.likeCount", post.getLikeCount())
                 .hasFieldOrPropertyWithValue("responseInfo.viewCount", post.getViewCount());
 
@@ -119,7 +119,7 @@ class PostServiceTest {
         // when
         PostErrorCode notFoundPost = PostErrorCode.NOT_FOUND_POST;
 
-        PostException postException = assertThrows(PostException.class, () -> postService.getPost(account, boardId, postId));
+        PostException postException = assertThrows(PostException.class, () -> postService.getPost(user, boardId, postId));
 
         //then
         assertThat(postException).hasMessageContaining(notFoundPost.getDescription());
@@ -134,7 +134,7 @@ class PostServiceTest {
         PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1");
 
         // when
-        postService.updatePost(account, 1, post.getId(), request);
+        postService.updatePost(user, 1, post.getId(), request);
 
         //then
         assertThat(post)
@@ -152,7 +152,7 @@ class PostServiceTest {
     void updatePost_fail() throws Exception {
         // given
         PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1");
-        Account test2 = Account.builder().nickname("test2").build();
+        User test2 = User.builder().nickname("test2").build();
         // when
         PostException postException = assertThrows(PostException.class, () -> postService.updatePost(test2, 1, post.getId(), request));
 
@@ -165,7 +165,7 @@ class PostServiceTest {
     void deletePost_success() throws Exception {
         // given
         // when
-        postService.deletePost(account, 1, post.getId());
+        postService.deletePost(user, 1, post.getId());
 
         //then
         assertThat(postRepository.existsById(post.getId())).isFalse();
@@ -176,7 +176,7 @@ class PostServiceTest {
     @DisplayName("[실패] 게시글 삭제 - 글 작성자가 아닌경우")
     void deletePost_fail() throws Exception {
         // given
-        Account test2 = Account.builder().nickname("test2").build();
+        User test2 = User.builder().nickname("test2").build();
         // when
         PostException postException = assertThrows(PostException.class, () -> postService.deletePost(test2, 1, post.getId()));
 
@@ -190,7 +190,7 @@ class PostServiceTest {
     void findAll_success() throws Exception {
         // given
         for (int i = 0; i < 10; i++) {
-            postService.registerPost(account, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
+            postService.registerPost(user, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
         }
         // when
         List<PostDto.ResponseAll> allPost = postService.findAllPost(1);
@@ -201,7 +201,8 @@ class PostServiceTest {
                 .hasFieldOrProperty("responseInfo.id")
                 .hasFieldOrProperty("responseInfo.title")
                 .hasFieldOrProperty("responseInfo.content")
-                .hasFieldOrProperty("responseInfo.user")
+                .hasFieldOrProperty("responseInfo.nickname")
+                .hasFieldOrProperty("responseInfo.profileImage")
                 .hasFieldOrProperty("responseInfo.likeCount")
                 .hasFieldOrProperty("responseInfo.viewCount")
                 .hasFieldOrProperty("commentsCount")

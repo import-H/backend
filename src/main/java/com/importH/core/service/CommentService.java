@@ -1,6 +1,6 @@
 package com.importH.core.service;
 
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import com.importH.core.domain.comment.Comment;
 import com.importH.core.domain.comment.CommentRepository;
 import com.importH.core.domain.post.Post;
@@ -23,18 +23,18 @@ public class CommentService {
      * 댓글 등록
      */
     @Transactional
-    public void registerComment(Long postsId, Account account, CommentDto.Request commentDto) {
+    public void registerComment(Long postsId, User user, CommentDto.Request commentDto) {
 
         Post post = postService.findByPostId(postsId);
 
         Comment comment = commentDto.toEntity();
-        setCommentRelation(account, post, comment);
+        setCommentRelation(user, post, comment);
 
         saveComment(comment);
     }
 
-    private void setCommentRelation(Account account, Post post, Comment comment) {
-        comment.setAccount(account);
+    private void setCommentRelation(User user, Post post, Comment comment) {
+        comment.setUser(user);
         post.addComment(comment);
     }
 
@@ -47,17 +47,17 @@ public class CommentService {
      */
     //TODO 조회 성능최적화
     @Transactional
-    public void updateComment(Long postsId, Long commentId, Account account, CommentDto.Request commentDto) {
+    public void updateComment(Long postsId, Long commentId, User user, CommentDto.Request commentDto) {
         Post post = postService.findByPostId(postsId);
         Comment comment = findByCommentId(commentId);
 
-        canModifiableComment(account, post, comment);
+        canModifiableComment(user, post, comment);
 
         comment.updateComment(commentDto);
     }
 
-    private void canModifiableComment(Account account, Post post, Comment comment) {
-        if (!isEqualsAccount(account, comment)) {
+    private void canModifiableComment(User user, Post post, Comment comment) {
+        if (!isEqualsAccount(user, comment)) {
             throw new CommentException(CommentErrorCode.NOT_AUTHORITY);
         }
         if (!isEqualsPost(post, comment)) {
@@ -69,8 +69,8 @@ public class CommentService {
         return comment.getPost().equals(post);
     }
 
-    private boolean isEqualsAccount(Account account, Comment comment) {
-        return comment.getAccount().equals(account);
+    private boolean isEqualsAccount(User user, Comment comment) {
+        return comment.getUser().equals(user);
     }
 
     private Comment findByCommentId(Long commentId) {
@@ -81,11 +81,11 @@ public class CommentService {
      * 댓글 삭제
      */
     @Transactional
-    public void deleteComment(Long postsId, Long commentId, Account account) {
+    public void deleteComment(Long postsId, Long commentId, User user) {
         Post post = postService.findByPostId(postsId);
         Comment comment = findByCommentId(commentId);
 
-        canModifiableComment(account, post, comment);
+        canModifiableComment(user, post, comment);
 
         post.deleteComment(comment);
         commentRepository.delete(comment);

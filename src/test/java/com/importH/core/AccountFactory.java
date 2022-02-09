@@ -1,25 +1,25 @@
 package com.importH.core;
 
-import com.importH.core.domain.account.Account;
-import com.importH.core.domain.account.AccountRepository;
-import com.importH.core.service.UserService;
+import com.importH.core.domain.user.User;
+import com.importH.core.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import springfox.documentation.swagger2.mappers.ModelMapper;
 
 @Component
 @Transactional
 @RequiredArgsConstructor
 public class AccountFactory {
 
-    private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
-    public Account createNewAccount(String nickname) {
+    public User createNewAccount(String nickname) {
 
-        return accountRepository.save(Account.builder()
+        return userRepository.save(User.builder()
                 .email(nickname + "@email.com")
                 .nickname(nickname)
+                .introduction("테스트 입니다.")
+                .personalUrl("http://.com")
                 .password(nickname + "asd")
                 .weekAgree(true)
                 .build());

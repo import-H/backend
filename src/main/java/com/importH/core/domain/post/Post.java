@@ -1,6 +1,6 @@
 package com.importH.core.domain.post;
 
-import com.importH.core.domain.account.Account;
+import com.importH.core.domain.user.User;
 import com.importH.core.domain.base.BaseTimeEntity;
 import com.importH.core.domain.comment.Comment;
 import com.importH.core.domain.tag.Tag;
@@ -39,7 +39,7 @@ public class Post extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
-    private Account account;
+    private User user;
 
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
@@ -81,8 +81,8 @@ public class Post extends BaseTimeEntity {
         this.getComments().remove(comment);
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setBoardType(int boardType) {
