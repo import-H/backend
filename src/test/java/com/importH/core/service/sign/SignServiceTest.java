@@ -1,19 +1,22 @@
 package com.importH.core.service.sign;
 
 import com.importH.config.security.JwtProvider;
+import com.importH.core.domain.token.RefreshToken;
+import com.importH.core.domain.token.RefreshTokenRepository;
+import com.importH.core.domain.user.User;
+import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.sign.LoginDto;
 import com.importH.core.dto.sign.UserSignUpRequestDto;
-import com.importH.core.domain.user.User;
-import com.importH.core.domain.token.RefreshToken;
 import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.JwtException;
 import com.importH.core.error.exception.UserException;
-import com.importH.core.domain.token.RefreshTokenRepository;
-import com.importH.core.domain.user.UserRepository;
 import com.importH.core.service.SignService;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,12 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
-import static java.lang.Thread.sleep;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @Transactional

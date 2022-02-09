@@ -2,11 +2,11 @@ package com.importH.core.service;
 
 import com.importH.core.PostFactory;
 import com.importH.core.WithAccount;
-import com.importH.core.domain.user.User;
-import com.importH.core.domain.user.UserRepository;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostLikeRepository;
 import com.importH.core.domain.post.PostRepository;
+import com.importH.core.domain.user.User;
+import com.importH.core.domain.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

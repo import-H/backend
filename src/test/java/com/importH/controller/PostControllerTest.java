@@ -3,11 +3,11 @@ package com.importH.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.importH.core.PostFactory;
 import com.importH.core.WithAccount;
-import com.importH.core.domain.user.User;
-import com.importH.core.domain.user.UserRepository;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostRepository;
 import com.importH.core.domain.tag.TagRepository;
+import com.importH.core.domain.user.User;
+import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.post.PostDto;
 import com.importH.core.dto.tag.TagDto;
 import com.importH.core.error.code.PostErrorCode;
@@ -28,9 +28,9 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest

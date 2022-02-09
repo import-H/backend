@@ -1,11 +1,11 @@
 package com.importH.core.service;
 
-import com.importH.core.domain.user.User;
-import com.importH.core.domain.user.UserRepository;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostLikeRepository;
 import com.importH.core.domain.post.PostRepository;
 import com.importH.core.domain.tag.Tag;
+import com.importH.core.domain.user.User;
+import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.post.CommentDto;
 import com.importH.core.dto.post.PostDto;
 import com.importH.core.dto.tag.TagDto;
@@ -17,7 +17,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

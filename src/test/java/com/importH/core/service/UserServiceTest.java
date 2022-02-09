@@ -76,4 +76,15 @@ class UserServiceTest {
         assertThrows(UserException.class, () -> userService.findUserById(test.getId(), null));
     }
 
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 프로필 정보 수정하기 ")
+    void updateUser_success() throws Exception {
+        // given
+//        UserDto.Request =
+        // when
+
+        //then
+    }
 }

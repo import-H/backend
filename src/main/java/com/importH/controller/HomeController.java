@@ -1,7 +1,6 @@
 package com.importH.controller;
 
 import com.importH.core.dto.post.PostDto;
-import com.importH.core.model.response.CommonResult;
 import com.importH.core.model.response.ListResult;
 import com.importH.core.service.PostService;
 import com.importH.core.service.response.ResponseService;

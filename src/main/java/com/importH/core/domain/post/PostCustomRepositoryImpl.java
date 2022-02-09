@@ -1,13 +1,13 @@
 package com.importH.core.domain.post;
 
-import com.importH.core.domain.user.QUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static com.importH.core.domain.user.QAccount.account;
 import static com.importH.core.domain.comment.QComment.comment;
 import static com.importH.core.domain.post.QPost.post;
 import static com.importH.core.domain.tag.QTag.tag;

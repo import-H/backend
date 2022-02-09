@@ -1,9 +1,9 @@
 package com.importH.core.domain.post;
 
-import com.importH.core.domain.user.User;
 import com.importH.core.domain.base.BaseTimeEntity;
 import com.importH.core.domain.comment.Comment;
 import com.importH.core.domain.tag.Tag;
+import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.PostDto;
 import lombok.*;
 

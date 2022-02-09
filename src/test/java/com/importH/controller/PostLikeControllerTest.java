@@ -2,10 +2,10 @@ package com.importH.controller;
 
 import com.importH.core.PostFactory;
 import com.importH.core.WithAccount;
-import com.importH.core.domain.user.User;
-import com.importH.core.domain.user.UserRepository;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostLikeRepository;
+import com.importH.core.domain.user.User;
+import com.importH.core.domain.user.UserRepository;
 import com.importH.core.service.PostLikeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

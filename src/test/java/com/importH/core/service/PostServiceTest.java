@@ -1,10 +1,10 @@
 package com.importH.core.service;
 
 import com.importH.core.AccountFactory;
-import com.importH.core.domain.user.User;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostRepository;
 import com.importH.core.domain.tag.Tag;
+import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.PostDto;
 import com.importH.core.dto.tag.TagDto;
 import com.importH.core.error.code.PostErrorCode;
@@ -23,7 +23,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @Transactional
