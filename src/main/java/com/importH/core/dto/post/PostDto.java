@@ -6,6 +6,7 @@ import com.importH.core.domain.post.Post;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.tag.TagDto;
 import com.importH.core.dto.user.UserDto;
+import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -77,6 +78,17 @@ public class PostDto {
         @ApiModelProperty(value = "작성시간", example = "yyyy-MM-dd/HH:mm")
         private LocalDateTime createdAt;
 
+        @QueryProjection
+        public ResponseInfo(Long id, String title, Set<TagDto> tags, String content, UserDto.Response user, int viewCount, int likeCount, LocalDateTime createdAt) {
+            this.id = id;
+            this.title = title;
+            this.tags = tags;
+            this.content = content;
+            this.user = user;
+            this.viewCount = viewCount;
+            this.likeCount = likeCount;
+            this.createdAt = createdAt;
+        }
     }
 
     @Getter
@@ -152,11 +164,12 @@ public class PostDto {
                     .thumbnail(null) // TODO 썸네일 작업
                     .build();
         }
+
+        @QueryProjection
+        public ResponseAll(ResponseInfo responseInfo, int commentsCount, String thumbnail) {
+            this.responseInfo = responseInfo;
+            this.commentsCount = commentsCount;
+            this.thumbnail = thumbnail;
+        }
     }
-
-
-
-
-
-
 }

@@ -12,6 +12,7 @@ public class UserDto {
     @Builder
     @ApiModel(value = "유저 정보 응답 DTO")
     public static class Response {
+
         @ApiModelProperty(value = "닉네임", example = "닉네임")
         private String nickname;
 

@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.importH.core.error.code.JwtErrorCode.AUTHENTICATION_ENTRYPOINT;
 
@@ -51,9 +50,9 @@ public class JwtProvider {
     }
 
     //JWT 토큰 생성
-    public TokenDto createToken(String userPk, List<String> roles) {
+    public TokenDto createToken(String userPk, String role) {
         Claims claims = Jwts.claims().setSubject(userPk); // JWT PALYLOAD 에 저장되는 정보단위
-        claims.put(ROLES, roles);
+        claims.put(ROLES, role);
 
         Date now = new Date();
 
@@ -91,9 +90,7 @@ public class JwtProvider {
 
         // 권한 정보가 없음
         Account account = accountRepository.findByEmail(claims.getSubject()).orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_USERID));
-        return new UsernamePasswordAuthenticationToken(new UserAccount(account), "", account.getRoles()
-                .stream().map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList()));
+        return new UsernamePasswordAuthenticationToken(new UserAccount(account), "", List.of(new SimpleGrantedAuthority(account.getRole())));
     }
 
     // jwt 에서 회원 구분 PK 추출

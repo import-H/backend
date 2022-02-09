@@ -40,7 +40,7 @@ public class SecurityContextFactory implements WithSecurityContextFactory<WithAc
         UserDetails userDetailsService = userService.loadUserByUsername(account.getEmail());
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                userDetailsService, userDetailsService.getPassword(), account.getRoles().stream().map(SimpleGrantedAuthority::new)
+                userDetailsService, userDetailsService.getPassword(), account.getRole().stream().map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList())
         );
 

@@ -1,8 +1,8 @@
 package com.importH.core.service;
 
 import com.importH.core.domain.account.Account;
+import com.importH.core.domain.account.AccountRepository;
 import com.importH.core.domain.post.Post;
-import com.importH.core.domain.post.PostLike;
 import com.importH.core.domain.post.PostLikeRepository;
 import com.importH.core.domain.post.PostRepository;
 import com.importH.core.domain.tag.Tag;
@@ -12,10 +12,12 @@ import com.importH.core.dto.tag.TagDto;
 import com.importH.core.error.code.PostErrorCode;
 import com.importH.core.error.exception.PostException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,7 +32,20 @@ public class PostService {
     private final PostRepository postRepository;
     private final TagService tagService;
     private final PostLikeRepository postLikeRepository;
+    private final AccountRepository accountRepository;
 
+    @PostConstruct
+    void testData() {
+        for (int i = 0; i < 50; i++) {
+            Post build = Post.builder()
+                    .title("test" + i)
+                    .content("test" + i)
+                    .account(accountRepository.save(Account.builder().nickname("test"+i).email("test@"+i).password("test"+i).weekAgree(false).build()))
+                    .likeCount(i)
+                    .build();
+            postRepository.save(build);
+        }
+    }
     /**
      * 게시글 저장
      */
@@ -165,5 +180,18 @@ public class PostService {
 
     public Post findByPostId(Long postsId) {
         return postRepository.findById(postsId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
+    }
+
+    public List<PostDto.ResponseAll> findAllPostOrderByLike(Pageable pageable) {
+        Slice<Post> postSlice = postRepository.findPostsAllOrderByLike(pageable);
+
+        List<Post> content = postSlice.getContent();
+
+        return content.stream()
+                .map(post ->
+                        PostDto.ResponseAll.fromEntity(
+                                post,
+                                post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet())))
+                .collect(Collectors.toList());
     }
 }

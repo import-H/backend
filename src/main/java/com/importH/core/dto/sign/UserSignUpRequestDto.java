@@ -52,7 +52,7 @@ public class UserSignUpRequestDto {
                 .email(email)
                 .password(password)
                 .nickname(nickname)
-                .roles(Collections.singletonList("ROLE_USER"))
+                .role("ROLE_USER")
                 .weekAgree(false)
                 .build();
     }

@@ -10,12 +10,12 @@ public class UserResponseDto {
     private final Long id;
     private final String email;
     private final String nickName;
-    private List<String> roles;
+    private String roles;
 
     public UserResponseDto(Account account) {
         this.id = account.getId();
         this.email = account.getEmail();
         this.nickName = account.getNickname();
-        this.roles = account.getRoles();
+        this.roles = account.getRole();
     }
 }

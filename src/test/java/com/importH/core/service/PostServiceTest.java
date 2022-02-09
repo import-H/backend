@@ -15,6 +15,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -203,5 +206,21 @@ class PostServiceTest {
                 .hasFieldOrProperty("responseInfo.viewCount")
                 .hasFieldOrProperty("commentsCount")
                 .hasFieldOrProperty("thumbnail"));
+    }
+
+
+    @Test
+    @DisplayName("[성공] 전체 게시글 좋아요 내림차순 으로 조회")
+    void findAllOrderByLike_success() throws Exception {
+
+        // when
+        List<PostDto.ResponseAll> allList = postService.findAllPostOrderByLike(PageRequest.of(0,10));
+
+        int maxLike = allList.stream().mapToInt(value -> value.getResponseInfo().getLikeCount()).max().getAsInt();
+
+        //then
+        assertThat(allList.size()).isEqualTo(10);
+        assertThat(allList.get(0).getResponseInfo().getLikeCount()).isEqualTo(maxLike);
+
     }
 }

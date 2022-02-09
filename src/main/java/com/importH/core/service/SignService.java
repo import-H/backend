@@ -126,7 +126,7 @@ public class SignService {
     }
 
     private TokenDto createToken(Account account) {
-        return jwtProvider.createToken(account.getEmail(), account.getRoles());
+        return jwtProvider.createToken(account.getEmail(), account.getRole());
     }
 
     private void validatePassword(String password, Account account) {

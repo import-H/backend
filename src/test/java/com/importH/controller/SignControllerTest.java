@@ -245,7 +245,7 @@ class SignControllerTest {
         TokenDto tokenDto = TokenDto.builder()
                 .accessToken(login.getAccessToken())
                 .refreshToken(login.getRefreshToken()).build();
-        tokenDto.setRefreshToken(createRefreshToken(account.getEmail(),account.getRoles(),30 * 1000L));
+        tokenDto.setRefreshToken(createRefreshToken(account.getEmail(),account.getRole(),30 * 1000L));
 
         assertThat(tokenRepository.findByKey(account.getId())).isNotNull();
         assertThat(tokenRepository.existsByToken(tokenDto.getRefreshToken())).isFalse();

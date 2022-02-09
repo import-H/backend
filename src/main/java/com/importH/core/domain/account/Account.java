@@ -6,9 +6,7 @@ import com.importH.core.domain.tag.Tag;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -34,9 +32,7 @@ public class Account extends BaseTimeEntity {
     @Column(length = 20,nullable = false)
     private String nickname;
 
-    @Builder.Default
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles = new ArrayList<>();
+    private String role;
 
     @Lob
     private String profileImage;
