@@ -24,11 +24,10 @@ public class CommentDto {
         @ApiModelProperty(value = "댓글 내용", example = "댓글 입니다.")
         private String content;
 
-        public Comment toEntity(Account account, Post post) {
+        public Comment toEntity() {
             return Comment.builder()
                     .content(content)
-                    .account(account)
-                    .post(post).build();
+                    .build();
         }
     }
 

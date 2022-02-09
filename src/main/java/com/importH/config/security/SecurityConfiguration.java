@@ -38,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/v1/signup", "/v1/login",
-                        "/v1/reissue", "/v1/social/**","/v1/file/upload").permitAll() //TODO 파일 업로드 POST 부분 삭제
+                        "/v1/reissue", "/v1/social/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/oauth/kakao/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/v1/boards/*/posts/*","/v1/boards/*/posts","/v1/file/upload/**").permitAll()

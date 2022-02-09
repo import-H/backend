@@ -124,7 +124,7 @@ class SignControllerTest {
         UserErrorCode userErrorCode = UserErrorCode.USER_EMAIL_DUPLICATED;
         UserSignUpRequestDto requestDto = getSignUpRequestDto("12341234");
 
-        accountRepository.save(requestDto.toEntity("1234"));
+        accountRepository.save(requestDto.toEntity());
 
         assertThat(accountRepository.findByEmail(requestDto.getEmail())).isNotNull();
 

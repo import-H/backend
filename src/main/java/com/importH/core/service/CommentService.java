@@ -24,13 +24,22 @@ public class CommentService {
      */
     @Transactional
     public void registerComment(Long postsId, Account account, CommentDto.Request commentDto) {
+
         Post post = postService.findByPostId(postsId);
-        saveComment(account, commentDto, post);
+
+        Comment comment = commentDto.toEntity();
+        setCommentRelation(account, post, comment);
+
+        saveComment(comment);
     }
 
-    private void saveComment(Account account, CommentDto.Request commentDto, Post post) {
-        Comment comment = commentRepository.save(commentDto.toEntity(account, post));
+    private void setCommentRelation(Account account, Post post, Comment comment) {
+        comment.setAccount(account);
         post.addComment(comment);
+    }
+
+    private void saveComment(Comment comment) {
+        commentRepository.save(comment);
     }
 
     /**

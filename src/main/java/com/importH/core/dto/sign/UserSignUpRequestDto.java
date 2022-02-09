@@ -47,7 +47,7 @@ public class UserSignUpRequestDto {
     private boolean agree;
 
 
-    public Account toEntity(String password) {
+    public Account toEntity() {
         return Account.builder()
                 .email(email)
                 .password(password)

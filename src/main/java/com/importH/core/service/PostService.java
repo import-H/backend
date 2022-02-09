@@ -27,18 +27,24 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final TagService tagService;
-    private final UserService userService;
 
     /**
      * 게시글 저장
      */
     @Transactional
-    public Post registerPost(Account account, int type, PostDto.Request postRequestDto) {
+    public Post registerPost(Account account, int boardType, PostDto.Request postRequestDto) {
 
-        //TODO 이미지 저장
-        Set<Tag> tags = getTags(postRequestDto);
-        Post post = postRequestDto.toEntity(account, new ArrayList<>(), tags, type);
+        Post post = postRequestDto.toEntity();
+
+        setPostRelation(account, boardType, postRequestDto, post);
+
         return savePost(post);
+    }
+
+    private void setPostRelation(Account account, int boardType, PostDto.Request postRequestDto, Post post) {
+        post.setTags(getTags(postRequestDto));
+        post.setAccount(account);
+        post.setBoardType(boardType);
     }
 
     private Set<Tag> getTags(PostDto.Request postRequestDto) {

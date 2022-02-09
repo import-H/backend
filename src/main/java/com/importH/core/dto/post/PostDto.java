@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @ApiModel(value = "게시글 DTO")
 public class PostDto {
@@ -37,17 +38,13 @@ public class PostDto {
         @NotBlank(message = "내용은 필수 입력값 입니다.")
         private String content;
 
-
-        public Post toEntity(Account account, List<Image> images, Set<Tag> tags, int type) {
+        public Post toEntity() {
             return Post.builder()
-                    .account(account)
-                    .type(type)
-                    .images(images)
                     .content(content)
                     .comments(new ArrayList<>())
-                    .postLikes(new ArrayList<>())// TODO 게시글 수정시 댓글 남아있는지 확인
+                    .postLikes(new ArrayList<>())
                     .title(title)
-                    .tags(tags).build();
+                    .tags(new HashSet<>()).build();
         }
     }
 

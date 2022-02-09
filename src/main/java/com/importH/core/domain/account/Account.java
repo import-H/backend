@@ -52,4 +52,7 @@ public class Account extends BaseTimeEntity {
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
 
+    public void setPassword(String encodePassword) {
+        this.password = encodePassword;
+    }
 }

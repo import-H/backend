@@ -3,7 +3,6 @@ package com.importH.core.domain.post;
 import com.importH.core.domain.account.Account;
 import com.importH.core.domain.base.BaseTimeEntity;
 import com.importH.core.domain.comment.Comment;
-import com.importH.core.domain.image.Image;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.post.PostDto;
 import lombok.*;
@@ -45,9 +44,6 @@ public class Post extends BaseTimeEntity {
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
 
-    @ManyToMany
-    private List<Image> images = new ArrayList<>();
-
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -77,10 +73,23 @@ public class Post extends BaseTimeEntity {
     }
 
     public void addComment(Comment comment) {
+        comment.setPost(this);
         this.getComments().add(comment);
     }
 
     public void deleteComment(Comment comment) {
         this.getComments().remove(comment);
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public void setBoardType(int boardType) {
+        this.type = boardType;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }

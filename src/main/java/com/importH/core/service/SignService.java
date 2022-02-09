@@ -43,15 +43,21 @@ public class SignService {
         UserSignUpRequestDto test =
                 UserSignUpRequestDto
                         .builder().email("abc@hongik.ac.kr").password("12341234").confirmPassword("12341234").nickname("test").build();
-        saveUser(test.toEntity(passwordEncoder.encode(test.getPassword())));
+        Account account = test.toEntity();
+        account.setPassword(passwordEncoder.encode(test.getPassword()));
+        saveUser(account);
     }
 
     /** 회원가입 */
     @Transactional
     public Long signup(UserSignUpRequestDto userSignUpRequestDto) {
+
         validateSignup(userSignUpRequestDto);
-        String password = passwordEncoder.encode(userSignUpRequestDto.getPassword());
-        return saveUser(userSignUpRequestDto.toEntity(password)).getId();
+
+        Account account = userSignUpRequestDto.toEntity();
+        account.setPassword(passwordEncoder.encode(userSignUpRequestDto.getPassword()));
+
+        return saveUser(account).getId();
     }
 
     private void validateSignup(UserSignUpRequestDto userSignUpRequestDto) {
