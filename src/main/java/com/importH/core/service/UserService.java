@@ -39,14 +39,18 @@ public class UserService implements UserDetailsService {
      */
     public Response findUserById(Long userId, User user) {
 
-        User findUser = findById(userId);
-
-        isSameAccount(user, findUser);
+        User findUser = getFindUser(userId, user);
 
         return Response.fromEntity(findUser);
     }
 
-    private void isSameAccount(User user, User findUser) {
+    private User getFindUser(Long userId, User user) {
+        User findUser = findById(userId);
+        isSameUser(user, findUser);
+        return findUser;
+    }
+
+    private void isSameUser(User user, User findUser) {
         if(!findUser.equals(user)) {
             throw new UserException(NOT_ACCORD_USERID);
         }
@@ -61,12 +65,20 @@ public class UserService implements UserDetailsService {
      */
     @Transactional
     public Response updateUser(Long userId, User user, Request request) {
-        User findUser = findById(userId);
-        isSameAccount(user, findUser);
-
+        User findUser = getFindUser(userId, user);
         findUser.update(request);
         return Response.fromEntity(findUser);
     }
 
 
+    /**
+     * 유저 탈퇴 (delete 처리)
+     */
+    @Transactional
+    public void deleteUser(Long userId, User user) {
+
+        User findUser = getFindUser(userId, user);
+
+        findUser.delete();
+    }
 }

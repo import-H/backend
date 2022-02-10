@@ -6,6 +6,7 @@ import com.importH.core.domain.post.PostRepository;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.PostDto;
+import com.importH.core.dto.post.PostDto.Response;
 import com.importH.core.dto.tag.TagDto;
 import com.importH.core.error.code.PostErrorCode;
 import com.importH.core.error.exception.PostException;
@@ -37,7 +38,6 @@ class PostServiceTest {
 
     @Autowired
     AccountFactory accountFactory;
-
 
     @Autowired
     TagService tagService;
@@ -91,7 +91,7 @@ class PostServiceTest {
         Post post =  postService.registerPost(user, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
 
         // when
-        PostDto.Response response = postService.getPost(user, 1, post.getId());
+        Response response = postService.getPost(user, 1, post.getId());
 
         //then
         assertThat(response)
@@ -223,5 +223,20 @@ class PostServiceTest {
         assertThat(allList.size()).isEqualTo(10);
         assertThat(allList.get(0).getResponseInfo().getLikeCount()).isEqualTo(maxLike);
 
+    }
+
+    @Test
+    @DisplayName("유저 탈퇴 후 게시글 조회")
+    void getPostByDeletedUser() throws Exception {
+        // given
+        user.delete();
+
+        // when
+        Response post = postService.getPost(user, 1, this.post.getId());
+
+        //then
+        assertThat(post.getResponseInfo())
+                .hasFieldOrPropertyWithValue("nickname","삭제된 계정")
+                .hasFieldOrPropertyWithValue("profileImage","N");
     }
 }

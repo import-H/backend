@@ -127,7 +127,39 @@ class UserServiceTest {
         // when
         //then
         assertThrows(UserException.class, () -> userService.updateUser(another.getId(), user, request));
+    }
 
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 회원 탈퇴")
+    void deleteUser_success() throws Exception {
+        // given
+        User user = userRepository.findByNickname("테스트").get();
+
+        // when
+        userService.deleteUser(user.getId(),user);
+
+        //then
+        assertThat(user)
+                .hasFieldOrPropertyWithValue("nickname", "삭제된 계정")
+                .hasFieldOrPropertyWithValue("password", "deleted"+user.getId())
+                .hasFieldOrPropertyWithValue("email", "deleted"+user.getId())
+                .hasFieldOrPropertyWithValue("role", null)
+                .hasFieldOrPropertyWithValue("deleted", true)
+                .hasFieldOrProperty("deletedTime");
+    }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[실패] 회원 탈퇴 - 동일한 회원 아닌경우")
+    void deleteUser_fail_notAccordUser() throws Exception {
+        // given
+        User user = userRepository.findByNickname("테스트").get();
+        User another = userRepository.findByNickname("test1").get();
+
+        // when
+        //then
+        assertThrows(UserException.class, () -> userService.deleteUser(user.getId(), another));
     }
 
 }

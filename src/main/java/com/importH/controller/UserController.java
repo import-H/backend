@@ -1,11 +1,12 @@
 package com.importH.controller;
 
-import com.importH.config.security.CurrentAccount;
+import com.importH.config.security.CurrentUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.user.UserDto.Request;
 import com.importH.core.dto.user.UserDto.Response;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.UserException;
+import com.importH.core.model.response.CommonResult;
 import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.UserService;
 import com.importH.core.service.response.ResponseService;
@@ -37,7 +38,7 @@ public class UserController {
     @GetMapping("/{userId}")
     public SingleResult<Response> findUserById
             (@ApiParam(value = "회원 ID", required = true) @PathVariable Long userId,
-             @ApiIgnore @CurrentAccount User user) {
+             @ApiIgnore @CurrentUser User user) {
         return responseService.getSingleResult(userService.findUserById(userId, user));
     }
 
@@ -51,13 +52,31 @@ public class UserController {
     @PutMapping("/{userId}")
     public SingleResult<Response> updateUser
             (@ApiParam(value = "회원 ID", required = true) @PathVariable Long userId,
-             @ApiIgnore @CurrentAccount User user,
+             @ApiIgnore @CurrentUser User user,
              @ApiParam(value = "유저 요청 DTO") @RequestBody @Validated Request request,
              BindingResult bindingResult) {
 
         validParameter(bindingResult);
         return responseService.getSingleResult(userService.updateUser(userId, user, request));
     }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "Authorization",
+                    value = "로그인 성공 후 AccessToken",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(value = "회원 탈퇴", notes = "userId 회원이 탈퇴 합니다.")
+    @DeleteMapping("/{userId}")
+    public CommonResult deleteUser
+            (@ApiParam(value = "회원 ID", required = true) @PathVariable Long userId,
+             @ApiIgnore @CurrentUser User user) {
+
+        userService.deleteUser(userId, user);
+
+        return responseService.getSuccessResult();
+    }
+
 
     private void validParameter(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

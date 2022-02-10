@@ -16,7 +16,7 @@ POST http://localhost:8090/v1/login
 Content-Type: application/json
 
 {
-  "email": "abc3@hongik.ac.kr",
+  "email": "abc@hongik.ac.kr",
   "password": "12341234"
 }
 
@@ -38,7 +38,7 @@ GET http://localhost:8090/v1/boards/1/posts
 
 ### 게시글 저장
 POST http://localhost:8090/v1/boards/1/posts
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDQ0NzE3NzAsImV4cCI6MTY0NDU1ODE3MH0.fDnacYhw_dd2K_tD15JuMY0PGTfBPpbn_X-4Evv1gNo
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
 Content-Type: application/json
 
 {
@@ -49,7 +49,7 @@ Content-Type: application/json
 
 ### 게시글 수정
 PUT http://localhost:8090/v1/boards/1/posts/4
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDQ0NzE3NzAsImV4cCI6MTY0NDU1ODE3MH0.fDnacYhw_dd2K_tD15JuMY0PGTfBPpbn_X-4Evv1gNo
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
 Content-Type: application/json
 
 {
@@ -60,12 +60,12 @@ Content-Type: application/json
 
 ### 게시글 삭제
 DELETE http://localhost:8090/v1/boards/1/posts/4
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDQ0NzE3NzAsImV4cCI6MTY0NDU1ODE3MH0.fDnacYhw_dd2K_tD15JuMY0PGTfBPpbn_X-4Evv1gNo
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
 
 
 ### 댓글 등록
 POST http://localhost:8090/v1/posts/4/comments
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0NDMxNjM5NywiZXhwIjoxNjQ0NDAyNzk3fQ.aHah4DFntmRd4zBue6LYm-x-KQzgbNCGgA68nM_XajI
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
 Content-Type: application/json
 
 {
@@ -96,11 +96,11 @@ GET http://localhost:8090/v1/main?page=0
 
 ### 회원 정보 조회
 GET http://localhost:8090/v1/users/1
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMzQGhvbmdpay5hYy5rciIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjQ0NDcwODk2LCJleHAiOjE2NDQ1NTcyOTZ9.MmM12CljlMs_bI06Jm3WS5FHTZ2LLoksTHOrBZ81SBM
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
 
 ### 회원 정보 수정
 PUT http://localhost:8090/v1/users/1
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMzQGhvbmdpay5hYy5rciIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjQ0NDcwODk2LCJleHAiOjE2NDQ1NTcyOTZ9.MmM12CljlMs_bI06Jm3WS5FHTZ2LLoksTHOrBZ81SBM
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
 Content-Type: application/json
 
 {
@@ -110,3 +110,7 @@ Content-Type: application/json
   "infoByEmail" : true,
   "infoByWeb" : true
 }
+
+### 회원 탈퇴
+DELETE http://localhost:8090/v1/users/1
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc

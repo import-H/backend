@@ -1,6 +1,6 @@
 package com.importH.controller;
 
-import com.importH.config.security.CurrentAccount;
+import com.importH.config.security.CurrentUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.PostDto;
 import com.importH.core.error.code.PostErrorCode;
@@ -45,7 +45,7 @@ public class PostController {
     })
     @ApiOperation(value = "게시글 등록", notes = "boardId 게시판에 게시글을 등록합니다.")
     @PostMapping
-    public CommonResult savePost(@ApiIgnore @CurrentAccount User user,
+    public CommonResult savePost(@ApiIgnore @CurrentUser User user,
                                  @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                  @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
                                  BindingResult bindingResult) {
@@ -59,7 +59,7 @@ public class PostController {
 
     @ApiOperation(value = "게시글 조회", notes = "boardId 게시판에 postId 게시글을 조회합니다.")
     @GetMapping("/{postId}")
-    public SingleResult<PostDto.Response> findPost(@ApiIgnore @CurrentAccount User user,
+    public SingleResult<PostDto.Response> findPost(@ApiIgnore @CurrentUser User user,
                                                    @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                                    @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId) {
 
@@ -74,7 +74,7 @@ public class PostController {
     })
     @ApiOperation(value = "게시글 수정", notes = "boardId 게시판에 postId 게시글을 수정합니다.")
     @PutMapping("/{postId}")
-    public SingleResult<Long> updatePost(@ApiIgnore @CurrentAccount User user,
+    public SingleResult<Long> updatePost(@ApiIgnore @CurrentUser User user,
                                          @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                          @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId,
                                          @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
@@ -97,7 +97,7 @@ public class PostController {
     })
     @ApiOperation(value = "게시글 삭제", notes = "boardId 게시판에 postId 게시글을 삭제합니다.")
     @DeleteMapping("/{postId}")
-    public CommonResult deletePost(@ApiIgnore @CurrentAccount User user,
+    public CommonResult deletePost(@ApiIgnore @CurrentUser User user,
                                    @ApiParam(value = "게시판 유형", example = "1") @PathVariable int boardId,
                                    @ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postId) {
         postService.deletePost(user, boardId, postId);

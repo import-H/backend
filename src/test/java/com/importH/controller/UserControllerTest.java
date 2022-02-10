@@ -5,6 +5,7 @@ import com.importH.core.WithAccount;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.user.UserDto;
+import com.importH.core.error.code.ErrorCode;
 import com.importH.core.error.code.UserErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,8 +19,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -151,4 +151,35 @@ class UserControllerTest {
     }
 
 
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 유저 탈퇴")
+    void deleteUser_success() throws Exception {
+        // given
+        User user = userRepository.findByNickname("테스트").get();
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/v1/users/" + user.getId()));
+
+        //then
+        perform.andExpect(jsonPath("$.success").value(true));
+
+    }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[실패] 유저 탈퇴 - 동일하지 않은 회원")
+    void deleteUser_fail() throws Exception {
+        // given
+        User another = userRepository.findByNickname("test1").get();
+        UserErrorCode errorCode = UserErrorCode.NOT_ACCORD_USERID;
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/v1/users/" + another.getId()));
+
+        //then
+        perform.andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.msg").value(errorCode.getDescription()));
+
+    }
 }

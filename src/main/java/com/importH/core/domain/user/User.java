@@ -8,6 +8,7 @@ import com.importH.core.dto.user.UserDto.Request;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,6 +53,7 @@ public class User extends BaseTimeEntity {
     private InfoAgree infoAgree = new InfoAgree();
 
     private boolean deleted;
+    private LocalDateTime deletedTime;
 
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
@@ -71,5 +73,15 @@ public class User extends BaseTimeEntity {
         this.profileImage = request.getProfileImage();
         this.introduction = request.getIntroduction();
         this.personalUrl = request.getPersonalUrl();
+    }
+
+    public void delete() {
+        deleted = true;
+        nickname = "삭제된 계정";
+        email = "deleted"+getId();
+        password = "deleted"+getId();
+        profileImage = "N";
+        role = null;
+        deletedTime = LocalDateTime.now();
     }
 }
