@@ -104,7 +104,7 @@ class SignServiceTest {
 
         //given
         UserErrorCode errorCode = UserErrorCode.USER_NICKNAME_DUPLICATED;
-        requestDto = getSignUpRequestDto("test","abc1@naver.com", "12341234");
+        requestDto = getSignUpRequestDto("test1","abc1@naver.com", "12341234");
 
         //when
         UserException userException = assertThrows(UserException.class, () -> signService.signup(requestDto));

@@ -18,20 +18,6 @@ public class AccountFactory {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @PostConstruct
-    public void init() {
-        initAccount();
-    }
-
-    private void initAccount() {
-        UserSignUpRequestDto test =
-                UserSignUpRequestDto
-                        .builder().email("abc@hongik.ac.kr").password("12341234").confirmPassword("12341234").nickname("test").build();
-        User user = test.toEntity();
-        user.setPassword(passwordEncoder.encode(test.getPassword()));
-        userRepository.save(user);
-    }
-
     public User createNewAccount(String nickname) {
 
         return userRepository.save(User.builder()

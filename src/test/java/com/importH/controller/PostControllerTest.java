@@ -64,7 +64,7 @@ class PostControllerTest {
 
     @BeforeEach
     void before() {
-        User user = userRepository.findByNickname("test").get();
+        User user = userRepository.findByNickname("test1").get();
         post = postFactory.createPost(user, 1, getRequest("test", "test게시글", "스터디","자바2"));
     }
 
@@ -132,7 +132,8 @@ class PostControllerTest {
         perform.andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.msg").exists())
-                .andExpect(jsonPath("$.data.responseInfo.id").value(post.getId()))
+                .andExpect(jsonPath("$.data.responseInfo.boardId").value(post.getType()))
+                .andExpect(jsonPath("$.data.responseInfo.postId").value(post.getId()))
                 .andExpect(jsonPath("$.data.responseInfo.title").value(post.getTitle()))
                 .andExpect(jsonPath("$.data.responseInfo.content").value(post.getContent()))
                 .andExpect(jsonPath("$.data.responseInfo.nickname").value(post.getUser().getNickname()))

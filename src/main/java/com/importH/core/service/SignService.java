@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
+
 import static com.importH.core.error.code.UserErrorCode.*;
 
 @Slf4j
@@ -31,6 +33,21 @@ public class SignService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository tokenRepository;
+
+    @PostConstruct
+    public void init() {
+        initAccount();
+    }
+
+    private void initAccount() {
+        UserSignUpRequestDto test =
+                UserSignUpRequestDto
+                        .builder().email("abc@hongik.ac.kr").password("12341234").confirmPassword("12341234").nickname("test").build();
+        User user = test.toEntity();
+        user.setPassword(passwordEncoder.encode(test.getPassword()));
+        userRepository.save(user);
+    }
+
 
     /** 회원가입 */
     @Transactional

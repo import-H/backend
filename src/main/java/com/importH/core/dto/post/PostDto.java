@@ -48,8 +48,13 @@ public class PostDto {
     @Getter
     @Builder
     public static class ResponseInfo {
+
+        @ApiModelProperty(value = "게시판 id", example = "1")
+        private int boardId;
+
+
         @ApiModelProperty(value = "게시글 id", example = "1")
-        private Long id;
+        private Long postId;
 
         @ApiModelProperty(value = "게시글 제목", example = "샘플 포스트")
         private String title;
@@ -94,7 +99,8 @@ public class PostDto {
 
             return Response.builder()
                     .responseInfo(ResponseInfo.builder()
-                            .id(post.getId())
+                            .boardId(post.getType())
+                            .postId(post.getId())
                             .nickname(post.getUser().getNickname())
                             .profileImage(post.getUser().getProfileImage())
                             .content(post.getContent())
@@ -127,7 +133,8 @@ public class PostDto {
 
             return ResponseAll.builder()
                     .responseInfo(ResponseInfo.builder()
-                            .id(post.getId())
+                            .boardId(post.getType())
+                            .postId(post.getId())
                             .nickname(post.getUser().getNickname())
                             .profileImage(post.getUser().getProfileImage())
                             .content(post.getContent())

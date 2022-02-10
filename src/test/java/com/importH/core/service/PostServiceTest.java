@@ -95,8 +95,8 @@ class PostServiceTest {
 
         //then
         assertThat(response)
-
-                .hasFieldOrPropertyWithValue("responseInfo.id", post.getId())
+                .hasFieldOrPropertyWithValue("responseInfo.boardId", post.getType())
+                .hasFieldOrPropertyWithValue("responseInfo.postId", post.getId())
                 .hasFieldOrPropertyWithValue("responseInfo.title", post.getTitle())
                 .hasFieldOrPropertyWithValue("responseInfo.content", post.getContent())
                 .hasFieldOrPropertyWithValue("responseInfo.nickname", post.getUser().getNickname())
@@ -197,7 +197,8 @@ class PostServiceTest {
         //then
         assertThat(allPost.size()).isEqualTo(11);
         allPost.stream().forEach(responseAll -> assertThat(responseAll)
-                .hasFieldOrProperty("responseInfo.id")
+                .hasFieldOrProperty("responseInfo.boardId")
+                .hasFieldOrProperty("responseInfo.postId")
                 .hasFieldOrProperty("responseInfo.title")
                 .hasFieldOrProperty("responseInfo.content")
                 .hasFieldOrProperty("responseInfo.nickname")
