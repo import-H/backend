@@ -18,9 +18,11 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.Option;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.importH.core.error.code.JwtErrorCode.AUTHENTICATION_ENTRYPOINT;
 
@@ -56,7 +58,7 @@ public class JwtProvider {
         Claims claims = Jwts.claims().setSubject(info.getEmail()); // JWT PALYLOAD 에 저장되는 정보단위
         claims.put(ROLES, role);
         claims.put("nickname", info.getNickname());
-        claims.put("userId", info.getNickname());
+        claims.put("userId", info.getId());
         claims.put("profileImage", info.getProfileImage());
 
         Date now = new Date();

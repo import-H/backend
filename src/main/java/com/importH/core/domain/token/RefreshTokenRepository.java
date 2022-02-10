@@ -7,7 +7,7 @@ import java.util.Optional;
 
 
 @Transactional(readOnly = true)
-public interface RefreshTokenRepository extends JpaRepository<RefreshToken , String> {
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken , Long> {
 
     Optional<RefreshToken> findByKey(Long key);
 

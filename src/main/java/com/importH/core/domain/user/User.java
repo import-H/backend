@@ -21,7 +21,7 @@ public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "account_id")
+    @Column(name = "user_id")
     private Long id;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -36,8 +36,8 @@ public class User extends BaseTimeEntity {
 
     private String role;
 
-    @Lob
-    private String profileImage;
+    @Builder.Default
+    private String profileImage = "N";
 
     @Column(length = 100)
     private String introduction;

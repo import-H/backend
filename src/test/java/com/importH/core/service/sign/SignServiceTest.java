@@ -13,6 +13,7 @@ import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.JwtException;
 import com.importH.core.error.exception.UserException;
 import com.importH.core.service.SignService;
+import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -63,7 +64,6 @@ class SignServiceTest {
     @AfterEach
     void after() {
         userRepository.deleteAll();
-        tokenRepository.deleteAll();
 
     }
 
@@ -203,6 +203,24 @@ class SignServiceTest {
         assertThat(exception)
                 .hasFieldOrPropertyWithValue("errorCode", errorCode)
                 .hasFieldOrPropertyWithValue("errorMessage", errorCode.getDescription());
+
+    }
+
+    @Test
+    @DisplayName("토큰 정보 확인")
+    void existInfoInToken() throws Exception {
+        // given
+        TokenDto tokenDto = loginUser();
+
+        // when
+        Claims claims = jwtProvider.parseClaims(tokenDto.getAccessToken());
+
+        //then
+        assertThat(claims)
+                .containsEntry("roles", user.getRole())
+                .containsEntry("nickname", user.getNickname())
+                .containsEntry("profileImage", user.getProfileImage())
+                .containsEntry("sub", user.getEmail());
 
     }
 
