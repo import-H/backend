@@ -17,7 +17,7 @@ import javax.validation.constraints.Pattern;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserSignUpRequestDto {
+public class SignupDto {
 
     @ApiModelProperty(value = "홍익 이메일" , example = "abc@hongik.ac.kr", required = true)
     @Email(message = "이메일 형태로 입력 해 주세요.")

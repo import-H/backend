@@ -1,6 +1,6 @@
 package com.importH.core.service;
 
-import com.importH.config.security.UserAccount;
+import com.importH.config.security.CustomUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.user.UserDto.Request;
@@ -26,7 +26,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = findByEmail(email);
-        return new UserAccount(user);
+        return new CustomUser(user);
     }
 
     public User findByEmail(String email) {

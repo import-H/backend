@@ -1,4 +1,4 @@
-package com.importH.controller.exception;
+package com.importH.controller;
 
 import com.importH.core.error.exception.JwtException;
 import com.importH.core.model.response.CommonResult;

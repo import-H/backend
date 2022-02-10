@@ -1,22 +1,28 @@
 package com.importH.core.dto.jwt;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class TokenDto {
 
     private String accessToken;
     private String refreshToken;
 
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
     @Builder
-    public TokenDto(String accessToken, String refreshToken) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
+    public static class Info {
+        private Long id;
+
+        private String email;
+        private String nickname;
+        private String profileImage;
     }
+
 }
 

@@ -3,6 +3,7 @@ package com.importH.config.security;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.jwt.TokenDto;
+import com.importH.core.dto.jwt.TokenDto.Info;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.JwtException;
 import com.importH.core.error.exception.UserException;
@@ -50,9 +51,13 @@ public class JwtProvider {
     }
 
     //JWT 토큰 생성
-    public TokenDto createToken(String userPk, String role) {
-        Claims claims = Jwts.claims().setSubject(userPk); // JWT PALYLOAD 에 저장되는 정보단위
+    public TokenDto createToken(Info info, String role) {
+
+        Claims claims = Jwts.claims().setSubject(info.getEmail()); // JWT PALYLOAD 에 저장되는 정보단위
         claims.put(ROLES, role);
+        claims.put("nickname", info.getNickname());
+        claims.put("userId", info.getNickname());
+        claims.put("profileImage", info.getProfileImage());
 
         Date now = new Date();
 
@@ -90,7 +95,7 @@ public class JwtProvider {
 
         // 권한 정보가 없음
         User user = userRepository.findByEmail(claims.getSubject()).orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_USERID));
-        return new UsernamePasswordAuthenticationToken(new UserAccount(user), "", List.of(new SimpleGrantedAuthority(user.getRole())));
+        return new UsernamePasswordAuthenticationToken(new CustomUser(user), "", List.of(new SimpleGrantedAuthority(user.getRole())));
     }
 
     // jwt 에서 회원 구분 PK 추출

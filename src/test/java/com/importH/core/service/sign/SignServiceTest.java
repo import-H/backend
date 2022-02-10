@@ -6,8 +6,8 @@ import com.importH.core.domain.token.RefreshTokenRepository;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.jwt.TokenDto;
-import com.importH.core.dto.sign.LoginDto;
-import com.importH.core.dto.sign.UserSignUpRequestDto;
+import com.importH.core.dto.jwt.TokenDto.Info;
+import com.importH.core.dto.sign.SignupDto;
 import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.JwtException;
@@ -50,7 +50,7 @@ class SignServiceTest {
     JwtProvider jwtProvider;
 
 
-    UserSignUpRequestDto requestDto;
+    SignupDto requestDto;
     User user;
 
     @BeforeEach
@@ -140,7 +140,7 @@ class SignServiceTest {
     void login_success() throws Exception {
         // given
         // when
-        LoginDto.Response login = signService.login(requestDto.getEmail(), requestDto.getPassword());
+        TokenDto login = signService.login(requestDto.getEmail(), requestDto.getPassword());
         TokenDto tokenDto = TokenDto.builder().accessToken(login.getAccessToken()).refreshToken(login.getRefreshToken()).build();
 
         //then
@@ -188,7 +188,10 @@ class SignServiceTest {
     void reissue_fail_1() throws Exception {
         // given
         TokenDto tokenDto = loginUser();
-        TokenDto newTokenDto = jwtProvider.createToken(user.getEmail(), "ADMIN");
+
+        Info info = getTokenClaims();
+
+        TokenDto newTokenDto = jwtProvider.createToken(info, "ADMIN");
         tokenDto.setRefreshToken(newTokenDto.getRefreshToken());
 
         JwtErrorCode errorCode = JwtErrorCode.REFRESH_TOKEN_VALID;
@@ -203,13 +206,21 @@ class SignServiceTest {
 
     }
 
+    private Info getTokenClaims() {
+        Info info = Info.builder().email(user.getEmail())
+                .id(user.getId())
+                .nickname(user.getNickname())
+                .profileImage(user.getProfileImage()).build();
+        return info;
+    }
+
     private TokenDto loginUser() {
-        LoginDto.Response login = signService.login("abc@naver.com", "12341234");
+        TokenDto login = signService.login("abc@naver.com", "12341234");
         return TokenDto.builder().accessToken(login.getAccessToken()).refreshToken(login.getRefreshToken()).build();
     }
 
-    private UserSignUpRequestDto getSignUpRequestDto(String nickname, String email, String password) {
-        return UserSignUpRequestDto.builder()
+    private SignupDto getSignUpRequestDto(String nickname, String email, String password) {
+        return SignupDto.builder()
                 .nickname(nickname)
                 .email(email)
                 .password(password)

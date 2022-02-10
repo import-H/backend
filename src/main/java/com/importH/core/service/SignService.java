@@ -6,8 +6,8 @@ import com.importH.core.domain.token.RefreshTokenRepository;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.jwt.TokenDto;
-import com.importH.core.dto.sign.LoginDto;
-import com.importH.core.dto.sign.UserSignUpRequestDto;
+import com.importH.core.dto.jwt.TokenDto.Info;
+import com.importH.core.dto.sign.SignupDto;
 import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.exception.JwtException;
 import com.importH.core.error.exception.UserException;
@@ -40,8 +40,8 @@ public class SignService {
     }
 
     private void initAccount() {
-        UserSignUpRequestDto test =
-                UserSignUpRequestDto
+        SignupDto test =
+                SignupDto
                         .builder().email("abc@hongik.ac.kr").password("12341234").confirmPassword("12341234").nickname("test").build();
         User user = test.toEntity();
         user.setPassword(passwordEncoder.encode(test.getPassword()));
@@ -51,20 +51,20 @@ public class SignService {
 
     /** 회원가입 */
     @Transactional
-    public Long signup(UserSignUpRequestDto userSignUpRequestDto) {
+    public Long signup(SignupDto userSignupDto) {
 
-        validateSignup(userSignUpRequestDto);
+        validateSignup(userSignupDto);
 
-        User user = userSignUpRequestDto.toEntity();
-        user.setPassword(passwordEncoder.encode(userSignUpRequestDto.getPassword()));
+        User user = userSignupDto.toEntity();
+        user.setPassword(passwordEncoder.encode(userSignupDto.getPassword()));
 
         return saveUser(user).getId();
     }
 
-    private void validateSignup(UserSignUpRequestDto userSignUpRequestDto) {
-        passwordCheck(userSignUpRequestDto.getPassword(), userSignUpRequestDto.getConfirmPassword());
-        duplicatedEmail(userSignUpRequestDto.getEmail());
-        duplicatedNickname(userSignUpRequestDto.getNickname());
+    private void validateSignup(SignupDto userSignupDto) {
+        passwordCheck(userSignupDto.getPassword(), userSignupDto.getConfirmPassword());
+        duplicatedEmail(userSignupDto.getEmail());
+        duplicatedNickname(userSignupDto.getNickname());
     }
 
     private void passwordCheck(String password, String confirmPassword) {
@@ -92,7 +92,7 @@ public class SignService {
 
     /** 로그인 */
     @Transactional
-    public LoginDto.Response login(String email, String password) {
+    public TokenDto login(String email, String password) {
         User user = getAccount(email);
         validatePassword(password, user);
         
@@ -101,12 +101,7 @@ public class SignService {
 
         saveRefreshToken(user, tokenDto, refreshToken);
 
-        return LoginDto.Response.builder()
-                .accessToken(tokenDto.getAccessToken())
-                .refreshToken(tokenDto.getRefreshToken())
-                .nickname(user.getNickname())
-                .profileImage(user.getProfileImage())
-                .build();
+        return tokenDto;
     }
 
     private void saveRefreshToken(User user, TokenDto tokenDto, RefreshToken refreshToken) {
@@ -127,7 +122,12 @@ public class SignService {
     }
 
     private TokenDto createToken(User user) {
-        return jwtProvider.createToken(user.getEmail(), user.getRole());
+        Info info = Info.builder().email(user.getEmail())
+                .id(user.getId())
+                .nickname(user.getNickname())
+                .profileImage(user.getProfileImage()).build();
+
+        return jwtProvider.createToken(info, user.getRole());
     }
 
     private void validatePassword(String password, User user) {

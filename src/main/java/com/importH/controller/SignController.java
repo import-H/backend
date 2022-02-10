@@ -2,7 +2,7 @@ package com.importH.controller;
 
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.sign.LoginDto;
-import com.importH.core.dto.sign.UserSignUpRequestDto;
+import com.importH.core.dto.sign.SignupDto;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.UserException;
 import com.importH.core.model.response.SingleResult;
@@ -32,8 +32,8 @@ public class SignController {
 
     @ApiOperation(value = "로그인", notes = "로그인을 합니다.")
     @PostMapping("/login")
-    public SingleResult<LoginDto.Response> login(
-            @ApiParam(value = "로그인 요청 DTO", required = true) @RequestBody @Validated LoginDto.Request request
+    public SingleResult<TokenDto> login(
+            @ApiParam(value = "로그인 요청 DTO", required = true) @RequestBody @Validated LoginDto request
             ,BindingResult bindingResult
             ) {
 
@@ -46,7 +46,7 @@ public class SignController {
 
     @ApiOperation(value = "회원가입 ", notes = "회원가입을 합니다.")
     @PostMapping("/signup")
-    public SingleResult<Long> signup(@ApiParam(value = "회원가입 요청 DTO " ,required = true) @RequestBody @Validated UserSignUpRequestDto userSignUpRequestDto, BindingResult bindingResult) {
+    public SingleResult<Long> signup(@ApiParam(value = "회원가입 요청 DTO " ,required = true) @RequestBody @Validated SignupDto userSignupDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             throw new UserException(UserErrorCode.NOT_VALID_REQUEST_PARAMETERS);
@@ -54,7 +54,7 @@ public class SignController {
 
 
 
-        Long userId = signService.signup(userSignUpRequestDto);
+        Long userId = signService.signup(userSignupDto);
         return responseService.getSingleResult(userId);
     }
 

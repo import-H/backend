@@ -6,7 +6,7 @@ import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.sign.LoginDto;
-import com.importH.core.dto.sign.UserSignUpRequestDto;
+import com.importH.core.dto.sign.SignupDto;
 import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.service.SignService;
@@ -67,7 +67,7 @@ class SignControllerTest {
 
     @BeforeEach
     void setup() {
-        UserSignUpRequestDto requestDto = UserSignUpRequestDto.builder()
+        SignupDto requestDto = SignupDto.builder()
                 .email("user@hongik.ac.kr")
                 .nickname("테스트")
                 .password("12341234")
@@ -86,7 +86,7 @@ class SignControllerTest {
     @Test
     void 회원가입요청_성공() throws Exception {
 
-        UserSignUpRequestDto requestDto = getSignUpRequestDto("12341234");
+        SignupDto requestDto = getSignUpRequestDto("12341234");
 
         mockMvc.perform(post("/v1/signup")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -104,7 +104,7 @@ class SignControllerTest {
     @Test
     void 회원가입요청_실패_조건만족_X() throws Exception {
 
-        UserSignUpRequestDto requestDto = getSignUpRequestDto("1234");
+        SignupDto requestDto = getSignUpRequestDto("1234");
 
         mockMvc.perform(post("/v1/signup")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -122,7 +122,7 @@ class SignControllerTest {
 
 
         UserErrorCode userErrorCode = UserErrorCode.USER_EMAIL_DUPLICATED;
-        UserSignUpRequestDto requestDto = getSignUpRequestDto("12341234");
+        SignupDto requestDto = getSignUpRequestDto("12341234");
 
         userRepository.save(requestDto.toEntity());
 
@@ -137,8 +137,8 @@ class SignControllerTest {
                 .andExpect(jsonPath("$.msg").value(userErrorCode.getDescription()));
     }
 
-    private UserSignUpRequestDto getSignUpRequestDto(String password) {
-        return UserSignUpRequestDto.builder()
+    private SignupDto getSignUpRequestDto(String password) {
+        return SignupDto.builder()
                 .email("테스트ACCOUNT@hongik.ac.kr")
                 .nickname("테스트ACCOUNT")
                 .password(password)
@@ -151,7 +151,7 @@ class SignControllerTest {
     void 로그인_성공() throws Exception {
 
 
-        LoginDto.Request requestDto = getUserLoginRequestDto("user@hongik.ac.kr", "12341234");
+        LoginDto requestDto = getUserLoginRequestDto("user@hongik.ac.kr", "12341234");
 
         mockMvc.perform(post("/v1/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -172,7 +172,7 @@ class SignControllerTest {
     void 로그인_실패() throws Exception {
 
         UserErrorCode userErrorCode = UserErrorCode.EMAIL_LOGIN_FAILED;
-        LoginDto.Request requestDto = getUserLoginRequestDto("user1@hongik.ac.kr", "12341234");
+        LoginDto requestDto = getUserLoginRequestDto("user1@hongik.ac.kr", "12341234");
 
         mockMvc.perform(post("/v1/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -191,7 +191,7 @@ class SignControllerTest {
     void 로그인_실패_비밀번호() throws Exception {
 
         UserErrorCode userErrorCode = UserErrorCode.EMAIL_LOGIN_FAILED;
-        LoginDto.Request requestDto = getUserLoginRequestDto("user@hongik.ac.kr", "123123");
+        LoginDto requestDto = getUserLoginRequestDto("user@hongik.ac.kr", "123123");
         Optional<User> account = userRepository.findByEmail(requestDto.getEmail());
 
         mockMvc.perform(post("/v1/login")
@@ -205,8 +205,8 @@ class SignControllerTest {
         assertThat(tokenRepository.findByKey(account.get().getId())).isEmpty();
     }
 
-    private LoginDto.Request getUserLoginRequestDto(String email, String password) {
-        LoginDto.Request requestDto = LoginDto.Request.builder()
+    private LoginDto getUserLoginRequestDto(String email, String password) {
+        LoginDto requestDto = LoginDto.builder()
                 .email(email)
                 .password(password).build();
         return requestDto;
@@ -218,17 +218,14 @@ class SignControllerTest {
     void 토큰재발급_성공() throws Exception {
 
         // given
-        LoginDto.Response response = signService.login("user@hongik.ac.kr","12341234");
+        TokenDto response = signService.login("user@hongik.ac.kr","12341234");
 
         // when
         ResultActions perform = mockMvc.perform(post("/v1/reissue")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(response)));
 
-        TokenDto reissue = signService.reissue(TokenDto.builder()
-                        .accessToken(response.getAccessToken())
-                        .refreshToken(response.getRefreshToken())
-                .build());
+        TokenDto reissue = signService.reissue(response);
         //then
         perform.andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -241,20 +238,17 @@ class SignControllerTest {
     @DisplayName("[실패] 토큰 재발급 - 잘못된 리프레시 토큰")
     void 토큰재발급_실패 () throws Exception {
         // given
-        LoginDto.Response login = signService.login("user@hongik.ac.kr", "12341234");
-        TokenDto tokenDto = TokenDto.builder()
-                .accessToken(login.getAccessToken())
-                .refreshToken(login.getRefreshToken()).build();
-        tokenDto.setRefreshToken(createRefreshToken(user.getEmail(), user.getRole(),30 * 1000L));
+        TokenDto login = signService.login("user@hongik.ac.kr", "12341234");
+        login.setRefreshToken(createRefreshToken(user.getEmail(), user.getRole(),30 * 1000L));
 
         assertThat(tokenRepository.findByKey(user.getId())).isNotNull();
-        assertThat(tokenRepository.existsByToken(tokenDto.getRefreshToken())).isFalse();
+        assertThat(tokenRepository.existsByToken(login.getRefreshToken())).isFalse();
         JwtErrorCode errorCode = JwtErrorCode.REFRESH_TOKEN_VALID;
 
         // when
         ResultActions perform = mockMvc.perform(post("/v1/reissue")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(tokenDto)));
+                .content(objectMapper.writeValueAsString(login)));
 
         //then
         perform.andExpect(status().is4xxClientError())
