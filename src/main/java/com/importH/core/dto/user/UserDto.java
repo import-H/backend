@@ -42,14 +42,6 @@ public class UserDto {
 
         @ApiModelProperty(value = "웹 수신 동의 여부", example = "true/false")
         private boolean infoByWeb;
-
-//        public User toEntity(Request request) {
-//            User.builder()
-//                    .nickname(request.getNickname())
-//                    .introduction(request.getIntroduction())
-//                    .(request.isInfoByEmail())
-//                    .
-//        }
     }
 
     @Getter

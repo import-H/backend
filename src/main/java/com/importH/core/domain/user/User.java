@@ -3,6 +3,8 @@ package com.importH.core.domain.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.importH.core.domain.base.BaseTimeEntity;
 import com.importH.core.domain.tag.Tag;
+import com.importH.core.dto.user.UserDto;
+import com.importH.core.dto.user.UserDto.Request;
 import lombok.*;
 
 import javax.persistence.*;
@@ -56,5 +58,18 @@ public class User extends BaseTimeEntity {
 
     public void setPassword(String encodePassword) {
         this.password = encodePassword;
+    }
+
+    public void update(Request request) {
+        InfoAgree infoAgree = InfoAgree.builder()
+                .infoByWeb(request.isInfoByWeb())
+                .infoByEmail(request.isInfoByEmail())
+                .build();
+
+        this.nickname = request.getNickname();
+        this.infoAgree = infoAgree;
+        this.profileImage = request.getProfileImage();
+        this.introduction = request.getIntroduction();
+        this.personalUrl = request.getPersonalUrl();
     }
 }

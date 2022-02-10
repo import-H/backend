@@ -3,6 +3,7 @@ package com.importH.core.service;
 import com.importH.config.security.UserAccount;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
+import com.importH.core.dto.user.UserDto.Request;
 import com.importH.core.dto.user.UserDto.Response;
 import com.importH.core.error.exception.UserException;
 import lombok.RequiredArgsConstructor;
@@ -54,5 +55,18 @@ public class UserService implements UserDetailsService {
     public User findById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
     }
+
+    /**
+     * 유저 프로필 정보 수정
+     */
+    @Transactional
+    public Response updateUser(Long userId, User user, Request request) {
+        User findUser = findById(userId);
+        isSameAccount(user, findUser);
+
+        findUser.update(request);
+        return Response.fromEntity(findUser);
+    }
+
 
 }

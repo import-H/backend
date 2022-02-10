@@ -5,6 +5,7 @@ import com.importH.core.WithAccount;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.user.UserDto;
+import com.importH.core.dto.user.UserDto.Response;
 import com.importH.core.error.exception.UserException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class UserServiceTest {
         User account = userRepository.findByNickname("테스트").get();
 
         // when
-        UserDto.Response user = userService.findUserById(account.getId(), account);
+        Response user = userService.findUserById(account.getId(), account);
 
         //then
         assertThat(user)
@@ -82,9 +83,51 @@ class UserServiceTest {
     @DisplayName("[성공] 프로필 정보 수정하기 ")
     void updateUser_success() throws Exception {
         // given
-//        UserDto.Request =
+        UserDto.Request request = UserDto.Request.builder()
+                .nickname("변경")
+                .infoByWeb(false)
+                .infoByEmail(false)
+                .introduction("안녕하세요.")
+                .build();
+
+        User user = userRepository.findByNickname("테스트").get();
+
         // when
 
+        Response updateUser = userService.updateUser(user.getId(), user, request);
+
         //then
+        assertThat(updateUser)
+                .hasFieldOrPropertyWithValue("email", user.getEmail())
+                .hasFieldOrPropertyWithValue("nickname", request.getNickname())
+                .hasFieldOrPropertyWithValue("profileImage", request.getProfileImage())
+                .hasFieldOrPropertyWithValue("introduction", request.getIntroduction())
+                .hasFieldOrPropertyWithValue("personalUrl", request.getPersonalUrl())
+                .hasFieldOrPropertyWithValue("infoByEmail", request.isInfoByEmail())
+                .hasFieldOrPropertyWithValue("infoByWeb", request.isInfoByWeb());
+
     }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[실패] 프로필 정보 수정하기 - 동일하지 않은 회원 ")
+    void updateUser_fail_notAccord_User() throws Exception {
+
+        // given
+        UserDto.Request request = UserDto.Request.builder()
+                .nickname("변경")
+                .infoByWeb(false)
+                .infoByEmail(false)
+                .introduction("안녕하세요.")
+                .build();
+
+        User user = userRepository.findByNickname("테스트").get();
+        User another = userRepository.findByNickname("test1").get();
+
+        // when
+        //then
+        assertThrows(UserException.class, () -> userService.updateUser(another.getId(), user, request));
+
+    }
+
 }

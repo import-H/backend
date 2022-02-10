@@ -22,7 +22,8 @@ public class ExceptionAdvice {
     @ExceptionHandler(UserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected CommonResult userException(HttpServletRequest request, UserException e) {
-        log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
+        log.error("requestUrl : {} , errorCode : {}, errorMessage : {}", request.getRequestURI(), e.getErrorCode(), e.getErrorMessage());
+
         return responseService.getFailResult(e.getErrorCode());
 
     }

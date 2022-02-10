@@ -16,7 +16,7 @@ POST http://localhost:8090/v1/login
 Content-Type: application/json
 
 {
-  "email": "abc@hongik.ac.kr",
+  "email": "abc3@hongik.ac.kr",
   "password": "12341234"
 }
 
@@ -28,12 +28,6 @@ Content-Type: application/json
   "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzI4NDgwOSwiZXhwIjoxNjQzMjg0ODM5fQ.x2IgY-CWDyq0HUIY2wY90ELmGsvIS3ovP30KvkmKLOg",
   "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzI4NDgwOSwiZXhwIjoxNjQ0NDk0NDA5fQ.6rqhONW9Afh7PtZ0d7p-ZWsy1eqSItNQ_OlKnxlvTsw"
 }
-
-
-### 회원 정보 조회
-GET http://localhost:8090/v1/users/101
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDQ0MTM2NDgsImV4cCI6MTY0NDUwMDA0OH0.du3E93086utBHDnxhNmrRJ1aHrsnkA2Po3WX043_loA
-
 
 ### 게시글 조회
 GET http://localhost:8090/v1/boards/1/posts/4
@@ -99,3 +93,20 @@ Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFj
 
 ### 메인화면 전체 게시글 조회
 GET http://localhost:8090/v1/main?page=2
+
+### 회원 정보 조회
+GET http://localhost:8090/v1/users/1
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMzQGhvbmdpay5hYy5rciIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjQ0NDcwODk2LCJleHAiOjE2NDQ1NTcyOTZ9.MmM12CljlMs_bI06Jm3WS5FHTZ2LLoksTHOrBZ81SBM
+
+### 회원 정보 수정
+PUT http://localhost:8090/v1/users/1
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMzQGhvbmdpay5hYy5rciIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjQ0NDcwODk2LCJleHAiOjE2NDQ1NTcyOTZ9.MmM12CljlMs_bI06Jm3WS5FHTZ2LLoksTHOrBZ81SBM
+Content-Type: application/json
+
+{
+  "nickname": "테스트2",
+  "introduction" : "소개입니다.",
+  "personalUrl" : "http://cafe.naver.com",
+  "infoByEmail" : true,
+  "infoByWeb" : true
+}
