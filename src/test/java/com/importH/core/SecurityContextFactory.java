@@ -30,7 +30,7 @@ public class SecurityContextFactory implements WithSecurityContextFactory<WithAc
         User user = User.builder().nickname(nickname)
                 .email(nickname + "@email.com")
                 .password(passwordEncoder.encode("testtest"))
-                .role("ROLE_USER")
+                .role(nickname.equals("관리자") ? "ROLE_ADMIN" : "ROLE_USER")
                 .weekAgree(true)
                 .build();
 
@@ -46,4 +46,5 @@ public class SecurityContextFactory implements WithSecurityContextFactory<WithAc
         securityContext.setAuthentication(token);
         return securityContext;
     }
+
 }

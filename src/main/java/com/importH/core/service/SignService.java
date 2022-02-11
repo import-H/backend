@@ -46,6 +46,8 @@ public class SignService {
         User user = test.toEntity();
         user.setPassword(passwordEncoder.encode(test.getPassword()));
         userRepository.save(user);
+
+        userRepository.save(User.builder().nickname("관리자").email("관리자").password(passwordEncoder.encode("1234")).role("ROLE_ADMIN").build());
     }
 
 

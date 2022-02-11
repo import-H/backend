@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import java.util.SortedMap;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

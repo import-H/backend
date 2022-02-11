@@ -129,6 +129,7 @@ public class PostDto {
         @ApiModelProperty(value = "썸네일", example = "")
         private String thumbnail;
 
+        //TODO tags 삭제
         public static ResponseAll fromEntity(Post post, Set<TagDto> tags) {
 
             return ResponseAll.builder()

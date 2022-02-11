@@ -43,7 +43,7 @@ public class JwtProvider {
 
     // 토큰 유효시간 30분
     private Long accessTokenValidTime = 24 * 60 * 60 * 1000L; // 30 min // 24 hours
-    private Long refreshTokenValidTime = 14 * 24 * 60 * 60 * 1000L; // 14day
+    private Long refreshTokenValidTime = 145 * 24 * 60 * 60 * 1000L; // 14day
 
     private final UserRepository userRepository;
 

@@ -43,8 +43,8 @@ public class User extends BaseTimeEntity {
     @Column(length = 100)
     private String introduction;
 
-    @Column(nullable = false)
-    private Boolean weekAgree;
+    @Builder.Default
+    private Boolean weekAgree = false;
 
     private String personalUrl;
 
@@ -56,6 +56,7 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedTime;
 
     @ManyToMany
+    @Builder.Default
     private Set<Tag> tags = new HashSet<>();
 
     public void setPassword(String encodePassword) {

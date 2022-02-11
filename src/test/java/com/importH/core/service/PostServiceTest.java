@@ -104,7 +104,7 @@ class PostServiceTest {
                 .hasFieldOrPropertyWithValue("responseInfo.likeCount", post.getLikeCount())
                 .hasFieldOrPropertyWithValue("responseInfo.viewCount", post.getViewCount());
 
-        assertThat(response.getResponseInfo().getTags()).hasSameElementsAs(postService.getTagDtos(post));
+        assertThat(response.getResponseInfo().getTags()).hasSameElementsAs(tagService.getTagDtos(post.getTags()));
         assertThat(response.getComments()).hasSameElementsAs(postService.getCommentDtos(post));
     }
 

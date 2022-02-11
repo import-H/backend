@@ -1,11 +1,18 @@
 package com.importH.core.service;
 
 
+import com.importH.core.domain.post.Post;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.domain.tag.TagRepository;
+import com.importH.core.dto.post.PostDto;
+import com.importH.core.dto.tag.TagDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,6 +31,17 @@ public class TagService {
         return findTag;
     }
 
+    public Set<Tag> getTags(List<TagDto> tags) {
+        return tags.stream()
+                .map(TagDto::toEntity)
+                .map(tag -> getTag(tag))
+                .collect(Collectors.toSet());
+    }
+
+    public Set<TagDto> getTagDtos(Set<Tag> tags) {
+        return tags.stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet());
+    }
+
     private Tag saveTag(Tag tag) {
         Tag save = tagRepository.save(tag);
         return save;
@@ -32,4 +50,5 @@ public class TagService {
     public Tag findByTitle(String name) {
         return tagRepository.findByName(name).orElse(null);
     }
+
 }

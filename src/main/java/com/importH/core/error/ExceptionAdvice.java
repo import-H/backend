@@ -1,5 +1,6 @@
 package com.importH.core.error;
 
+import com.importH.core.error.code.BannerErrorCode;
 import com.importH.core.error.exception.*;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.service.response.ResponseService;
@@ -53,6 +54,13 @@ public class ExceptionAdvice {
     @ExceptionHandler(CommentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected CommonResult CommentException(HttpServletRequest request, CommentException e) {
+        log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
+        return responseService.getFailResult(e.getErrorCode());
+    }
+
+    @ExceptionHandler(BannerException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected CommonResult BannerException(HttpServletRequest request, BannerException e) {
         log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
         return responseService.getFailResult(e.getErrorCode());
     }

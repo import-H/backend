@@ -13,10 +13,12 @@ import com.importH.core.service.response.ResponseService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Api(tags = {"2. User"})
@@ -77,15 +79,18 @@ public class UserController {
         return responseService.getSuccessResult();
     }
 
-
     private void validParameter(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new UserException(UserErrorCode.NOT_VALID_REQUEST_PARAMETERS,
-                    bindingResult.getAllErrors().stream()
-                            .map(objectError -> objectError.getDefaultMessage())
-                            .collect(Collectors.toList())
-                            .toString());
+                    getErrorMessage(bindingResult.getAllErrors()));
         }
+    }
+
+    private String getErrorMessage(List<ObjectError> errors) {
+        return errors.stream()
+                .map(objectError -> objectError.getDefaultMessage())
+                .collect(Collectors.toList())
+                .toString();
     }
 
 }

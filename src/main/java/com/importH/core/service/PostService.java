@@ -31,7 +31,6 @@ public class PostService {
     private final PostRepository postRepository;
     private final TagService tagService;
     private final PostLikeRepository postLikeRepository;
-    private final UserRepository userRepository;
 
     /**
      * 게시글 저장
@@ -47,17 +46,11 @@ public class PostService {
     }
 
     private void setPostRelation(User user, int boardType, PostDto.Request postRequestDto, Post post) {
-        post.setTags(getTags(postRequestDto));
+        post.setTags(tagService.getTags(postRequestDto.getTags()));
         post.setUser(user);
         post.setBoardType(boardType);
     }
 
-    private Set<Tag> getTags(PostDto.Request postRequestDto) {
-        return postRequestDto.getTags().stream()
-                .map(TagDto::toEntity)
-                .map(tag -> tagService.getTag(tag))
-                .collect(Collectors.toSet());
-    }
 
     private Post savePost(Post post) {
         Post save = postRepository.save(post);
@@ -75,7 +68,7 @@ public class PostService {
 
         increaseViewCount(user, post);
 
-        Set<TagDto> tags = getTagDtos(post);
+        Set<TagDto> tags = tagService.getTagDtos(post.getTags());
         List<CommentDto.Response> comments = getCommentDtos(post);
 
         boolean isLike = havePostLike(user, post);
@@ -102,10 +95,6 @@ public class PostService {
         return post.getComments().stream().map(comment -> CommentDto.Response.fromEntity(comment)).collect(Collectors.toList());
     }
 
-    public Set<TagDto> getTagDtos(Post post) {
-        return post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet());
-    }
-
     private Post findByTypeAndId(int boardId, Long postId) {
         return postRepository.findByIdAndType(postId, boardId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
     }
@@ -118,7 +107,7 @@ public class PostService {
 
         Post findPost = findByTypeAndId(boardId, postId);
 
-        Set<Tag> tags = getTags(postRequestDto);
+        Set<Tag> tags = tagService.getTags(postRequestDto.getTags());
 
         validateAccount(user, findPost);
 
