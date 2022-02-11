@@ -1,0 +1,20 @@
+### 회원 정보 조회
+GET http://localhost:8090/v1/users/1
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
+
+### 회원 정보 수정
+PUT http://localhost:8090/v1/users/1
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
+Content-Type: application/json
+
+{
+  "nickname": "테스트2",
+  "introduction" : "소개입니다.",
+  "personalUrl" : "http://cafe.naver.com",
+  "infoByEmail" : true,
+  "infoByWeb" : true
+}
+
+### 회원 탈퇴
+DELETE http://localhost:8090/v1/users/1
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc

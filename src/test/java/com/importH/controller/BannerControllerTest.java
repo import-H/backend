@@ -1,30 +1,20 @@
 package com.importH.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.importH.config.security.SecurityConfiguration;
 import com.importH.core.WithAccount;
 import com.importH.core.domain.banner.Banner;
 import com.importH.core.domain.banner.BannerRepository;
 import com.importH.core.domain.tag.Tag;
-import com.importH.core.dto.banner.BannerDto;
 import com.importH.core.dto.banner.BannerDto.Request;
 import com.importH.core.dto.tag.TagDto;
 import com.importH.core.error.code.BannerErrorCode;
-import com.importH.core.model.response.CommonResult;
-import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.BannerService;
-import com.importH.core.service.response.ResponseService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -34,12 +24,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.map;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -94,7 +83,7 @@ class BannerControllerTest {
     void registerBanner_fail() throws Exception {
         // given
         Request request = getRequest();
-        BannerErrorCode errorCode = BannerErrorCode.NOT_AUTHORITY_REG;
+        BannerErrorCode errorCode = BannerErrorCode.NOT_AUTHORITY_REGISTER;
 
         // when
         ResultActions perform = mockMvc.perform(post("/v1/banners")
@@ -104,7 +93,8 @@ class BannerControllerTest {
         //then
         perform.andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.msg").value(errorCode.getDescription()));
+                .andExpect(jsonPath("$.msg").value(errorCode.getDescription()))
+                .andDo(print());
 
     }
 

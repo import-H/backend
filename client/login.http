@@ -1,0 +1,31 @@
+
+### 회원가입  정상 요청
+POST http://localhost:8090/v1/signup
+Content-Type: application/json
+
+{
+  "email": "abc3@hongik.ac.kr",
+  "nickname": "자몽",
+  "password": "12341234",
+  "confirmPassword": "12341234",
+  "agree": "true"
+}
+
+### 로그인 정상 요청
+POST http://localhost:8090/v1/login
+Content-Type: application/json
+
+{
+  "email": "abc@hongik.ac.kr",
+  "password": "12341234"
+}
+
+### 토큰 재발급 정상 요청
+POST http://localhost:8090/v1/reissue
+Content-Type: application/json
+
+{
+  "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzI4NDgwOSwiZXhwIjoxNjQzMjg0ODM5fQ.x2IgY-CWDyq0HUIY2wY90ELmGsvIS3ovP30KvkmKLOg",
+  "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzI4NDgwOSwiZXhwIjoxNjQ0NDk0NDA5fQ.6rqhONW9Afh7PtZ0d7p-ZWsy1eqSItNQ_OlKnxlvTsw"
+}
+

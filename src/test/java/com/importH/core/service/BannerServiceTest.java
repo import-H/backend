@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,7 +72,7 @@ class BannerServiceTest {
     void registerBanner_fail() throws Exception {
         // given
         Request req = getRequest();
-        BannerErrorCode err = BannerErrorCode.NOT_AUTHORITY_REG;
+        BannerErrorCode err = BannerErrorCode.NOT_AUTHORITY_REGISTER;
 
         // when
         BannerException bannerException = assertThrows(BannerException.class, () -> bannerService.registerBanner(req, "ROLE_USER"));

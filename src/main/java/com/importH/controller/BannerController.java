@@ -23,7 +23,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.importH.core.error.code.BannerErrorCode.NOT_AUTHORITY_REG;
+import static com.importH.core.error.code.BannerErrorCode.NOT_AUTHORITY_REGISTER;
 
 @Api(tags = "7. Banner")
 @Slf4j
@@ -54,7 +54,7 @@ public class BannerController  {
 
     private void validParameter(BindingResult bindingResult) {
             if (bindingResult.hasErrors()) {
-                throw new BannerException(NOT_AUTHORITY_REG, getErrorMessage(bindingResult.getAllErrors()));
+                throw new BannerException(NOT_AUTHORITY_REGISTER, getErrorMessage(bindingResult.getAllErrors()));
             }
     }
 

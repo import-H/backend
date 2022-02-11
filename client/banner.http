@@ -1,0 +1,21 @@
+### 관리자 로그인
+POST http://localhost:8090/v1/login
+Content-Type: application/json
+
+{
+  "email": "관리자",
+  "password": "1234"
+}
+
+### 배너 등록
+POST http://localhost:8090/v1/banners
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLqtIDrpqzsnpAiLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJuaWNrbmFtZSI6Iuq0gOumrOyekCIsInVzZXJJZCI6MiwicHJvZmlsZUltYWdlIjoiTiIsImlhdCI6MTY0NDU2MjIwMywiZXhwIjoxNjQ0NjQ4NjAzfQ.BtCqt5552F1TK6QMjDcf68gdjiyg2tctSuTYTEIuRfk
+Content-Type: application/json
+
+{
+  "title" : "배너",
+  "content" : "배너 입니다.",
+  "url" : "http://cafe.naver.com",
+  "imgUrl" : "x",
+  "tags" : ["자바","자바1"]
+}

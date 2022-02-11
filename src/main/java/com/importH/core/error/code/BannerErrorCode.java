@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum BannerErrorCode implements  ErrorCode {
 
-    NOT_AUTHORITY_REG("배너를 작성할 권한이 없습니다.", 400),
+    NOT_AUTHORITY_REGISTER("배너를 작성할 권한이 없습니다.", 403),
     NOT_FOUND_BANNER("해당 배너를 찾을수 없습니다.",400);
 
 

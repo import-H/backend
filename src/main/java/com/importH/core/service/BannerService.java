@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.importH.core.error.code.BannerErrorCode.NOT_AUTHORITY_REG;
+import static com.importH.core.error.code.BannerErrorCode.NOT_AUTHORITY_REGISTER;
 import static com.importH.core.error.code.BannerErrorCode.NOT_FOUND_BANNER;
 
 @Service
@@ -26,7 +26,7 @@ public class BannerService {
     public Response registerBanner(Request bannerDto, String role) {
 
         if (!role.equals("ROLE_ADMIN")) {
-            throw new BannerException(NOT_AUTHORITY_REG);
+            throw new BannerException(NOT_AUTHORITY_REGISTER);
         }
         Banner banner = bannerDto.toEntity();
         banner.setTags(tagService.getTags(bannerDto.getTags()));
