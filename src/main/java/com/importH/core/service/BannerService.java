@@ -40,4 +40,9 @@ public class BannerService {
         return bannerRepository.findById(bannerId).orElseThrow(() -> new BannerException(NOT_FOUND_BANNER));
     }
 
+    public Response getBanner(Long bannerId) {
+        Banner banner = findById(bannerId);
+
+        return Response.fromEntity(banner);
+    }
 }
