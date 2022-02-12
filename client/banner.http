@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### 배너 등록
 POST http://localhost:8090/v1/banners
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLqtIDrpqzsnpAiLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJuaWNrbmFtZSI6Iuq0gOumrOyekCIsInVzZXJJZCI6MiwicHJvZmlsZUltYWdlIjoiTiIsImlhdCI6MTY0NDU2MjIwMywiZXhwIjoxNjQ0NjQ4NjAzfQ.BtCqt5552F1TK6QMjDcf68gdjiyg2tctSuTYTEIuRfk
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLqtIDrpqzsnpAiLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJuaWNrbmFtZSI6Iuq0gOumrOyekCIsInVzZXJJZCI6MiwicHJvZmlsZUltYWdlIjoiTiIsImlhdCI6MTY0NDY4MDE3MiwiZXhwIjoxNjQ0NzY2NTcyfQ.HkXmB1uFjQG79-QKtN8h_xc6I1BgF2VKSapOwb0Q_EE
 Content-Type: application/json
 
 {
@@ -19,3 +19,7 @@ Content-Type: application/json
   "imgUrl" : "x",
   "tags" : ["자바","자바1"]
 }
+
+
+### 배너 가져오기
+GET http://localhost:8090/v1/banners

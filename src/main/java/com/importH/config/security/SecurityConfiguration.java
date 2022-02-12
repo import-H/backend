@@ -41,7 +41,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/v1/reissue", "/v1/social/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/oauth/kakao/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/v1/boards/*/posts/*","/v1/boards/*/posts","/v1/file/upload/**","/v1/main").permitAll()
+                .antMatchers(HttpMethod.GET, "/v1/boards/*/posts/*","/v1/boards/*/posts","/v1/file/upload/**"
+                        ,"/v1/main","/v1/banners").permitAll()
                 .anyRequest().hasAnyRole("USER","ADMIN")
 
 

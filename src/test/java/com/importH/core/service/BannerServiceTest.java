@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -91,26 +90,25 @@ class BannerServiceTest {
     void getBanner_success() throws Exception {
         // given
         Request req = getRequest();
-        when(bannerRepository.findById(any())).thenReturn(Optional.of(getEntity(req)));
+        when(bannerRepository.findAll()).thenReturn(List.of(getEntity(req),getEntity(req),getEntity(req)));
 
-        Long bannerId = 1L;
         // when
-        Response response = bannerService.getBanner(bannerId);
+        List<Response> banners = bannerService.getBanners();
 
         //then
-        assertThat(response)
+        assertThat(banners.get(0))
                 .hasFieldOrPropertyWithValue("title", req.getTitle())
                 .hasFieldOrPropertyWithValue("content", req.getContent())
                 .hasFieldOrPropertyWithValue("imgUrl", req.getImgUrl())
                 .hasFieldOrPropertyWithValue("url", req.getUrl())
                 .hasFieldOrPropertyWithValue("bannerId", 1L);
 
-        assertThat(response.getTags()).hasSameElementsAs(req.getTags());
+        assertThat(banners.get(0).getTags()).hasSameElementsAs(req.getTags());
 
-        verify(bannerRepository, times(1)).findById(any());
+        verify(bannerRepository, times(1)).findAll();
     }
 
-    @Test
+/*    @Test
     @DisplayName("[실패] 배너 조회 실패 - 존재하지 않는 배너")
     void getBanner_fail() throws Exception {
         // given
@@ -118,7 +116,7 @@ class BannerServiceTest {
         BannerErrorCode err = BannerErrorCode.NOT_FOUND_BANNER;
 
         // when
-        BannerException exception = assertThrows(BannerException.class, () -> bannerService.getBanner(2L));
+        BannerException exception = assertThrows(BannerException.class, () -> bannerService.getBanner());
 
         //then
         assertThat(exception)
@@ -126,7 +124,7 @@ class BannerServiceTest {
                 .hasFieldOrPropertyWithValue("errorMessage",err.getDescription());
 
         verify(bannerRepository, times(1)).findById(any());
-    }
+    }*/
 
     @Test
     @DisplayName("[성공] 배너 삭제 성공")

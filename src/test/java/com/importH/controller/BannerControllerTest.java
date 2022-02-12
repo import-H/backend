@@ -5,6 +5,7 @@ import com.importH.core.WithAccount;
 import com.importH.core.domain.banner.Banner;
 import com.importH.core.domain.banner.BannerRepository;
 import com.importH.core.domain.tag.Tag;
+import com.importH.core.dto.banner.BannerDto;
 import com.importH.core.dto.banner.BannerDto.Request;
 import com.importH.core.dto.tag.TagDto;
 import com.importH.core.error.code.BannerErrorCode;
@@ -98,12 +99,41 @@ class BannerControllerTest {
 
     }
 
+    @Test
+    @DisplayName("[성공] 배너 가져오기")
+    void getBanners_success() throws Exception {
+
+        // given
+        for (int i = 0; i < 3; i++) {
+            Request request = getRequest(i);
+            bannerService.registerBanner(request, "ROLE_ADMIN");
+        }
+        // when
+        ResultActions perform = mockMvc.perform(get("/v1/banners"));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.list[*].bannerId").exists())
+                .andExpect(jsonPath("$.list[*].title").exists())
+                .andExpect(jsonPath("$.list[*].url").exists())
+                .andExpect(jsonPath("$.list[*].imgUrl").exists())
+                .andExpect(jsonPath("$.list[*].content").exists())
+                .andExpect(jsonPath("$.list[*].tags").exists())
+                .andDo(print());
+
+    }
+
     private Request getRequest() {
+        return getRequest(1);
+    }
+
+    private Request getRequest(int seq) {
         Request bannerDto = Request.builder()
-                .title("제목")
+                .title("제목"+seq)
                 .url("http://cafe.naver.com")
                 .tags(List.of(getTag("태그1"), getTag("태그2")))
-                .content("배너 내용")
+                .content("배너 내용"+seq)
                 .imgUrl("배너 이미지 주소")
                 .build();
         return bannerDto;

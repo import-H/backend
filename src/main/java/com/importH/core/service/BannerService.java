@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.importH.core.error.code.BannerErrorCode.NOT_AUTHORITY_REGISTER;
 import static com.importH.core.error.code.BannerErrorCode.NOT_FOUND_BANNER;
 
@@ -47,10 +50,11 @@ public class BannerService {
         return bannerRepository.findById(bannerId).orElseThrow(() -> new BannerException(NOT_FOUND_BANNER));
     }
 
-    public Response getBanner(Long bannerId) {
-        Banner banner = findById(bannerId);
+    public List<Response> getBanners() {
+        List<Banner> banners = bannerRepository.findAll();
 
-        return Response.fromEntity(banner);
+        return banners.stream().map(banner -> Response.fromEntity(banner))
+                .collect(Collectors.toList());
     }
 
     public void deleteBanner(Banner banner, String role) {

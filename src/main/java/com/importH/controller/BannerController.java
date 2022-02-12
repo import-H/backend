@@ -5,6 +5,7 @@ import com.importH.core.domain.user.User;
 import com.importH.core.dto.banner.BannerDto.Request;
 import com.importH.core.dto.banner.BannerDto.Response;
 import com.importH.core.error.exception.BannerException;
+import com.importH.core.model.response.ListResult;
 import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.BannerService;
 import com.importH.core.service.response.ResponseService;
@@ -14,10 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -50,6 +48,12 @@ public class BannerController  {
 
         validParameter(bindingResult);
         return responseService.getSingleResult(bannerService.registerBanner(request, user.getRole()));
+    }
+
+    @GetMapping
+    @ApiOperation(value = "배너 가져오기", notes = "등록된 배너 정보들을 가져옵니다.")
+    public ListResult<Response> getBanners() {
+        return responseService.getListResult(bannerService.getBanners());
     }
 
     private void validParameter(BindingResult bindingResult) {
