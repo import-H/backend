@@ -25,15 +25,22 @@ public class BannerService {
     @Transactional
     public Response registerBanner(Request bannerDto, String role) {
 
-        if (!role.equals("ROLE_ADMIN")) {
-            throw new BannerException(NOT_AUTHORITY_REGISTER);
-        }
+        isAdmin(role);
         Banner banner = bannerDto.toEntity();
         banner.setTags(tagService.getTags(bannerDto.getTags()));
 
-        bannerRepository.save(banner);
 
-        return Response.fromEntity(banner);
+        return Response.fromEntity(saveBanner(banner));
+    }
+
+    private Banner saveBanner(Banner banner) {
+        return bannerRepository.save(banner);
+    }
+
+    private void isAdmin(String role) {
+        if (!role.equals("ROLE_ADMIN")) {
+            throw new BannerException(NOT_AUTHORITY_REGISTER);
+        }
     }
 
     public Banner findById(Long bannerId) {
@@ -44,5 +51,11 @@ public class BannerService {
         Banner banner = findById(bannerId);
 
         return Response.fromEntity(banner);
+    }
+
+    public void deleteBanner(Banner banner, String role) {
+
+        isAdmin(role);
+        bannerRepository.delete(banner);
     }
 }

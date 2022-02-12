@@ -128,6 +128,43 @@ class BannerServiceTest {
         verify(bannerRepository, times(1)).findById(any());
     }
 
+    @Test
+    @DisplayName("[성공] 배너 삭제 성공")
+    void deleteBanner_success() throws Exception {
+        // given
+        String role = "ROLE_ADMIN";
+        Banner banner = getEntity(getRequest());
+
+        // when
+        bannerService.deleteBanner(banner, role);
+
+        //then
+        verify(bannerRepository, times(1)).delete(any());
+
+    }
+
+
+    @Test
+    @DisplayName("[성공] 배너 삭제 실패 - 관리자가 아닌 일반 유저가 접근시")
+    void deleteBanner_fail() throws Exception {
+        
+        // given
+        String role = "ROLE_USER";
+        Banner banner = getEntity(getRequest());
+        BannerErrorCode err = BannerErrorCode.NOT_AUTHORITY_REGISTER;
+
+        // when
+        BannerException exception = assertThrows(BannerException.class, () -> bannerService.deleteBanner(banner, role));
+
+        //then
+        assertThat(exception)
+                .hasFieldOrPropertyWithValue("errorCode", err)
+                .hasFieldOrPropertyWithValue("errorMessage",err.getDescription());
+
+        verify(bannerRepository, never()).delete(any());
+
+    }
+
     private Request getRequest() {
         Request bannerDto = Request.builder()
                 .title("제목")
