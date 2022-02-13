@@ -1,3 +1,4 @@
+
 ### 이미지 업로드 테스트
 POST http://localhost:8090/v1/file/upload
 Authorization: {{Authorization}}
@@ -9,5 +10,10 @@ Content-Type: image/png
 
 < C:\Users\busan\ScreenCapture.png
 --WebAppBoundary--
+
+> {%
+client.global.set("imageURL", response.body.data.imageURL);
+client.log("생성된 URL" + client.global.get("imageURL"));
+%}
 
 

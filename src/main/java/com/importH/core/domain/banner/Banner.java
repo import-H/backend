@@ -36,6 +36,10 @@ public class Banner {
     private Set<Tag> tags = new HashSet<>();
 
 
+    public String getStoreImageUrl() {
+        return imageUrl.substring(imageUrl.indexOf("upload")+7);
+    }
+
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }

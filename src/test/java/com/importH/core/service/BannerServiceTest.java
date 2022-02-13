@@ -113,23 +113,7 @@ class BannerServiceTest {
         verify(bannerRepository, times(1)).findAll();
     }
 
-/*    @Test
-    @DisplayName("[실패] 배너 조회 실패 - 존재하지 않는 배너")
-    void getBanner_fail() throws Exception {
-        // given
-        when(bannerRepository.findById(any())).thenReturn(Optional.empty());
-        BannerErrorCode err = BannerErrorCode.NOT_FOUND_BANNER;
 
-        // when
-        BannerException exception = assertThrows(BannerException.class, () -> bannerService.getBanner());
-
-        //then
-        assertThat(exception)
-                .hasFieldOrPropertyWithValue("errorCode", err)
-                .hasFieldOrPropertyWithValue("errorMessage",err.getDescription());
-
-        verify(bannerRepository, times(1)).findById(any());
-    }*/
 
     @Test
     @DisplayName("[성공] 배너 삭제 성공")

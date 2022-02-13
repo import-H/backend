@@ -60,7 +60,7 @@ public class BannerService {
 
         isAdmin(role);
         Banner banner = findById(bannerId);
-        fileService.deleteImage(banner.getImageUrl());
+        fileService.deleteImage(banner.getStoreImageUrl());
         bannerRepository.delete(banner);
     }
 }
