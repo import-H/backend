@@ -7,6 +7,7 @@ import com.importH.core.domain.banner.BannerRepository;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.banner.BannerDto;
 import com.importH.core.dto.banner.BannerDto.Request;
+import com.importH.core.dto.banner.BannerDto.Response;
 import com.importH.core.dto.tag.TagDto;
 import com.importH.core.error.code.BannerErrorCode;
 import com.importH.core.service.BannerService;
@@ -21,14 +22,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -84,7 +83,7 @@ class BannerControllerTest {
     void registerBanner_fail() throws Exception {
         // given
         Request request = getRequest();
-        BannerErrorCode errorCode = BannerErrorCode.NOT_AUTHORITY_REGISTER;
+        BannerErrorCode errorCode = BannerErrorCode.NOT_AUTHORITY_ACCESS;
 
         // when
         ResultActions perform = mockMvc.perform(post("/v1/banners")
@@ -124,6 +123,50 @@ class BannerControllerTest {
 
     }
 
+    @Test
+    @WithAccount("관리자")
+    @DisplayName("[성공] 관리자가 존재하는 배너 삭제하기")
+    void deleteBanner_success() throws Exception {
+        // given
+        Response response = bannerService.registerBanner(getRequest(), "ROLE_ADMIN");
+        Banner banner = bannerRepository.findById(response.getBannerId()).get();
+        File file = new File(banner.getImageUrl());
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/v1/banners/" + banner.getId()));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        assertThat(bannerRepository.findById(banner.getId())).isEmpty();
+
+        assertThat(file.exists()).isFalse();
+    }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[실패] 배너 삭제하기 - 권한이 없는 유저가 접근")
+    void deleteBanner_fail_user() throws Exception {
+        // given
+        Response response = bannerService.registerBanner(getRequest(), "ROLE_ADMIN");
+        Banner banner = bannerRepository.findById(response.getBannerId()).get();
+        BannerErrorCode err = BannerErrorCode.NOT_AUTHORITY_ACCESS;
+        // when
+        ResultActions perform = mockMvc.perform(delete("/v1/banners/" + banner.getId()));
+
+        //then
+        perform.andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.msg").value(err.getDescription()));
+
+        assertThat(bannerRepository.findById(banner.getId())).isPresent();
+
+    }
+
+
+
+
     private Request getRequest() {
         return getRequest(1);
     }
@@ -134,7 +177,7 @@ class BannerControllerTest {
                 .url("http://cafe.naver.com")
                 .tags(List.of(getTag("태그1"), getTag("태그2")))
                 .content("배너 내용"+seq)
-                .imgUrl("배너 이미지 주소")
+                .imgUrl("95d9da62-a6c6-43df-8caa-bb80a3d71b1d.png")
                 .build();
         return bannerDto;
     }

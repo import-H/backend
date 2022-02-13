@@ -4,7 +4,9 @@ import com.importH.config.security.CurrentUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.banner.BannerDto.Request;
 import com.importH.core.dto.banner.BannerDto.Response;
+import com.importH.core.error.code.BannerErrorCode;
 import com.importH.core.error.exception.BannerException;
+import com.importH.core.model.response.CommonResult;
 import com.importH.core.model.response.ListResult;
 import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.BannerService;
@@ -21,7 +23,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.importH.core.error.code.BannerErrorCode.NOT_AUTHORITY_REGISTER;
+import static com.importH.core.error.code.BannerErrorCode.NOT_AUTHORITY_ACCESS;
 
 @Api(tags = "7. Banner")
 @Slf4j
@@ -58,8 +60,23 @@ public class BannerController  {
 
     private void validParameter(BindingResult bindingResult) {
             if (bindingResult.hasErrors()) {
-                throw new BannerException(NOT_AUTHORITY_REGISTER, getErrorMessage(bindingResult.getAllErrors()));
+                throw new BannerException(NOT_AUTHORITY_ACCESS, getErrorMessage(bindingResult.getAllErrors()));
             }
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "Authorization",
+                    value = "로그인 성공 후 AccessToken",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(value = "배너 삭제", notes = "bannerId 에 해당하는 배너를 삭제합니다.")
+    @DeleteMapping("/{bannerId}")
+    public CommonResult deleteBanner(@ApiIgnore @CurrentUser User user,
+                                     @ApiParam(value = "bannerId", example = "1") @PathVariable Long  bannerId) {
+
+        bannerService.deleteBanner(bannerId, user.getRole());
+        return responseService.getSuccessResult();
     }
 
     private String getErrorMessage(List<ObjectError> errors) {

@@ -6,20 +6,29 @@ Content-Type: application/json
   "email": "관리자",
   "password": "1234"
 }
+> {%
+client.global.set("Authorization", response.body.data.accessToken);
+client.log("생성된 보안키" + client.global.get("Authorization"));
+%}
 
 ### 배너 등록
 POST http://localhost:8090/v1/banners
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLqtIDrpqzsnpAiLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJuaWNrbmFtZSI6Iuq0gOumrOyekCIsInVzZXJJZCI6MiwicHJvZmlsZUltYWdlIjoiTiIsImlhdCI6MTY0NDY4MDE3MiwiZXhwIjoxNjQ0NzY2NTcyfQ.HkXmB1uFjQG79-QKtN8h_xc6I1BgF2VKSapOwb0Q_EE
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
   "title" : "배너",
   "content" : "배너 입니다.",
   "url" : "http://cafe.naver.com",
-  "imgUrl" : "x",
+  "imgUrl" : "/v1/file/upload/95d9da62-a6c6-43df-8caa-bb80a3d71b1d.png",
   "tags" : ["자바","자바1"]
 }
 
 
 ### 배너 가져오기
 GET http://localhost:8090/v1/banners
+
+
+### 배너 삭제하기
+DELETE http://localhost:8090/v1/banners
+Authorization: {{Authorization}}

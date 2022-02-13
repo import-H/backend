@@ -5,7 +5,6 @@ import com.importH.core.WithAccount;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.user.UserDto;
-import com.importH.core.error.code.ErrorCode;
 import com.importH.core.error.code.UserErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

@@ -2,6 +2,7 @@ package com.importH.core.domain.post;
 
 import com.importH.core.domain.base.BaseTimeEntity;
 import com.importH.core.domain.comment.Comment;
+import com.importH.core.domain.image.Image;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.PostDto;
@@ -50,6 +51,7 @@ public class Post extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostLike> postLikes = new ArrayList<>();
+
 
     public Long updatePost(PostDto.Request postRequestDto, Set<Tag> tags) {
         this.tags = tags;

@@ -18,11 +18,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import static com.importH.core.error.code.JwtErrorCode.AUTHENTICATION_ENTRYPOINT;
 

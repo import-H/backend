@@ -1,0 +1,13 @@
+### 이미지 업로드 테스트
+POST http://localhost:8090/v1/file/upload
+Authorization: {{Authorization}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="ScreenCapture.png"
+Content-Type: image/png
+
+< C:\Users\busan\ScreenCapture.png
+--WebAppBoundary--
+
+

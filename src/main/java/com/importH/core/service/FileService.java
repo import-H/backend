@@ -73,4 +73,14 @@ public class FileService {
     public String  getFullPath(String filename) {
         return fileDir + filename;
     }
+
+    public void deleteImage(String imgUrl) {
+        File deleteFie = new File(fileDir + imgUrl);
+        if (deleteFie.exists()) {
+            deleteFie.delete();
+            log.info("파일을 삭제하였습니다.");
+        } else {
+            log.info("파일이 존재하지 않습니다.");
+        }
+    }
 }

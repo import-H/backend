@@ -17,11 +17,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +35,9 @@ class BannerServiceTest {
 
     @Mock
     TagService tagService;
+
+    @Mock
+    FileService fileService;
 
     @InjectMocks
     BannerService bannerService;
@@ -72,7 +77,7 @@ class BannerServiceTest {
     void registerBanner_fail() throws Exception {
         // given
         Request req = getRequest();
-        BannerErrorCode err = BannerErrorCode.NOT_AUTHORITY_REGISTER;
+        BannerErrorCode err = BannerErrorCode.NOT_AUTHORITY_ACCESS;
 
         // when
         BannerException bannerException = assertThrows(BannerException.class, () -> bannerService.registerBanner(req, "ROLE_USER"));
@@ -129,12 +134,14 @@ class BannerServiceTest {
     @Test
     @DisplayName("[성공] 배너 삭제 성공")
     void deleteBanner_success() throws Exception {
+
         // given
         String role = "ROLE_ADMIN";
         Banner banner = getEntity(getRequest());
+        when(bannerRepository.findById(any())).thenReturn(Optional.of(getEntity(getRequest())));
 
         // when
-        bannerService.deleteBanner(banner, role);
+        bannerService.deleteBanner(banner.getId(), role);
 
         //then
         verify(bannerRepository, times(1)).delete(any());
@@ -149,10 +156,10 @@ class BannerServiceTest {
         // given
         String role = "ROLE_USER";
         Banner banner = getEntity(getRequest());
-        BannerErrorCode err = BannerErrorCode.NOT_AUTHORITY_REGISTER;
+        BannerErrorCode err = BannerErrorCode.NOT_AUTHORITY_ACCESS;
 
         // when
-        BannerException exception = assertThrows(BannerException.class, () -> bannerService.deleteBanner(banner, role));
+        BannerException exception = assertThrows(BannerException.class, () -> bannerService.deleteBanner(banner.getId(), role));
 
         //then
         assertThat(exception)
@@ -160,7 +167,27 @@ class BannerServiceTest {
                 .hasFieldOrPropertyWithValue("errorMessage",err.getDescription());
 
         verify(bannerRepository, never()).delete(any());
+    }
 
+    @Test
+    @DisplayName("[성공] 배너 삭제 실패 - bannerId 에 해당하는 배너가 없을시")
+    void deleteBanner_fail_notFound_Banner() throws Exception {
+
+        // given
+        String role = "ROLE_ADMIN";
+        Banner banner = getEntity(getRequest());
+        when(bannerRepository.findById(any())).thenReturn(Optional.empty());
+        BannerErrorCode err = BannerErrorCode.NOT_FOUND_BANNER;
+
+        // when
+        BannerException exception = assertThrows(BannerException.class, () -> bannerService.deleteBanner(banner.getId(), role));
+
+        //then
+        assertThat(exception)
+                .hasFieldOrPropertyWithValue("errorCode", err)
+                .hasFieldOrPropertyWithValue("errorMessage",err.getDescription());
+
+        verify(bannerRepository, never()).delete(any());
     }
 
     private Request getRequest() {

@@ -5,7 +5,6 @@ import com.importH.core.domain.post.PostLikeRepository;
 import com.importH.core.domain.post.PostRepository;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.domain.user.User;
-import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.post.CommentDto;
 import com.importH.core.dto.post.PostDto;
 import com.importH.core.dto.tag.TagDto;

@@ -3,7 +3,6 @@ package com.importH.core.domain.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.importH.core.domain.base.BaseTimeEntity;
 import com.importH.core.domain.tag.Tag;
-import com.importH.core.dto.user.UserDto;
 import com.importH.core.dto.user.UserDto.Request;
 import lombok.*;
 

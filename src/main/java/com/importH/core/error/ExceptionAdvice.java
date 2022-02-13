@@ -1,6 +1,5 @@
 package com.importH.core.error;
 
-import com.importH.core.error.code.BannerErrorCode;
 import com.importH.core.error.exception.*;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.service.response.ResponseService;

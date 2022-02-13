@@ -12,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.importH.core.error.code.BannerErrorCode.NOT_AUTHORITY_REGISTER;
-import static com.importH.core.error.code.BannerErrorCode.NOT_FOUND_BANNER;
+import static com.importH.core.error.code.BannerErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,7 +20,7 @@ import static com.importH.core.error.code.BannerErrorCode.NOT_FOUND_BANNER;
 public class BannerService {
 
     private final BannerRepository bannerRepository;
-
+    private final FileService fileService;
     private final TagService tagService;
 
 
@@ -42,7 +41,7 @@ public class BannerService {
 
     private void isAdmin(String role) {
         if (!role.equals("ROLE_ADMIN")) {
-            throw new BannerException(NOT_AUTHORITY_REGISTER);
+            throw new BannerException(NOT_AUTHORITY_ACCESS);
         }
     }
 
@@ -57,9 +56,11 @@ public class BannerService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteBanner(Banner banner, String role) {
+    public void deleteBanner(Long bannerId, String role) {
 
         isAdmin(role);
+        Banner banner = findById(bannerId);
+        fileService.deleteImage(banner.getImageUrl());
         bannerRepository.delete(banner);
     }
 }
