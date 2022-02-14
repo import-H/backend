@@ -4,7 +4,7 @@ import com.importH.core.domain.comment.Comment;
 import com.importH.core.domain.comment.CommentRepository;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.user.User;
-import com.importH.core.dto.post.CommentDto;
+import com.importH.core.dto.post.CommentDto.Request;
 import com.importH.core.error.code.CommentErrorCode;
 import com.importH.core.error.exception.CommentException;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class CommentService {
      * 댓글 등록
      */
     @Transactional
-    public void registerComment(Long postsId, User user, CommentDto.Request commentDto) {
+    public Long registerComment(Long postsId, User user, Request commentDto) {
 
         Post post = postService.findByPostId(postsId);
 
@@ -31,6 +31,8 @@ public class CommentService {
         setCommentRelation(user, post, comment);
 
         saveComment(comment);
+
+        return comment.getId();
     }
 
     private void setCommentRelation(User user, Post post, Comment comment) {
@@ -47,7 +49,7 @@ public class CommentService {
      */
     //TODO 조회 성능최적화
     @Transactional
-    public void updateComment(Long postsId, Long commentId, User user, CommentDto.Request commentDto) {
+    public void updateComment(Long postsId, Long commentId, User user, Request commentDto) {
         Post post = postService.findByPostId(postsId);
         Comment comment = findByCommentId(commentId);
 
@@ -58,7 +60,7 @@ public class CommentService {
 
     private void canModifiableComment(User user, Post post, Comment comment) {
         if (!isEqualsAccount(user, comment)) {
-            throw new CommentException(CommentErrorCode.NOT_AUTHORITY);
+            throw new CommentException(CommentErrorCode.NOT_EQUALS_USER);
         }
         if (!isEqualsPost(post, comment)) {
             throw new CommentException(CommentErrorCode.NOT_EQUALS_POST);

@@ -27,7 +27,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@TestPropertySource(locations = "classpath:/application-test.properties")
 class BannerServiceTest {
 
     @Mock

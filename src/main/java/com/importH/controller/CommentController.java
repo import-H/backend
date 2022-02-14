@@ -3,6 +3,7 @@ package com.importH.controller;
 import com.importH.config.security.CurrentUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.CommentDto;
+import com.importH.core.dto.post.CommentDto.Request;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.service.CommentService;
 import com.importH.core.service.response.ResponseService;
@@ -32,7 +33,7 @@ public class CommentController {
     @PostMapping
     public CommonResult saveComment(@ApiParam(value = "게시글 ID", example = "1") @PathVariable Long  postsId,
                                     @ApiIgnore @CurrentUser User user,
-                                    @ApiParam("댓글 요청 Dto") @RequestBody CommentDto.Request commentDto) {
+                                    @ApiParam("댓글 요청 Dto") @RequestBody Request commentDto) {
         commentService.registerComment(postsId, user, commentDto);
         return responseService.getSuccessResult();
     }
@@ -48,7 +49,7 @@ public class CommentController {
     public CommonResult updateComment(@ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postsId,
                                       @ApiParam(value = "댓글 ID", example = "1") @PathVariable Long commentId,
                                       @ApiIgnore @CurrentUser User user,
-                                      @ApiParam("댓글 요청 Dto") @RequestBody CommentDto.Request commentDto) {
+                                      @ApiParam("댓글 요청 Dto") @RequestBody Request commentDto) {
         commentService.updateComment(postsId,commentId, user, commentDto);
         return responseService.getSuccessResult();
     }

@@ -1,4 +1,4 @@
-package com.importH.core.service.sign;
+package com.importH.core.service;
 
 import com.importH.config.security.JwtProvider;
 import com.importH.core.domain.token.RefreshToken;

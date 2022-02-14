@@ -14,4 +14,6 @@ public interface PostRepository extends JpaRepository<Post,Long >,PostCustomRepo
     List<Post> findAllByType(int type);
 
     boolean existsByTitle(String title);
+
+    Post findByTitle(String title);
 }
