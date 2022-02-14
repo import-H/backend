@@ -8,9 +8,11 @@ import com.importH.core.domain.post.PostRepository;
 import com.importH.core.domain.tag.TagRepository;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
+import com.importH.core.dto.post.CommentDto;
 import com.importH.core.dto.post.PostDto;
 import com.importH.core.dto.tag.TagDto;
 import com.importH.core.error.code.PostErrorCode;
+import com.importH.core.service.CommentService;
 import com.importH.core.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +30,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -60,12 +63,16 @@ class PostControllerTest {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    CommentService commentService;
+
     Post post;
 
     @BeforeEach
     void before() {
         User user = userRepository.findByNickname("test1").get();
         post = postFactory.createPost(user, 1, getRequest("test", "test게시글", "스터디","자바2"));
+        commentService.registerComment(post.getId(), user, CommentDto.Request.builder().content("테스트 댓글").build());
     }
 
     @Test
@@ -142,7 +149,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.data.responseInfo.tags[*].name").exists())
                 .andExpect(jsonPath("$.data.responseInfo.viewCount").value(post.getViewCount()))
                 .andExpect(jsonPath("$.data.like").value(false))
-                .andExpect(jsonPath("$.data.comments[*]").value(postService.getCommentDtos(post)));
+                .andExpect(jsonPath("$.data.comments[*].*", hasSize(5)));
 
     }
 

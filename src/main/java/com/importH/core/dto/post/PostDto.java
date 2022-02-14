@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @ApiModel(value = "게시글 DTO")
 public class PostDto {
@@ -129,8 +130,7 @@ public class PostDto {
         @ApiModelProperty(value = "썸네일", example = "")
         private String thumbnail;
 
-        //TODO tags 삭제
-        public static ResponseAll fromEntity(Post post, Set<TagDto> tags) {
+        public static ResponseAll fromEntity(Post post) {
 
             return ResponseAll.builder()
                     .responseInfo(ResponseInfo.builder()
@@ -141,7 +141,7 @@ public class PostDto {
                             .content(post.getContent())
                             .createdAt(post.getCreatedAt())
                             .title(post.getTitle())
-                            .tags(tags)
+                            .tags(post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet()))
                             .viewCount(post.getViewCount())
                             .likeCount(post.getLikeCount())
                             .build())

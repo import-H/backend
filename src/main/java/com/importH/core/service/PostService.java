@@ -71,7 +71,6 @@ public class PostService {
         List<CommentDto.Response> comments = getCommentDtos(post);
 
         boolean isLike = havePostLike(user, post);
-        //TODO 계정 삭제시에 조회 어떻게 처리할것인지 생각
 
         return PostDto.Response.fromEntity(post, tags, comments, isLike);
     }
@@ -146,10 +145,7 @@ public class PostService {
 
 
         return posts.stream()
-                .map(post ->
-                        PostDto.ResponseAll.fromEntity(
-                                post,
-                                post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet())))
+                .map(PostDto.ResponseAll::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -163,10 +159,7 @@ public class PostService {
         List<Post> content = postSlice.getContent();
 
         return content.stream()
-                .map(post ->
-                        PostDto.ResponseAll.fromEntity(
-                                post,
-                                post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet())))
+                .map(PostDto.ResponseAll::fromEntity)
                 .collect(Collectors.toList());
     }
 }
