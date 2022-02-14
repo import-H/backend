@@ -19,10 +19,14 @@ public class Banner {
     private Long id;
 
     @Column(nullable = false)
+    private String nickname;
+
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
     private String url;
+
 
     @Lob
     @Column(nullable = false)

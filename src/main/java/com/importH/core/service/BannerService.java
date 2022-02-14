@@ -31,7 +31,6 @@ public class BannerService {
         Banner banner = bannerDto.toEntity();
         banner.setTags(tagService.getTags(bannerDto.getTags()));
 
-
         return Response.fromEntity(saveBanner(banner));
     }
 

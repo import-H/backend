@@ -59,6 +59,7 @@ class BannerServiceTest {
         //then
         assertThat(response)
                 .hasFieldOrPropertyWithValue("title", req.getTitle())
+                .hasFieldOrPropertyWithValue("nickname", req.getNickname())
                 .hasFieldOrPropertyWithValue("content", req.getContent())
                 .hasFieldOrPropertyWithValue("imgUrl", req.getImgUrl())
                 .hasFieldOrPropertyWithValue("url", req.getUrl());
@@ -103,6 +104,7 @@ class BannerServiceTest {
         //then
         assertThat(banners.get(0))
                 .hasFieldOrPropertyWithValue("title", req.getTitle())
+                .hasFieldOrPropertyWithValue("nickname", req.getNickname())
                 .hasFieldOrPropertyWithValue("content", req.getContent())
                 .hasFieldOrPropertyWithValue("imgUrl", req.getImgUrl())
                 .hasFieldOrPropertyWithValue("url", req.getUrl())
@@ -177,6 +179,7 @@ class BannerServiceTest {
     private Request getRequest() {
         Request bannerDto = Request.builder()
                 .title("제목")
+                .nickname("관리자")
                 .url("http://cafe.naver.com")
                 .tags(List.of(getTag("태그1"), getTag("태그2")))
                 .content("배너 내용")
@@ -194,6 +197,7 @@ class BannerServiceTest {
 
         return Banner.builder()
                 .id(id)
+                .nickname(bannerDto.getNickname())
                 .title(bannerDto.getTitle())
                 .tags(bannerDto.getTags().stream().map(TagDto::toEntity).collect(Collectors.toSet()))
                 .content(bannerDto.getContent())

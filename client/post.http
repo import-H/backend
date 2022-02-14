@@ -1,13 +1,13 @@
 ### 게시글 조회
 GET http://localhost:8090/v1/boards/1/posts/4
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDQ0NzE3NzAsImV4cCI6MTY0NDU1ODE3MH0.fDnacYhw_dd2K_tD15JuMY0PGTfBPpbn_X-4Evv1gNo
+Authorization: {{Authorization}}
 
 ### 게시글 전체 조회
 GET http://localhost:8090/v1/boards/1/posts
 
 ### 게시글 저장
 POST http://localhost:8090/v1/boards/1/posts
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json
 
 ### 게시글 수정
 PUT http://localhost:8090/v1/boards/1/posts/4
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
@@ -29,12 +29,11 @@ Content-Type: application/json
 
 ### 게시글 삭제
 DELETE http://localhost:8090/v1/boards/1/posts/4
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
-
+Authorization: {{Authorization}}
 
 ### 댓글 등록
 POST http://localhost:8090/v1/posts/4/comments
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
@@ -43,7 +42,7 @@ Content-Type: application/json
 
 ### 댓글 수정
 PUT http://localhost:8090/v1/posts/4/comments/5
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0Mzk4MDEyOSwiZXhwIjoxNjQ0MDY2NTI5fQ.vawWyp83-W7jRyB0Jx9JRQRltrRRQqA0MBZ-ui6zUsQ
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
@@ -52,9 +51,9 @@ Content-Type: application/json
 
 ### 댓글 삭제
 DELETE http://localhost:8090/v1/posts/4/comments/8
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMzQGhvbmdpay5hYy5rciIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjQ0NDcwODk2LCJleHAiOjE2NDQ1NTcyOTZ9.MmM12CljlMs_bI06Jm3WS5FHTZ2LLoksTHOrBZ81SBM
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 ### 게시글 좋아요 요청
 POST http://localhost:8090/v1/posts/4/like
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMzQGhvbmdpay5hYy5rciIsInJvbGVzIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjQ0NDcyMDM0LCJleHAiOjE2NDQ1NTg0MzR9.6KQ4IbdFkCPgSRbLG2MPBEMeisLNETb4ISesHvu2h0c
+Authorization: {{Authorization}}

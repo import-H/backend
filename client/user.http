@@ -1,10 +1,10 @@
 ### 회원 정보 조회
-GET http://localhost:8090/v1/users/1
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
+GET http://localhost:8090/v1/users/2
+Authorization: {{Authorization}}
 
 ### 회원 정보 수정
 PUT http://localhost:8090/v1/users/1
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
@@ -17,4 +17,4 @@ Content-Type: application/json
 
 ### 회원 탈퇴
 DELETE http://localhost:8090/v1/users/1
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOiJST0xFX1VTRVIiLCJuaWNrbmFtZSI6InRlc3QiLCJ1c2VySWQiOjEsInByb2ZpbGVJbWFnZSI6Ik4iLCJpYXQiOjE2NDQ0ODIyOTIsImV4cCI6MTY0NDU2ODY5Mn0.KyJ5jdFJqPDZVpQF-VrVyUDuL-A2Qau_JwAdnie13dc
+Authorization: {{Authorization}}

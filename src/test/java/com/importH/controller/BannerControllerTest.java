@@ -174,6 +174,7 @@ class BannerControllerTest {
     private Request getRequest(int seq) {
         Request bannerDto = Request.builder()
                 .title("제목"+seq)
+                .nickname("관리자")
                 .url("http://cafe.naver.com")
                 .tags(List.of(getTag("태그1"), getTag("태그2")))
                 .content("배너 내용"+seq)

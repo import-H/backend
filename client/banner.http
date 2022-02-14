@@ -20,6 +20,7 @@ Content-Type: application/json
 
 {
   "title" : "배너",
+  "nickname" : "관리자",
   "content" : "배너 입니다.",
   "url" : "http://cafe.naver.com",
   "imgUrl" : "{{imageURL}}",

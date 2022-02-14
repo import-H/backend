@@ -28,6 +28,10 @@ public class BannerDto {
         @ApiModelProperty(value = "배너 제목", example = "테스트 배너")
         private String title;
 
+        @ApiModelProperty(value = "배너 작성자", example = "닉네임 ")
+        @NotEmpty(message = "배너 작성자는 필수값 입니다.")
+        private String  nickname;
+
         @NotEmpty(message = "url 은 필수 값 입니다.")
         @URL(message = "url 형태로 입력해 주세요.")
         @ApiModelProperty(value = "배너 누를시 링크", example = "http://...")
@@ -47,6 +51,7 @@ public class BannerDto {
 
         public Banner toEntity() {
             return Banner.builder()
+                    .nickname(nickname)
                     .imageUrl(imgUrl)
                     .content(content)
                     .title(title)
@@ -64,6 +69,9 @@ public class BannerDto {
 
         @ApiModelProperty(value = "배너 ID", example = "1")
         private Long bannerId;
+
+        @ApiModelProperty(value = "배너 작성자", example = "닉네임 ")
+        private String  nickname;
 
         @ApiModelProperty(value = "배너 제목", example = "테스트 배너")
         private String title;
@@ -84,6 +92,7 @@ public class BannerDto {
             return Response.builder()
                     .bannerId(banner.getId())
                     .title(banner.getTitle())
+                    .nickname(banner.getNickname())
                     .content(banner.getContent())
                     .imgUrl(banner.getImageUrl())
                     .url(banner.getUrl())
