@@ -36,7 +36,7 @@ public class Post extends BaseTimeEntity {
 
     private int likeCount;
 
-    private int type;
+    private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -89,7 +89,7 @@ public class Post extends BaseTimeEntity {
         this.user = user;
     }
 
-    public void setBoardType(int boardType) {
+    public void setBoardType(String boardType) {
         this.type = boardType;
     }
 

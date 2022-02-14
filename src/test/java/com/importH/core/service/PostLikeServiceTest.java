@@ -47,7 +47,7 @@ class PostLikeServiceTest {
     }
 
     private Post createPost() {
-        return postFactory.createPost(user, 1, postFactory.getRequest("test", "test", "테스트"));
+        return postFactory.createPost(user, postFactory.getRequest("test", "test", "테스트"));
     }
 
     @Test

@@ -1,12 +1,14 @@
+
+
 ### 게시글 조회
-GET http://localhost:8090/v1/boards/1/posts/4
+GET http://localhost:8090/v1/boards/{{boardId}}/posts/5
 Authorization: {{Authorization}}
 
 ### 게시글 전체 조회
-GET http://localhost:8090/v1/boards/1/posts
+GET http://localhost:8090/v1/boards/{{boardId}}/posts
 
 ### 게시글 저장
-POST http://localhost:8090/v1/boards/1/posts
+POST http://localhost:8090/v1/boards/{{boardId}}/posts
 Authorization: {{Authorization}}
 Content-Type: application/json
 
@@ -17,7 +19,7 @@ Content-Type: application/json
 }
 
 ### 게시글 수정
-PUT http://localhost:8090/v1/boards/1/posts/4
+PUT http://localhost:8090/v1/boards/{{boardId}}/posts/5
 Authorization: {{Authorization}}
 Content-Type: application/json
 
@@ -28,7 +30,7 @@ Content-Type: application/json
 }
 
 ### 게시글 삭제
-DELETE http://localhost:8090/v1/boards/1/posts/4
+DELETE http://localhost:8090/v1/boards/{{boardId}}/posts/5
 Authorization: {{Authorization}}
 
 ### 댓글 등록
@@ -41,7 +43,7 @@ Content-Type: application/json
 }
 
 ### 댓글 수정
-PUT http://localhost:8090/v1/posts/4/comments/5
+PUT http://localhost:8090/v1/posts/5/comments/5
 Authorization: {{Authorization}}
 Content-Type: application/json
 
@@ -50,10 +52,10 @@ Content-Type: application/json
 }
 
 ### 댓글 삭제
-DELETE http://localhost:8090/v1/posts/4/comments/8
+DELETE http://localhost:8090/v1/posts/5/comments/8
 Authorization: {{Authorization}}
 Content-Type: application/json
 
 ### 게시글 좋아요 요청
-POST http://localhost:8090/v1/posts/4/like
+POST http://localhost:8090/v1/posts/5/like
 Authorization: {{Authorization}}

@@ -3,7 +3,7 @@ GET http://localhost:8090/v1/users/2
 Authorization: {{Authorization}}
 
 ### 회원 정보 수정
-PUT http://localhost:8090/v1/users/1
+PUT http://localhost:8090/v1/users/2
 Authorization: {{Authorization}}
 Content-Type: application/json
 
@@ -16,5 +16,9 @@ Content-Type: application/json
 }
 
 ### 회원 탈퇴
-DELETE http://localhost:8090/v1/users/1
+DELETE http://localhost:8090/v1/users/2
 Authorization: {{Authorization}}
+
+> {%
+client.log("현재 보안키" + client.global.get("Authorization"));
+%}

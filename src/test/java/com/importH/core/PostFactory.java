@@ -37,8 +37,8 @@ public class PostFactory {
         }
     }
 
-    public Post createPost(User user, int type, PostDto.Request request) {
-       return postService.registerPost(user, type,request);
+    public Post createPost(User user, PostDto.Request request) {
+       return postService.registerPost(user, "free",request);
     }
 
     public PostDto.Request getRequest(String title, String content, String... tagName) {

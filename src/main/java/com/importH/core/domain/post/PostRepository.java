@@ -9,9 +9,9 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface PostRepository extends JpaRepository<Post,Long >,PostCustomRepository {
 
-    Optional<Post> findByIdAndType(Long postId, int type);
+    Optional<Post> findByIdAndType(Long postId, String type);
 
-    List<Post> findAllByType(int type);
+    List<Post> findAllByType(String type);
 
     boolean existsByTitle(String title);
 

@@ -51,7 +51,7 @@ class PostLikeControllerTest {
     @BeforeEach
     void before() {
         user = userRepository.findByNickname("테스트").get();
-        post = postFactory.createPost(user, 1, postFactory.getRequest("test", "test게시글", "스터디","자바2"));
+        post = postFactory.createPost(user, postFactory.getRequest("test", "test게시글", "스터디","자바2"));
     }
 
     @Test

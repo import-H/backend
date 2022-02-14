@@ -50,8 +50,8 @@ public class PostDto {
     @Builder
     public static class ResponseInfo {
 
-        @ApiModelProperty(value = "게시판 id", example = "1")
-        private int boardId;
+        @ApiModelProperty(value = "게시판 id", example = "free")
+        private String boardId;
 
 
         @ApiModelProperty(value = "게시글 id", example = "1")

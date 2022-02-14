@@ -71,7 +71,7 @@ class PostControllerTest {
     @BeforeEach
     void before() {
         User user = userRepository.findByNickname("test1").get();
-        post = postFactory.createPost(user, 1, getRequest("test", "test게시글", "스터디","자바2"));
+        post = createPost(user);
         commentService.registerComment(post.getId(), user, CommentDto.Request.builder().content("테스트 댓글").build());
     }
 
@@ -84,7 +84,7 @@ class PostControllerTest {
         PostDto.Request request = getRequest("테스트", "테스트 게시글", "자바");
 
         // when
-        mockMvc.perform(post("/v1/boards/1/posts")
+        mockMvc.perform(post("/v1/boards/"+post.getType()+"/posts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -115,7 +115,7 @@ class PostControllerTest {
         // when
         PostErrorCode errorCode = PostErrorCode.NOT_VALIDATE_PARAM;
 
-        mockMvc.perform(post("/v1/boards/1/posts")
+        mockMvc.perform(post("/v1/boards/"+post.getType()+"/posts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().is4xxClientError())
@@ -133,7 +133,7 @@ class PostControllerTest {
     void findPost_success() throws Exception {
 
         // when
-        ResultActions perform = mockMvc.perform(get("/v1/boards/1/posts/" + post.getId()));
+        ResultActions perform = mockMvc.perform(get("/v1/boards/"+post.getType()+"/posts/" + post.getId()));
 
         //then
         perform.andExpect(status().isOk())
@@ -160,7 +160,7 @@ class PostControllerTest {
         PostErrorCode notFoundPost = PostErrorCode.NOT_FOUND_POST;
 
         // when
-        ResultActions perform = mockMvc.perform(get("/v1/boards/1/posts/2"));
+        ResultActions perform = mockMvc.perform(get("/v1/boards/"+post.getType()+"/posts/2"));
 
 
         //then
@@ -175,11 +175,11 @@ class PostControllerTest {
     @DisplayName("[성공] 게시글 수정")
     void updatePost_success() throws Exception {
         // given
-        post = postFactory.createPost(userRepository.findByNickname("테스트").get(), 1, getRequest("test", "test게시글", "스터디", "자바2"));
+        post = createPost(userRepository.findByNickname("테스트").get());
         PostDto.Request request = getRequest("테스트2", "테스트2", "스터디1","자바1");
 
         // when
-        ResultActions perform = mockMvc.perform(put("/v1/boards/1/posts/" + post.getId())
+        ResultActions perform = mockMvc.perform(put("/v1/boards/"+post.getType()+"/posts/" + post.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -198,7 +198,7 @@ class PostControllerTest {
         PostErrorCode notAccordAccount = PostErrorCode.NOT_ACCORD_ACCOUNT;
 
         // when
-        ResultActions perform = mockMvc.perform(put("/v1/boards/1/posts/" + post.getId())
+        ResultActions perform = mockMvc.perform(put("/v1/boards/"+post.getType()+"/posts/" + post.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -214,11 +214,11 @@ class PostControllerTest {
     @DisplayName("[성공] 게시글 삭제")
     void deletePost_success() throws Exception {
         // given
-        post = postFactory.createPost(userRepository.findByNickname("테스트").get(), 1, getRequest("test", "test게시글", "스터디", "자바2"));
+        post = createPost(userRepository.findByNickname("테스트").get());
 
         // when
 
-        mockMvc.perform(delete("/v1/boards/1/posts/" + post.getId()))
+        mockMvc.perform(delete("/v1/boards/"+post.getType()+"/posts/" + post.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.msg").exists());
@@ -226,6 +226,10 @@ class PostControllerTest {
         //then
         assertThat(postRepository.existsById(post.getId())).isFalse();
 
+    }
+
+    private Post createPost(User user) {
+        return postFactory.createPost(user, getRequest("test", "test게시글", "스터디", "자바2"));
     }
 
     @Test
@@ -237,7 +241,7 @@ class PostControllerTest {
 
         // when
 
-        mockMvc.perform(delete("/v1/boards/1/posts/" + post.getId()))
+        mockMvc.perform(delete("/v1/boards/"+post.getType()+"/posts/" + post.getId()))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.msg").value(notAccordAccount.getDescription()));

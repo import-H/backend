@@ -48,7 +48,7 @@ class PostServiceTest {
     @BeforeEach
     void before() {
         user = accountFactory.createNewAccount("test");
-        post = postService.registerPost(user, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
+        post = postService.registerPost(user, "free", getRequest("테스트", "테스트 게시글 입니다.", "자바"));
     }
 
     @AfterEach
@@ -63,7 +63,7 @@ class PostServiceTest {
         PostDto.Request request = getRequest("테스트", "테스트 게시글 입니다.", "자바");
 
         // when
-        Post post = postService.registerPost(user, 1, request);
+        Post post = postService.registerPost(user, "free", request);
 
 
         //then
@@ -88,10 +88,10 @@ class PostServiceTest {
     @DisplayName("[성공] 게시글 조회 정상적인 요청")
     void getPost_success() throws Exception {
         // given
-        Post post =  postService.registerPost(user, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
+        Post post =  postService.registerPost(user, "free", getRequest("테스트", "테스트 게시글 입니다.", "자바"));
 
         // when
-        Response response = postService.getPost(user, 1, post.getId());
+        Response response = postService.getPost(user, "free", post.getId());
 
         //then
         assertThat(response)
@@ -113,7 +113,7 @@ class PostServiceTest {
     void getPost_fail() throws Exception {
         // given
         Long postId = 2L;
-        int boardId = 1;
+        String boardId = "free";
 
         // when
         PostErrorCode notFoundPost = PostErrorCode.NOT_FOUND_POST;
@@ -133,7 +133,7 @@ class PostServiceTest {
         PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1");
 
         // when
-        postService.updatePost(user, 1, post.getId(), request);
+        postService.updatePost(user, "free", post.getId(), request);
 
         //then
         assertThat(post)
@@ -153,7 +153,7 @@ class PostServiceTest {
         PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1");
         User test2 = User.builder().nickname("test2").build();
         // when
-        PostException postException = assertThrows(PostException.class, () -> postService.updatePost(test2, 1, post.getId(), request));
+        PostException postException = assertThrows(PostException.class, () -> postService.updatePost(test2, "free", post.getId(), request));
 
         //then
         assertThat(postException).hasMessageContaining(PostErrorCode.NOT_ACCORD_ACCOUNT.getDescription());
@@ -164,7 +164,7 @@ class PostServiceTest {
     void deletePost_success() throws Exception {
         // given
         // when
-        postService.deletePost(user, 1, post.getId());
+        postService.deletePost(user, "free", post.getId());
 
         //then
         assertThat(postRepository.existsById(post.getId())).isFalse();
@@ -177,7 +177,7 @@ class PostServiceTest {
         // given
         User test2 = User.builder().nickname("test2").build();
         // when
-        PostException postException = assertThrows(PostException.class, () -> postService.deletePost(test2, 1, post.getId()));
+        PostException postException = assertThrows(PostException.class, () -> postService.deletePost(test2, "free", post.getId()));
 
         //then
         assertThat(postException).hasMessageContaining(PostErrorCode.NOT_ACCORD_ACCOUNT.getDescription());
@@ -189,10 +189,10 @@ class PostServiceTest {
     void findAll_success() throws Exception {
         // given
         for (int i = 0; i < 10; i++) {
-            postService.registerPost(user, 1, getRequest("테스트", "테스트 게시글 입니다.", "자바"));
+            postService.registerPost(user, "free", getRequest("테스트", "테스트 게시글 입니다.", "자바"));
         }
         // when
-        List<PostDto.ResponseAll> allPost = postService.findAllPost(1);
+        List<PostDto.ResponseAll> allPost = postService.findAllPost("free");
 
         //then
         assertThat(allPost.size()).isEqualTo(11);
@@ -232,7 +232,7 @@ class PostServiceTest {
         user.delete();
 
         // when
-        Response post = postService.getPost(user, 1, this.post.getId());
+        Response post = postService.getPost(user, "free", this.post.getId());
 
         //then
         assertThat(post.getResponseInfo())
