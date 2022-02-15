@@ -5,6 +5,7 @@ import com.importH.core.dto.sign.LoginDto;
 import com.importH.core.dto.sign.SignupDto;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.UserException;
+import com.importH.core.model.response.CommonResult;
 import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.SignService;
 import com.importH.core.service.response.ResponseService;
@@ -16,10 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,6 +61,17 @@ public class SignController {
             @ApiParam(value = "토큰 재발급 요청 DTO", required = true) @RequestBody TokenDto tokenDto
             ) {
         return responseService.getSingleResult(signService.reissue(tokenDto));
+    }
+
+
+    @ApiOperation(value = "이메일 인증", notes = "회원가입 후 이메일 인증을 진행합니다.")
+    @GetMapping("/check-email-token")
+    public CommonResult checkEmailToken(@ApiParam(value = "인증토큰",required = true) @RequestParam String token,
+                                        @ApiParam(value = "인증토큰",required = true) @RequestParam String email ) {
+
+        signService.completeSignup(token, email);
+
+        return responseService.getSuccessResult();
     }
 
     private void validParameter(BindingResult bindingResult) {

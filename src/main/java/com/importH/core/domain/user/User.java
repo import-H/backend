@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Builder
 @Entity
@@ -31,7 +32,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, unique = true, length = 30)
     private String email;
 
-    @Column(length = 20,nullable = false)
+    @Column(length = 20, nullable = false)
     private String nickname;
 
     private String role;
@@ -54,7 +55,14 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private InfoAgree infoAgree = new InfoAgree();
 
+    private boolean emailVerified;
+
+    private String emailCheckToken;
+
+    private LocalDateTime emailCheckTokenGeneratedAt;
+
     private boolean deleted;
+
     private LocalDateTime deletedTime;
 
     @ManyToMany
@@ -81,10 +89,23 @@ public class User extends BaseTimeEntity {
     public void delete() {
         deleted = true;
         nickname = "삭제된 계정";
-        email = "deleted"+getId();
-        password = "deleted"+getId();
+        email = "deleted" + getId();
+        password = "deleted" + getId();
         profileImage = "N";
         role = null;
         deletedTime = LocalDateTime.now();
+    }
+
+    public void generateEmailToken() {
+        this.emailCheckToken = UUID.randomUUID().toString();
+        this.emailCheckTokenGeneratedAt = LocalDateTime.now();
+    }
+
+    public boolean isValidToken(String token, User user) {
+        return user.getEmailCheckToken().equals(token);
+    }
+
+    public void completeSignup() {
+        this.emailVerified = true;
     }
 }

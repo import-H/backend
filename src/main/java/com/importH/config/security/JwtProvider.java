@@ -11,6 +11,7 @@ import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +38,7 @@ import static com.importH.core.error.code.JwtErrorCode.AUTHENTICATION_ENTRYPOINT
 public class JwtProvider {
 
     public static final String ROLES = "roles";
-    @Value("${spring.jwt.secret}")
+    @Value("${jwt.secret}")
     private String secretKey;
 
     // 토큰 유효시간 30분

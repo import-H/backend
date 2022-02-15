@@ -5,6 +5,7 @@ import com.importH.core.domain.token.RefreshToken;
 import com.importH.core.domain.token.RefreshTokenRepository;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
+import com.importH.core.dto.email.EmailDto;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.jwt.TokenDto.Info;
 import com.importH.core.dto.sign.SignupDto;
@@ -33,6 +34,7 @@ public class SignService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository tokenRepository;
+    private final EmailService emailService;
 
     @PostConstruct
     public void init() {
@@ -58,11 +60,32 @@ public class SignService {
         validateSignup(userSignupDto);
 
         User user = userSignupDto.toEntity();
+
         String encodePassword = passwordEncoder.encode(userSignupDto.getPassword());
         user.setPassword(encodePassword);
 
+        sendEmailConfirmEmail(user);
+
         return saveUser(user).getId();
     }
+
+    private void sendEmailConfirmEmail(User user) {
+        user.generateEmailToken();
+        EmailDto emailDto = createEmailDto(user);
+        emailService.sendEmail(emailDto);
+    }
+
+    private EmailDto createEmailDto(User user) {
+        return EmailDto.builder()
+                .subject("Import-H 이메일 인증")
+                .nickname(user.getNickname())
+                .message("Import - H 이메일 인증을 위해 아래의 링크를 클릭하세요")
+                .link("/v1/check-email-token?token=" + user.getEmailCheckToken() + "&email=" + user.getEmail())
+                .linkName("이메일 인증하기")
+                .email(user.getEmail())
+                .build();
+    }
+
 
     private void validateSignup(SignupDto userSignupDto) {
         passwordCheck(userSignupDto.getPassword(), userSignupDto.getConfirmPassword());
@@ -104,7 +127,7 @@ public class SignService {
     /** 로그인 */
     @Transactional
     public TokenDto login(String email, String password) {
-        User user = getAccount(email);
+        User user = findUserByEmail(email);
         validatePassword(password, user);
         
         TokenDto tokenDto = createToken(user);
@@ -151,9 +174,8 @@ public class SignService {
         return passwordEncoder.matches(password, accountPassword);
     }
 
-    private User getAccount(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserException(EMAIL_LOGIN_FAILED));
-        return user;
+    private User findUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserException(EMAIL_LOGIN_FAILED));
     }
 
     /** 토큰 재발급 */
@@ -163,7 +185,7 @@ public class SignService {
         Claims claims = jwtProvider.parseClaims(tokenRequestDto.getRefreshToken());
         String email = claims.getSubject();
 
-        User user = getAccount(email);
+        User user = findUserByEmail(email);
 
         RefreshToken refreshToken = getValidateRefreshToken(user, tokenRequestDto.getRefreshToken());
 
@@ -198,5 +220,20 @@ public class SignService {
 
     private boolean isEqualsRefreshToken(RefreshToken refreshToken, String requestRefreshToken) {
         return refreshToken.getToken().equals(requestRefreshToken);
+    }
+
+    /**
+     * 이메일 토큰 인증
+     */
+    @Transactional
+    public void completeSignup(String emailToken, String email) {
+
+        User user = findUserByEmail(email);
+
+        if (!user.isValidToken(emailToken,user)) {
+            throw new UserException(NOT_EQUALS_TOKEN);
+        }
+
+        user.completeSignup();
     }
 }

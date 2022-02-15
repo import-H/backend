@@ -4,7 +4,7 @@ POST http://localhost:8090/v1/signup
 Content-Type: application/json
 
 {
-  "email": "abc3@hongik.ac.kr",
+  "email": "busan-sy@naver.com",
   "nickname": "테스트",
   "pathId" : "test1",
   "password": "12341234",
