@@ -2,6 +2,7 @@ package com.importH.controller;
 
 import com.importH.config.security.CurrentUser;
 import com.importH.core.domain.user.User;
+import com.importH.core.dto.user.PasswordDto;
 import com.importH.core.dto.user.UserDto.Request;
 import com.importH.core.dto.user.UserDto.Response;
 import com.importH.core.error.code.UserErrorCode;
@@ -75,6 +76,27 @@ public class UserController {
              @ApiIgnore @CurrentUser User user) {
 
         userService.deleteUser(userId, user);
+
+        return responseService.getSuccessResult();
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "Authorization",
+                    value = "로그인 성공 후 AccessToken",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(value = "비밀번호 변경", notes = "userId 회원의 비밀번호를 변경합니다.")
+    @PutMapping("/{userId}/updatePassword")
+    public CommonResult updatePassword
+            (@ApiParam(value = "회원 ID", required = true) @PathVariable Long userId,
+             @ApiIgnore @CurrentUser User user,
+             @ApiParam(value = "비밀번호 요청 DTO") @RequestBody @Validated PasswordDto.Request request,
+             BindingResult bindingResult)  {
+
+        validParameter(bindingResult);
+
+        userService.updatePassword(userId, user,request);
 
         return responseService.getSuccessResult();
     }

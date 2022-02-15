@@ -12,7 +12,6 @@ import com.importH.core.error.code.JwtErrorCode;
 import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.JwtException;
 import com.importH.core.error.exception.UserException;
-import com.importH.core.service.SignService;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -123,7 +122,7 @@ class SignServiceTest {
     void signup_fail_password_notValid() throws Exception {
 
         //given
-        UserErrorCode errorCode = UserErrorCode.USER_PASSWORD_CHECK;
+        UserErrorCode errorCode = UserErrorCode.NOT_PASSWORD_EQUALS;
         requestDto = getSignUpRequestDto("test","abc1@naver.com", "12341234");
         requestDto.setConfirmPassword("1234");
         //when

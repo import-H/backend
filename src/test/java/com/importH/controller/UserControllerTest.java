@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.importH.core.WithAccount;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
+import com.importH.core.dto.user.PasswordDto;
 import com.importH.core.dto.user.UserDto;
 import com.importH.core.error.code.UserErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -67,7 +68,7 @@ class UserControllerTest {
     void getUserInfo_fail() throws Exception {
         // given
         User another = userRepository.findByNickname("test1").get();
-        UserErrorCode errorCode = UserErrorCode.NOT_ACCORD_USERID;
+        UserErrorCode errorCode = UserErrorCode.NOT_EQUALS_USER;
 
         // when
         ResultActions perform = mockMvc.perform(get("/v1/users/" + another.getId()));
@@ -170,7 +171,7 @@ class UserControllerTest {
     void deleteUser_fail() throws Exception {
         // given
         User another = userRepository.findByNickname("test1").get();
-        UserErrorCode errorCode = UserErrorCode.NOT_ACCORD_USERID;
+        UserErrorCode errorCode = UserErrorCode.NOT_EQUALS_USER;
 
         // when
         ResultActions perform = mockMvc.perform(delete("/v1/users/" + another.getId()));
@@ -180,4 +181,70 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.msg").value(errorCode.getDescription()));
 
     }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 패스워드 변경")
+    void updatePassword_success() throws Exception {
+        // given
+        User user = userRepository.findByNickname("테스트").get();
+        PasswordDto.Request request = getPasswordReq("testtest", "testtest");
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                put("/v1/users/" + user.getId() + "/updatePassword")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[실패] 패스워드 변경 - 동일하지 않은 유저")
+    void updatePassword_fail1() throws Exception {
+        // given
+        User user = userRepository.findByNickname("test1").get();
+        PasswordDto.Request request = getPasswordReq("testtest", "testtest");
+        UserErrorCode err = UserErrorCode.NOT_EQUALS_USER;
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                put("/v1/users/" + user.getId() + "/updatePassword")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)));
+
+        //then
+        perform.andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.msg").value(err.getDescription()));
+    }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[실패] 패스워드 변경 - 입력된 비밀번호와 확인이 동일하지 않은 경우")
+    void updatePassword_fail2() throws Exception {
+        // given
+        User user = userRepository.findByNickname("테스트").get();
+        PasswordDto.Request request = getPasswordReq("testtest", "testtest1");
+        UserErrorCode err = UserErrorCode.NOT_PASSWORD_EQUALS;
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                put("/v1/users/" + user.getId() + "/updatePassword")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)));
+
+        //then
+        perform.andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.msg").value(err.getDescription()));
+    }
+
+    private PasswordDto.Request getPasswordReq(String password, String confirmPassword) {
+        return PasswordDto.Request.builder().password(password).confirmPassword(confirmPassword).build();
+    }
+
 }

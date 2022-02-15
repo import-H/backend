@@ -11,7 +11,20 @@ Content-Type: application/json
   "agree": "true"
 }
 
-### 로그인 정상 요청
+### 관리자 로그인
+POST http://localhost:8090/v1/login
+Content-Type: application/json
+
+{
+  "email": "관리자",
+  "password": "1234"
+}
+> {%
+client.global.set("Authorization", response.body.data.accessToken);
+client.log("생성된 보안키" + client.global.get("Authorization"));
+%}
+
+### 일반 유저 로그인 정상 요청
 POST http://localhost:8090/v1/login
 Content-Type: application/json
 
@@ -19,6 +32,10 @@ Content-Type: application/json
   "email": "abc@hongik.ac.kr",
   "password": "12341234"
 }
+> {%
+client.global.set("Authorization", response.body.data.accessToken);
+client.log("생성된 보안키" + client.global.get("Authorization"));
+%}
 
 ### 토큰 재발급 정상 요청
 POST http://localhost:8090/v1/reissue

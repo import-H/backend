@@ -71,7 +71,7 @@ public class SignService {
 
     private void passwordCheck(String password, String confirmPassword) {
         if (!password.equals(confirmPassword)) {
-            throw new UserException(USER_PASSWORD_CHECK);
+            throw new UserException(NOT_PASSWORD_EQUALS);
         }
     }
 

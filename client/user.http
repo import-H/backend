@@ -19,6 +19,13 @@ Content-Type: application/json
 DELETE http://localhost:8090/v1/users/2
 Authorization: {{Authorization}}
 
-> {%
-client.log("현재 보안키" + client.global.get("Authorization"));
-%}
+### 회원 비밀번호 변경
+PUT http://localhost:8090/v1/users/1/updatePassword
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "password" : "12341234",
+  "confirmPassword" : "12341234"
+
+}
