@@ -5,7 +5,9 @@ import com.importH.core.WithAccount;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.user.UserDto;
+import com.importH.core.dto.user.UserDto.Request;
 import com.importH.core.dto.user.UserDto.Response;
+import com.importH.core.error.code.UserErrorCode;
 import com.importH.core.error.exception.UserException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,12 +85,7 @@ class UserServiceTest {
     @DisplayName("[성공] 프로필 정보 수정하기 ")
     void updateUser_success() throws Exception {
         // given
-        UserDto.Request request = UserDto.Request.builder()
-                .nickname("변경")
-                .infoByWeb(false)
-                .infoByEmail(false)
-                .introduction("안녕하세요.")
-                .build();
+        Request request = getRequest("테스트");
 
         User user = userRepository.findByNickname("테스트").get();
 
@@ -110,16 +107,42 @@ class UserServiceTest {
 
     @Test
     @WithAccount("테스트")
-    @DisplayName("[실패] 프로필 정보 수정하기 - 동일하지 않은 회원 ")
-    void updateUser_fail_notAccord_User() throws Exception {
+    @DisplayName("[실패] 프로필 정보 수정하기 - 중복되는 닉네임")
+    void updateUser_fail_duplicated_nickname() throws Exception {
 
         // given
-        UserDto.Request request = UserDto.Request.builder()
-                .nickname("변경")
+        Request request = getRequest("test1");
+
+        UserErrorCode err = UserErrorCode.USER_NICKNAME_DUPLICATED;
+        User user = userRepository.findByNickname("테스트").get();
+
+        // when
+        UserException exception = assertThrows(UserException.class, () -> userService.updateUser(user.getId(), user, request));
+
+        //then
+        assertThat(exception)
+                .hasFieldOrPropertyWithValue("errorCode", err)
+                .hasFieldOrPropertyWithValue("errorMessage",err.getDescription());
+    }
+
+    private Request getRequest(String nickname) {
+        Request request = Request.builder()
+                .nickname(nickname)
                 .infoByWeb(false)
                 .infoByEmail(false)
                 .introduction("안녕하세요.")
                 .build();
+        return request;
+    }
+
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[실패] 프로필 정보 수정하기 - 동일하지 않은 회원 ")
+    void updateUser_fail_notAccord_User() throws Exception {
+
+        // given
+        Request request = getRequest("변경");
 
         User user = userRepository.findByNickname("테스트").get();
         User another = userRepository.findByNickname("test1").get();
@@ -161,5 +184,8 @@ class UserServiceTest {
         //then
         assertThrows(UserException.class, () -> userService.deleteUser(user.getId(), another));
     }
+
+
+    
 
 }

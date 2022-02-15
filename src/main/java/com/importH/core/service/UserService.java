@@ -13,8 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.importH.core.error.code.UserErrorCode.NOT_ACCORD_USERID;
-import static com.importH.core.error.code.UserErrorCode.NOT_FOUND_USERID;
+import static com.importH.core.error.code.UserErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -66,10 +65,16 @@ public class UserService implements UserDetailsService {
     @Transactional
     public Response updateUser(Long userId, User user, Request request) {
         User findUser = getFindUser(userId, user);
+        duplicatedNickname(request.getNickname(), user.getNickname());
         findUser.update(request);
         return Response.fromEntity(findUser);
     }
 
+    private void duplicatedNickname(String changeName, String currentName) {
+        if (!currentName.equals(changeName) && userRepository.existsByNickname(changeName)) {
+            throw new UserException(USER_NICKNAME_DUPLICATED);
+        }
+    }
 
     /**
      * 유저 탈퇴 (delete 처리)
