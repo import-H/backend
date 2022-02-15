@@ -57,7 +57,7 @@ class SignServiceTest {
 
     @BeforeEach
     void before() {
-        requestDto = getSignUpRequestDto("테스트","abc@naver.com", "12341234");
+        requestDto = getSignUpRequestDto("테스트","abc@naver.com", "12341234","test1");
         signService.signup(requestDto);
         user = userRepository.findByEmail(requestDto.getEmail()).get();
     }
@@ -72,7 +72,7 @@ class SignServiceTest {
     @DisplayName("[성공] 회원가입 요청")
     void signup_success() throws Exception {
         // given
-        requestDto = getSignUpRequestDto("test123","test@naver.com", "21341234");
+        requestDto = getSignUpRequestDto("test123","test@naver.com", "21341234","test2");
 
         // when
         Long id = signService.signup(requestDto);
@@ -105,7 +105,25 @@ class SignServiceTest {
 
         //given
         UserErrorCode errorCode = UserErrorCode.USER_NICKNAME_DUPLICATED;
-        requestDto = getSignUpRequestDto("test1","abc1@naver.com", "12341234");
+        requestDto = getSignUpRequestDto("test1","abc1@naver.com", "12341234","test2");
+
+        //when
+        UserException userException = assertThrows(UserException.class, () -> signService.signup(requestDto));
+
+        //then
+        assertThat(userException)
+                .hasFieldOrPropertyWithValue("errorCode", errorCode)
+                .hasFieldOrPropertyWithValue("errorMessage", errorCode.getDescription());
+
+    }
+
+    @Test
+    @DisplayName("[실패] 회원가입 요청 - 중복된 주소 ID")
+    void signup_fail_pathId() throws Exception {
+
+        //given
+        UserErrorCode errorCode = UserErrorCode.USER_PATH_ID_DUPLICATED;
+        requestDto = getSignUpRequestDto("테스트1","abc1@naver.com", "12341234","test1");
 
         //when
         UserException userException = assertThrows(UserException.class, () -> signService.signup(requestDto));
@@ -123,7 +141,7 @@ class SignServiceTest {
 
         //given
         UserErrorCode errorCode = UserErrorCode.NOT_PASSWORD_EQUALS;
-        requestDto = getSignUpRequestDto("test","abc1@naver.com", "12341234");
+        requestDto = getSignUpRequestDto("test","abc1@naver.com", "12341234","test2");
         requestDto.setConfirmPassword("1234");
         //when
         UserException userException = assertThrows(UserException.class, () -> signService.signup(requestDto));
@@ -238,11 +256,12 @@ class SignServiceTest {
         return TokenDto.builder().accessToken(login.getAccessToken()).refreshToken(login.getRefreshToken()).build();
     }
 
-    private SignupDto getSignUpRequestDto(String nickname, String email, String password) {
+    private SignupDto getSignUpRequestDto(String nickname, String email, String password,String pathId) {
         return SignupDto.builder()
                 .nickname(nickname)
                 .email(email)
                 .password(password)
+                .pathId(pathId)
                 .confirmPassword(password)
                 .build();
     }

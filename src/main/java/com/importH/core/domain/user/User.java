@@ -45,6 +45,9 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private Boolean weekAgree = false;
 
+    @Column(unique = true, length = 20)
+    private String pathId;
+
     private String personalUrl;
 
     @Embedded

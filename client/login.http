@@ -5,7 +5,8 @@ Content-Type: application/json
 
 {
   "email": "abc3@hongik.ac.kr",
-  "nickname": "자몽",
+  "nickname": "테스트",
+  "pathId" : "test1",
   "password": "12341234",
   "confirmPassword": "12341234",
   "agree": "true"

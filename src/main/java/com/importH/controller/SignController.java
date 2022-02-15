@@ -14,11 +14,15 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Api(tags = "1. SignUp / Login")
 @Slf4j
@@ -37,9 +41,7 @@ public class SignController {
             ,BindingResult bindingResult
             ) {
 
-        if (bindingResult.hasErrors()) {
-            throw new UserException(UserErrorCode.NOT_VALID_REQUEST_PARAMETERS);
-        }
+        validParameter(bindingResult);
 
         return responseService.getSingleResult(signService.login(request.getEmail(), request.getPassword()));
     }
@@ -48,11 +50,7 @@ public class SignController {
     @PostMapping("/signup")
     public SingleResult<Long> signup(@ApiParam(value = "회원가입 요청 DTO " ,required = true) @RequestBody @Validated SignupDto userSignupDto, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            throw new UserException(UserErrorCode.NOT_VALID_REQUEST_PARAMETERS);
-        }
-
-
+        validParameter(bindingResult);
 
         Long userId = signService.signup(userSignupDto);
         return responseService.getSingleResult(userId);
@@ -65,5 +63,19 @@ public class SignController {
             @ApiParam(value = "토큰 재발급 요청 DTO", required = true) @RequestBody TokenDto tokenDto
             ) {
         return responseService.getSingleResult(signService.reissue(tokenDto));
+    }
+
+    private void validParameter(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new UserException(UserErrorCode.NOT_VALID_REQUEST_PARAMETERS,
+                    getErrorMessage(bindingResult.getAllErrors()));
+        }
+    }
+
+    private String getErrorMessage(List<ObjectError> errors) {
+        return errors.stream()
+                .map(objectError -> objectError.getDefaultMessage())
+                .collect(Collectors.toList())
+                .toString();
     }
 }

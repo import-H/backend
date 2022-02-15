@@ -58,7 +58,8 @@ public class SignService {
         validateSignup(userSignupDto);
 
         User user = userSignupDto.toEntity();
-        user.setPassword(passwordEncoder.encode(userSignupDto.getPassword()));
+        String encodePassword = passwordEncoder.encode(userSignupDto.getPassword());
+        user.setPassword(encodePassword);
 
         return saveUser(user).getId();
     }
@@ -67,6 +68,14 @@ public class SignService {
         passwordCheck(userSignupDto.getPassword(), userSignupDto.getConfirmPassword());
         duplicatedEmail(userSignupDto.getEmail());
         duplicatedNickname(userSignupDto.getNickname());
+        duplicatedPathId(userSignupDto.getPathId());
+
+    }
+
+    private void duplicatedPathId(String pathId) {
+        if (userRepository.existsByPathId(pathId)) {
+            throw new UserException(USER_PATH_ID_DUPLICATED);
+        }
     }
 
     private void passwordCheck(String password, String confirmPassword) {
@@ -82,7 +91,7 @@ public class SignService {
     }
 
     private void duplicatedEmail(String email) {
-        if (userRepository.findByEmail(email).orElse(null) != null) {
+        if (userRepository.existsByEmail(email)) {
             throw new UserException(USER_EMAIL_DUPLICATED);
         }
     }
