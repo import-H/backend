@@ -22,7 +22,8 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.importH.error.code.BannerErrorCode.NOT_VALID_PARAM;
+import static com.importH.error.code.BannerErrorCode.NOT_AUTHORITY_ACCESS;
+
 
 @Api(tags = "7. Banner")
 @Slf4j
@@ -35,12 +36,7 @@ public class BannerController  {
     private final BannerService bannerService;
 
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    
     @ApiOperation(value = "배너 등록", notes = "배너를 등록합니다.")
     @PostMapping
     public SingleResult<Response> registerBanner(@ApiIgnore @CurrentUser User user,
@@ -59,16 +55,11 @@ public class BannerController  {
 
     private void validParameter(BindingResult bindingResult) {
             if (bindingResult.hasErrors()) {
-                throw new BannerException(NOT_VALID_PARAM, getErrorMessage(bindingResult.getAllErrors()));
+                throw new BannerException(NOT_AUTHORITY_ACCESS, getErrorMessage(bindingResult.getAllErrors()));
             }
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    
     @ApiOperation(value = "배너 삭제", notes = "bannerId 에 해당하는 배너를 삭제합니다.")
     @DeleteMapping("/{bannerId}")
     public CommonResult deleteBanner(@ApiIgnore @CurrentUser User user,

@@ -3,8 +3,6 @@ package com.importH.core.dto.jwt;
 import com.importH.core.domain.user.User;
 import lombok.*;
 
-import javax.sound.sampled.DataLine.Info;
-
 @Getter
 @Setter
 @Builder

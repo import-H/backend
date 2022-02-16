@@ -37,12 +37,16 @@ public class PostController {
         return responseService.getListResult(postService.findAllPost(boardId));
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    @ApiOperation(value = "게시글 조회", notes = "boardId 게시판에 postId 게시글을 조회합니다.")
+    @GetMapping("/{postId}")
+    public SingleResult<PostDto.Response> findPost(@ApiIgnore @CurrentUser User user,
+                                                   @ApiParam(value = "게시판 유형", defaultValue = "free") @PathVariable String boardId,
+                                                   @ApiParam(value = "게시글 ID", defaultValue = "1") @PathVariable Long postId) {
+
+        return responseService.getSingleResult(postService.getPost(user,boardId, postId));
+    }
+
+    
     @ApiOperation(value = "게시글 등록", notes = "boardId 게시판에 게시글을 등록합니다.")
     @PostMapping
     public CommonResult savePost(@ApiIgnore @CurrentUser User user,
@@ -57,21 +61,7 @@ public class PostController {
         return responseService.getSuccessResult();
     }
 
-    @ApiOperation(value = "게시글 조회", notes = "boardId 게시판에 postId 게시글을 조회합니다.")
-    @GetMapping("/{postId}")
-    public SingleResult<PostDto.Response> findPost(@ApiIgnore @CurrentUser User user,
-                                                   @ApiParam(value = "게시판 유형", defaultValue = "free") @PathVariable String boardId,
-                                                   @ApiParam(value = "게시글 ID", defaultValue = "1") @PathVariable Long postId) {
-
-        return responseService.getSingleResult(postService.getPost(user,boardId, postId));
-    }
-
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    
     @ApiOperation(value = "게시글 수정", notes = "boardId 게시판에 postId 게시글을 수정합니다.")
     @PutMapping("/{postId}")
     public SingleResult<Long> updatePost(@ApiIgnore @CurrentUser User user,
@@ -89,12 +79,7 @@ public class PostController {
 
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    
     @ApiOperation(value = "게시글 삭제", notes = "boardId 게시판에 postId 게시글을 삭제합니다.")
     @DeleteMapping("/{postId}")
     public CommonResult deletePost(@ApiIgnore @CurrentUser User user,

@@ -26,12 +26,7 @@ public class FileController {
     private final ResponseService responseService;
     private final FileService fileService;
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    
     @ApiOperation(value = "이미지 업로드", notes = "이미지 파일을 업로드 합니다.")
     @PostMapping("upload")
     public SingleResult<ImageDto.Response> uploadImage(@ApiParam(value = "파일 요청 DTO") ImageDto.Request imageRequest, HttpServletRequest request) throws URISyntaxException {

@@ -66,8 +66,8 @@ public class SignController {
 
     @ApiOperation(value = "이메일 인증", notes = "회원가입 후 이메일 인증을 진행합니다.")
     @GetMapping("/check-email-token")
-    public CommonResult checkEmailToken(@RequestParam String token,
-                                        @RequestParam String email ) {
+    public CommonResult checkEmailToken(@ApiParam(value = "이메일 인증 토큰") @RequestParam String token,
+                                        @ApiParam(value = "이메일") @RequestParam String email ) {
 
         signService.completeSignup(token, email);
 

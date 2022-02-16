@@ -22,12 +22,7 @@ public class CommentController {
     private final CommentService commentService;
     private final ResponseService responseService;
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    
     @ApiOperation(value = "댓글 등록", notes = "postsId 게시글에 댓글을 등록합니다.")
     @PostMapping
     public CommonResult saveComment(@ApiParam(value = "게시글 ID", example = "1") @PathVariable Long  postsId,
@@ -37,12 +32,7 @@ public class CommentController {
         return responseService.getSuccessResult();
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    
     @ApiOperation(value = "댓글 수장", notes = "postsId 게시글에 댓글을 수정합니다.")
     @PutMapping("/{commentId}")
     public CommonResult updateComment(@ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postsId,
@@ -54,12 +44,7 @@ public class CommentController {
     }
 
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    
     @ApiOperation(value = "댓글 삭제", notes = "postsId 게시글에 댓글을 삭제합니다.")
     @DeleteMapping("/{commentId}")
     public CommonResult deleteComment(@ApiParam(value = "게시글 ID", example = "1") @PathVariable Long postsId,

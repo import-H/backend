@@ -31,12 +31,7 @@ public class UserController {
     private final ResponseService responseService;
     private final UserService userService;
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    
     @ApiOperation(value = "회원 단건 검색", notes = "userId로 회원을 조회합니다.")
     @GetMapping("/{userId}")
     public SingleResult<Response> findUserById
@@ -45,12 +40,7 @@ public class UserController {
         return responseService.getSingleResult(userService.findUserById(userId, user));
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    
     @ApiOperation(value = "회원 정보 수정", notes = "userId 회원 정보를 수정합니다.")
     @PutMapping("/{userId}")
     public SingleResult<Response> updateUser
@@ -63,12 +53,7 @@ public class UserController {
         return responseService.getSingleResult(userService.updateUser(userId, user, request));
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    
     @ApiOperation(value = "회원 탈퇴", notes = "userId 회원이 탈퇴 합니다.")
     @DeleteMapping("/{userId}")
     public CommonResult deleteUser
@@ -80,12 +65,7 @@ public class UserController {
         return responseService.getSuccessResult();
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "Authorization",
-                    value = "로그인 성공 후 AccessToken",
-                    required = true, dataType = "String", paramType = "header")
-    })
+    
     @ApiOperation(value = "비밀번호 변경", notes = "userId 회원의 비밀번호를 변경합니다.")
     @PutMapping("/{userId}/updatePassword")
     public CommonResult updatePassword
