@@ -1,9 +1,9 @@
 package com.importH.core.domain.comment;
 
-import com.importH.core.domain.base.BaseTimeEntity;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.CommentDto;
+import com.importH.core.model.base.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

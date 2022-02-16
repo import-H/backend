@@ -1,16 +1,15 @@
 package com.importH.controller;
 
-import com.importH.config.security.CurrentUser;
+import com.importH.core.domain.user.CurrentUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.banner.BannerDto.Request;
 import com.importH.core.dto.banner.BannerDto.Response;
-import com.importH.core.error.code.BannerErrorCode;
-import com.importH.core.error.exception.BannerException;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.model.response.ListResult;
 import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.BannerService;
 import com.importH.core.service.response.ResponseService;
+import com.importH.error.exception.BannerException;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +22,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.importH.core.error.code.BannerErrorCode.NOT_AUTHORITY_ACCESS;
-import static com.importH.core.error.code.BannerErrorCode.NOT_VALID_PARAM;
+import static com.importH.error.code.BannerErrorCode.NOT_VALID_PARAM;
 
 @Api(tags = "7. Banner")
 @Slf4j

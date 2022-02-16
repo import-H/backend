@@ -1,12 +1,12 @@
 package com.importH.core.service;
 
-import com.importH.config.security.CustomUser;
+import com.importH.core.domain.user.CustomUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.user.PasswordDto;
 import com.importH.core.dto.user.UserDto.Request;
 import com.importH.core.dto.user.UserDto.Response;
-import com.importH.core.error.exception.UserException;
+import com.importH.error.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.importH.core.error.code.UserErrorCode.*;
+import static com.importH.error.code.UserErrorCode.*;
 
 @Service
 @RequiredArgsConstructor

@@ -1,16 +1,16 @@
 package com.importH.controller;
 
-import com.importH.config.security.CurrentUser;
+import com.importH.core.domain.user.CurrentUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.user.PasswordDto;
 import com.importH.core.dto.user.UserDto.Request;
 import com.importH.core.dto.user.UserDto.Response;
-import com.importH.core.error.code.UserErrorCode;
-import com.importH.core.error.exception.UserException;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.UserService;
 import com.importH.core.service.response.ResponseService;
+import com.importH.error.code.UserErrorCode;
+import com.importH.error.exception.UserException;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;

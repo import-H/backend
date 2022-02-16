@@ -8,8 +8,8 @@ import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.CommentDto;
 import com.importH.core.dto.post.PostDto;
 import com.importH.core.dto.tag.TagDto;
-import com.importH.core.error.code.PostErrorCode;
-import com.importH.core.error.exception.PostException;
+import com.importH.error.code.PostErrorCode;
+import com.importH.error.exception.PostException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.importH.core.error.code.PostErrorCode.NOT_FOUND_POST;
+import static com.importH.error.code.PostErrorCode.NOT_FOUND_POST;
 
 @Service
 @Transactional(readOnly = true)

@@ -1,7 +1,7 @@
 package com.importH.core.domain.post;
 
-import com.importH.core.domain.base.BaseTimeEntity;
 import com.importH.core.domain.user.User;
+import com.importH.core.model.base.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;

@@ -6,15 +6,14 @@ import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.banner.BannerDto.Request;
 import com.importH.core.dto.banner.BannerDto.Response;
 import com.importH.core.dto.tag.TagDto;
-import com.importH.core.error.code.BannerErrorCode;
-import com.importH.core.error.exception.BannerException;
+import com.importH.error.code.BannerErrorCode;
+import com.importH.error.exception.BannerException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

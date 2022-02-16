@@ -1,15 +1,15 @@
 package com.importH.controller;
 
-import com.importH.config.security.CurrentUser;
+import com.importH.core.domain.user.CurrentUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.PostDto;
-import com.importH.core.error.code.PostErrorCode;
-import com.importH.core.error.exception.PostException;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.model.response.ListResult;
 import com.importH.core.model.response.SingleResult;
 import com.importH.core.service.PostService;
 import com.importH.core.service.response.ResponseService;
+import com.importH.error.code.PostErrorCode;
+import com.importH.error.exception.PostException;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

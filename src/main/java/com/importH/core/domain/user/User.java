@@ -1,9 +1,9 @@
 package com.importH.core.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.importH.core.domain.base.BaseTimeEntity;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.dto.user.UserDto.Request;
+import com.importH.core.model.base.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;

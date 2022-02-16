@@ -1,7 +1,7 @@
 package com.importH.controller;
 
 
-import com.importH.config.security.CurrentUser;
+import com.importH.core.domain.user.CurrentUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.service.PostLikeService;

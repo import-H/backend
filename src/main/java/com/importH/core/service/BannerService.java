@@ -4,7 +4,7 @@ import com.importH.core.domain.banner.Banner;
 import com.importH.core.domain.banner.BannerRepository;
 import com.importH.core.dto.banner.BannerDto.Request;
 import com.importH.core.dto.banner.BannerDto.Response;
-import com.importH.core.error.exception.BannerException;
+import com.importH.error.exception.BannerException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.importH.core.error.code.BannerErrorCode.*;
+import static com.importH.error.code.BannerErrorCode.NOT_AUTHORITY_ACCESS;
+import static com.importH.error.code.BannerErrorCode.NOT_FOUND_BANNER;
 
 @Service
 @Transactional(readOnly = true)

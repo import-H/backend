@@ -1,4 +1,4 @@
-package com.importH.core.domain.base;
+package com.importH.core.model.base;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;

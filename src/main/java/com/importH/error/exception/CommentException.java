@@ -1,6 +1,6 @@
-package com.importH.core.error.exception;
+package com.importH.error.exception;
 
-import com.importH.core.error.code.ErrorCode;
+import com.importH.error.code.ErrorCode;
 import lombok.Getter;
 
 @Getter

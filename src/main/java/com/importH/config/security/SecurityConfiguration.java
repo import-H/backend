@@ -1,5 +1,7 @@
 package com.importH.config.security;
 
+import com.importH.config.security.exception.CustomAccessDeniedHandler;
+import com.importH.config.security.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

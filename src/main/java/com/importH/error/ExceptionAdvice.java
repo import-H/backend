@@ -1,8 +1,8 @@
-package com.importH.core.error;
+package com.importH.error;
 
-import com.importH.core.error.exception.*;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.service.response.ResponseService;
+import com.importH.error.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

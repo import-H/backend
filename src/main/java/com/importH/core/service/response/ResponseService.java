@@ -1,9 +1,9 @@
 package com.importH.core.service.response;
 
-import com.importH.core.error.code.ErrorCode;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.model.response.ListResult;
 import com.importH.core.model.response.SingleResult;
+import com.importH.error.code.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

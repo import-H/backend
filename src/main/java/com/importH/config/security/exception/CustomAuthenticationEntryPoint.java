@@ -1,4 +1,4 @@
-package com.importH.config.security;
+package com.importH.config.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

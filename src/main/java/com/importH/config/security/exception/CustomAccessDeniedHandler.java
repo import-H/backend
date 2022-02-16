@@ -1,4 +1,4 @@
-package com.importH.config.security;
+package com.importH.config.security.exception;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

@@ -6,7 +6,7 @@ import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.user.PasswordDto;
 import com.importH.core.dto.user.UserDto;
-import com.importH.core.error.code.UserErrorCode;
+import com.importH.error.code.UserErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.importH.config.security;
+package com.importH.core.domain.user;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

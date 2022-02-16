@@ -1,4 +1,4 @@
-package com.importH.core.error.code;
+package com.importH.error.code;
 
 
 public interface ErrorCode {

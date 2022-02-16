@@ -5,7 +5,7 @@ Content-Type: application/json
 
 {
   "email": "busan-sy@naver.com",
-  "nickname": "테스트",
+  "nickname": "자몽",
   "pathId" : "test1",
   "password": "12341234",
   "confirmPassword": "12341234",
@@ -43,7 +43,7 @@ POST http://localhost:8090/v1/reissue
 Content-Type: application/json
 
 {
-  "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzI4NDgwOSwiZXhwIjoxNjQzMjg0ODM5fQ.x2IgY-CWDyq0HUIY2wY90ELmGsvIS3ovP30KvkmKLOg",
-  "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmNAaG9uZ2lrLmFjLmtyIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0MzI4NDgwOSwiZXhwIjoxNjQ0NDk0NDA5fQ.6rqhONW9Afh7PtZ0d7p-ZWsy1eqSItNQ_OlKnxlvTsw"
+  "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLqtIDrpqzsnpAiLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJuaWNrbmFtZSI6Iuq0gOumrOyekCIsInVzZXJJZCI6MiwicHJvZmlsZUltYWdlIjoiTiIsImlhdCI6MTY0NTAxNDMyOSwiZXhwIjoxNjQ1MTAwNzI5fQ.V7yKuIK0A5TCR4Uf3mdKDnKwYxVpLNCM7DNccnvQHzk",
+  "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLqtIDrpqzsnpAiLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJuaWNrbmFtZSI6Iuq0gOumrOyekCIsInVzZXJJZCI6MiwicHJvZmlsZUltYWdlIjoiTiIsImlhdCI6MTY0NTAxNDMyOSwiZXhwIjoxNjU3NTQyMzI5fQ.WIlVYYNONzpAs2_SMxw0kIo-m24iLOgZsh0ooucbPQo"
 }
 

@@ -1,4 +1,4 @@
-package com.importH.core.error.code;
+package com.importH.error.code;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -8,10 +8,10 @@ import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.jwt.TokenDto.Info;
 import com.importH.core.dto.sign.SignupDto;
-import com.importH.core.error.code.JwtErrorCode;
-import com.importH.core.error.code.UserErrorCode;
-import com.importH.core.error.exception.JwtException;
-import com.importH.core.error.exception.UserException;
+import com.importH.error.code.JwtErrorCode;
+import com.importH.error.code.UserErrorCode;
+import com.importH.error.exception.JwtException;
+import com.importH.error.exception.UserException;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -239,15 +239,13 @@ class SignServiceTest {
                 .containsEntry("roles", user.getRole())
                 .containsEntry("nickname", user.getNickname())
                 .containsEntry("profileImage", user.getProfileImage())
+                .containsEntry("emailVerified", user.isEmailVerified())
                 .containsEntry("sub", user.getEmail());
 
     }
 
     private Info getTokenClaims() {
-        Info info = Info.builder().email(user.getEmail())
-                .id(user.getId())
-                .nickname(user.getNickname())
-                .profileImage(user.getProfileImage()).build();
+        Info info = Info.fromEntity(user);
         return info;
     }
 

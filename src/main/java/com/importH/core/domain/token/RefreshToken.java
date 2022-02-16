@@ -1,6 +1,6 @@
 package com.importH.core.domain.token;
 
-import com.importH.core.domain.base.BaseTimeEntity;
+import com.importH.core.model.base.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

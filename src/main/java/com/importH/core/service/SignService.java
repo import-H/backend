@@ -9,9 +9,9 @@ import com.importH.core.dto.email.EmailDto;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.jwt.TokenDto.Info;
 import com.importH.core.dto.sign.SignupDto;
-import com.importH.core.error.code.JwtErrorCode;
-import com.importH.core.error.exception.JwtException;
-import com.importH.core.error.exception.UserException;
+import com.importH.error.code.JwtErrorCode;
+import com.importH.error.exception.JwtException;
+import com.importH.error.exception.UserException;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 
-import static com.importH.core.error.code.UserErrorCode.*;
+import static com.importH.error.code.UserErrorCode.*;
 
 @Slf4j
 @Service
@@ -42,14 +42,8 @@ public class SignService {
     }
 
     private void initAccount() {
-        SignupDto test =
-                SignupDto
-                        .builder().email("abc@hongik.ac.kr").password("12341234").confirmPassword("12341234").nickname("test").build();
-        User user = test.toEntity();
-        user.setPassword(passwordEncoder.encode(test.getPassword()));
-        userRepository.save(user);
-
-        userRepository.save(User.builder().nickname("관리자").email("관리자").password(passwordEncoder.encode("1234")).role("ROLE_ADMIN").build());
+        userRepository.save(User.builder().nickname("test").email("abc@hongik.ac.kr").password(passwordEncoder.encode("12341234")).role("ROLE_USER").build());
+        userRepository.save(User.builder().nickname("관리자").email("관리자").password(passwordEncoder.encode("1234")).role("ROLE_ADMIN").emailVerified(true).build());
     }
 
 
@@ -156,10 +150,7 @@ public class SignService {
     }
 
     private TokenDto createToken(User user) {
-        Info info = Info.builder().email(user.getEmail())
-                .id(user.getId())
-                .nickname(user.getNickname())
-                .profileImage(user.getProfileImage()).build();
+        Info info = Info.fromEntity(user);
 
         return jwtProvider.createToken(info, user.getRole());
     }

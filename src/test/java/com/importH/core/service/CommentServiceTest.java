@@ -5,10 +5,9 @@ import com.importH.core.domain.comment.CommentRepository;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.CommentDto.Request;
-import com.importH.core.error.code.CommentErrorCode;
-import com.importH.core.error.exception.CommentException;
-import com.importH.core.error.exception.PostException;
-import org.h2.util.ThreadDeadlockDetector;
+import com.importH.error.code.CommentErrorCode;
+import com.importH.error.exception.CommentException;
+import com.importH.error.exception.PostException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.importH.core.error.code.PostErrorCode.NOT_FOUND_POST;
+import static com.importH.error.code.PostErrorCode.NOT_FOUND_POST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
