@@ -47,3 +47,5 @@ Content-Type: application/json
   "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLqtIDrpqzsnpAiLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJuaWNrbmFtZSI6Iuq0gOumrOyekCIsInVzZXJJZCI6MiwicHJvZmlsZUltYWdlIjoiTiIsImlhdCI6MTY0NTAxNDMyOSwiZXhwIjoxNjU3NTQyMzI5fQ.WIlVYYNONzpAs2_SMxw0kIo-m24iLOgZsh0ooucbPQo"
 }
 
+### 이메일 인증
+GET http://localhost:8090/v1/check-email-token?email={{email}}&token={{token}}

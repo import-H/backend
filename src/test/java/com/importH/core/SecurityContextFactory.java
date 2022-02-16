@@ -32,7 +32,7 @@ public class SecurityContextFactory implements WithSecurityContextFactory<WithAc
                 .password(passwordEncoder.encode("testtest"))
                 .role(nickname.equals("관리자") ? "ROLE_ADMIN" : "ROLE_USER")
                 .weekAgree(true)
-                .emailVerified(nickname.equals("관리자") ? true : false)
+                .emailVerified(true)
                 .build();
 
         userRepository.save(user);

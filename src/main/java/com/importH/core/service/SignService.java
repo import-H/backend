@@ -42,7 +42,7 @@ public class SignService {
     }
 
     private void initAccount() {
-        userRepository.save(User.builder().nickname("test").email("abc@hongik.ac.kr").password(passwordEncoder.encode("12341234")).role("ROLE_USER").build());
+        userRepository.save(User.builder().nickname("test").email("abc@hongik.ac.kr").password(passwordEncoder.encode("12341234")).role("ROLE_USER").emailCheckToken("5fde96c1-46d0-464b-84e3-478170402815").build());
         userRepository.save(User.builder().nickname("관리자").email("관리자").password(passwordEncoder.encode("1234")).role("ROLE_ADMIN").emailVerified(true).build());
     }
 
