@@ -218,10 +218,26 @@ public class SignService {
 
         User user = findUserByEmail(email);
 
-        if (!user.isValidToken(emailToken,user)) {
+        if (!user.isValidToken(emailToken)) {
             throw new UserException(NOT_EQUALS_EMAIL_TOKEN);
         }
 
         user.completeSignup();
     }
+
+
+    /**
+     * 이메일 다시 보내기
+     */
+    @Transactional
+    public void resendConfirmEmail(String email) {
+        User user = findUserByEmail(email);
+
+        if (!user.canSendConfirmEmail()) {
+            throw new UserException(NOT_PASSED_HOUR);
+        }
+
+        sendEmailConfirmEmail(user);
+    }
+
 }

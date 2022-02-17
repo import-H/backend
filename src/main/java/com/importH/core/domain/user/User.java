@@ -101,11 +101,16 @@ public class User extends BaseTimeEntity {
         this.emailCheckTokenGeneratedAt = LocalDateTime.now();
     }
 
-    public boolean isValidToken(String token, User user) {
-        return user.getEmailCheckToken().equals(token);
+    public boolean isValidToken(String token) {
+        return this.getEmailCheckToken().equals(token);
     }
 
     public void completeSignup() {
         this.emailVerified = true;
     }
+
+    public boolean canSendConfirmEmail() {
+        return emailCheckTokenGeneratedAt == null || emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusHours(1));
+    }
+
 }

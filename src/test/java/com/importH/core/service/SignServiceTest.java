@@ -27,6 +27,8 @@ import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
@@ -294,6 +296,39 @@ class SignServiceTest {
 
     }
 
+
+    @Test
+    @DisplayName("[성공] 이메일 인증 다시 보내기 ")
+    void resendConfirmEmail_success() throws Exception {
+        // given
+        user = userRepository.save(User.builder()
+                .email("test")
+                .password(passwordEncoder.encode("1234"))
+                .nickname("test")
+                .build());
+        String beforeToken = user.getEmailCheckToken();
+
+        // when
+        signService.resendConfirmEmail(user.getEmail());
+
+        //then
+        assertThat(user.getEmailCheckToken()).isNotEqualTo(beforeToken);
+    }
+
+    @Test
+    @DisplayName("[실패] 이메일 인증 다시 보내기 - 아직 1시간이 지나지 않은 경우")
+    void resendConfirmEmail_fail() throws Exception {
+        // given
+        String beforeToken = user.getEmailCheckToken();
+        UserErrorCode err = UserErrorCode.NOT_PASSED_HOUR;
+        // when
+        UserException exception = assertThrows(UserException.class, () -> signService.resendConfirmEmail(user.getEmail()));
+
+        //then
+        assertThat(exception)
+                .hasFieldOrPropertyWithValue("errorCode", err)
+                .hasFieldOrPropertyWithValue("errorMessage", err.getDescription());
+    }
     private Info getTokenClaims() {
         Info info = Info.fromEntity(user);
         return info;

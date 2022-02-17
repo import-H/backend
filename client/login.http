@@ -48,4 +48,8 @@ Content-Type: application/json
 }
 
 ### 이메일 인증
-GET http://localhost:8090/v1/check-email-token?email={{email}}&token={{token}}
+GET http://localhost:8090/v1/email-token?email={{email}}&token={{token}}
+
+### 이메일 인증 재전송
+POST http://localhost:8090/v1/email-token
+Authorization: {{Authorization}}

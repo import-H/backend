@@ -12,8 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final EmailVerifyInterceptor emailVerifyInterceptor;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(emailVerifyInterceptor);
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(emailVerifyInterceptor);
+//    }
 }

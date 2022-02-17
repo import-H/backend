@@ -1,5 +1,7 @@
 package com.importH.controller;
 
+import com.importH.core.domain.user.CurrentUser;
+import com.importH.core.domain.user.User;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.sign.LoginDto;
 import com.importH.core.dto.sign.SignupDto;
@@ -18,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,11 +70,20 @@ public class SignController {
 
 
     @ApiOperation(value = "이메일 인증", notes = "회원가입 후 이메일 인증을 진행합니다.")
-    @GetMapping("/check-email-token")
+    @GetMapping("/email-token")
     public CommonResult checkEmailToken(@ApiParam(value = "이메일 인증 토큰") @RequestParam String token,
                                         @ApiParam(value = "이메일") @RequestParam String email ) {
 
         signService.completeSignup(token, email);
+
+        return responseService.getSuccessResult();
+    }
+
+    @ApiOperation(value = "이메일 인증 재전송", notes = "인증 이메일을 재전송 합니다.")
+    @PostMapping("/email-token")
+    public CommonResult resendEmailToken(@ApiIgnore @CurrentUser User user) {
+
+        signService.resendConfirmEmail(user.getEmail());
 
         return responseService.getSuccessResult();
     }
