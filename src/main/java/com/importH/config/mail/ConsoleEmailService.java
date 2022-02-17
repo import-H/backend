@@ -1,12 +1,15 @@
 package com.importH.config.mail;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-@Profile("local")
+@Primary
 @Component
 @Slf4j
+@NoArgsConstructor
 public class ConsoleEmailService implements EmailMessenger {
 
     @Override

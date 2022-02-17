@@ -244,6 +244,56 @@ class SignServiceTest {
 
     }
 
+    @Test
+    @DisplayName("[성공] 이메일 인증 ")
+    void emailVerified_success() throws Exception {
+
+        // when
+        signService.completeSignup(user.getEmailCheckToken(), user.getEmail());
+
+        //then
+        assertThat(user.isEmailVerified()).isTrue();
+
+    }
+
+    @Test
+    @DisplayName("[실패] 이메일 인증 - 잘못된 토큰 ")
+    void emailVerified_fail1() throws Exception {
+
+        //given
+        UserErrorCode err = UserErrorCode.NOT_EQUALS_EMAIL_TOKEN;
+
+        // when
+        UserException exception = assertThrows(UserException.class, () -> signService.completeSignup("", user.getEmail()));
+
+        //then
+        assertThat(exception)
+                .hasFieldOrPropertyWithValue("errorCode", err)
+                .hasFieldOrPropertyWithValue("errorMessage", err.getDescription());
+
+        assertThat(user.isEmailVerified()).isFalse();
+
+    }
+
+    @Test
+    @DisplayName("[실패] 이메일 인증 - 잘못된 이메일 ")
+    void emailVerified_fail2() throws Exception {
+
+        //given
+        UserErrorCode err = UserErrorCode.EMAIL_LOGIN_FAILED;
+
+        // when
+        UserException exception = assertThrows(UserException.class, () -> signService.completeSignup(user.getEmailCheckToken(), ""));
+
+        //then
+        assertThat(exception)
+                .hasFieldOrPropertyWithValue("errorCode", err)
+                .hasFieldOrPropertyWithValue("errorMessage", err.getDescription());
+
+        assertThat(user.isEmailVerified()).isFalse();
+
+    }
+
     private Info getTokenClaims() {
         Info info = Info.fromEntity(user);
         return info;

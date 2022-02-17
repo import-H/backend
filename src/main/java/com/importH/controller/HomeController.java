@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayDeque;
+
 
 @Api(tags = "5. Home")
 @Slf4j
@@ -27,7 +29,6 @@ public class HomeController {
     @ApiOperation(value = "메인 화면 게시글 좋아요순으로 조회", notes = "전체 게시글을 좋아요 순으로 조회 합니다.")
     @GetMapping
     public ListResult<PostDto.ResponseAll> mainPosts(Pageable pageable) {
-
         return responseService.getListResult(postService.findAllPostOrderByLike(pageable));
     }
 

@@ -194,13 +194,10 @@ public class SignService {
     }
 
     private void validateRefreshToken(RefreshToken refreshToken, String requestRefreshToken) {
-        if (refreshToken == null) {
-            throw new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID);
-        }
-        if (!isValidationRefreshToken(requestRefreshToken)) {
-            throw new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID);
-        }
-        if (!isEqualsRefreshToken(refreshToken, requestRefreshToken)) {
+        if (refreshToken == null ||
+            !isValidationRefreshToken(requestRefreshToken) ||
+            !isEqualsRefreshToken(refreshToken, requestRefreshToken)) {
+
             throw new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID);
         }
     }
@@ -222,7 +219,7 @@ public class SignService {
         User user = findUserByEmail(email);
 
         if (!user.isValidToken(emailToken,user)) {
-            throw new UserException(NOT_EQUALS_TOKEN);
+            throw new UserException(NOT_EQUALS_EMAIL_TOKEN);
         }
 
         user.completeSignup();

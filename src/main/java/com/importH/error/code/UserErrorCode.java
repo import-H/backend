@@ -15,8 +15,8 @@ public enum UserErrorCode implements ErrorCode{
     ALREADY_USER_DELETED("해당 아이디는 이미 삭제 처리 되었습니다. ", 400),
     EMAIL_LOGIN_FAILED("가입하지 않은 아이디이거나, 잘못된 비밀번호입니다.", 400),
     NOT_VALID_REQUEST_PARAMETERS("잘못된 파라미터 요청입니다.", 400),
-    USER_PATH_ID_DUPLICATED("해당 주소 id 값은 사용중입니다.", 400)
-    , NOT_EQUALS_TOKEN("이메일 인증 토큰이 동일하지 않습니다.", 400);
+    USER_PATH_ID_DUPLICATED("해당 주소 id 값은 사용중입니다.", 400),
+    NOT_EQUALS_EMAIL_TOKEN("이메일 인증 토큰이 동일하지 않습니다.", 400);
 
     private final String description;
     private final int status;
