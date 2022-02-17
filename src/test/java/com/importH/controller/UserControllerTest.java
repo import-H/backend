@@ -6,6 +6,7 @@ import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.user.PasswordDto;
 import com.importH.core.dto.user.UserDto;
+import com.importH.error.code.CommonErrorCode;
 import com.importH.error.code.UserErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -135,7 +136,7 @@ class UserControllerTest {
                 .build();
 
         User user = userRepository.findByNickname("테스트").get();
-        UserErrorCode errorCode = UserErrorCode.NOT_VALID_REQUEST_PARAMETERS;
+        CommonErrorCode errorCode = CommonErrorCode.NOT_VALID_PARAM;
 
         // when
         ResultActions perform = mockMvc.perform(put("/v1/users/" + user.getId())

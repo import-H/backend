@@ -2,9 +2,11 @@ package com.importH.error;
 
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.service.response.ResponseService;
+import com.importH.error.code.ErrorCode;
 import com.importH.error.exception.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,10 +22,23 @@ public class ExceptionAdvice {
 
     private final ResponseService responseService;
 
+    @ExceptionHandler(CommonException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected CommonResult CommonException(HttpServletRequest request, CommonException e) {
+        printError(request, e);
+
+        return responseService.getFailResult(e.getErrorCode());
+
+    }
+
+    private void printError(HttpServletRequest request, CommonException e) {
+        log.error("requestUrl : {} , errorCode : {}, errorMessage : {}", request.getRequestURI(), e.getErrorCode(), e.getErrorMessage());
+    }
+
     @ExceptionHandler(UserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected CommonResult userException(HttpServletRequest request, UserException e) {
-        log.error("requestUrl : {} , errorCode : {}, errorMessage : {}", request.getRequestURI(), e.getErrorCode(), e.getErrorMessage());
+        printError(request, e.getErrorCode());
 
         return responseService.getFailResult(e.getErrorCode());
 
@@ -32,21 +47,21 @@ public class ExceptionAdvice {
     @ExceptionHandler(JwtException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected CommonResult jwtException(HttpServletRequest request, JwtException e) {
-        log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
+        printError(request, e.getErrorCode());
         return responseService.getFailResult(e.getErrorCode());
     }
 
     @ExceptionHandler(PostException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected CommonResult postException(HttpServletRequest request, PostException e) {
-        log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
+        printError(request, e.getErrorCode());
         return responseService.getFailResult(e.getErrorCode());
     }
 
     @ExceptionHandler(FileException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected CommonResult FileException(HttpServletRequest request, FileException e) {
-        log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
+        printError(request, e.getErrorCode());
         return responseService.getFailResult(e.getErrorCode());
     }
 
@@ -54,16 +69,21 @@ public class ExceptionAdvice {
     @ExceptionHandler(CommentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected CommonResult CommentException(HttpServletRequest request, CommentException e) {
-        log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
+        printError(request, e.getErrorCode());
         return responseService.getFailResult(e.getErrorCode());
     }
 
     @ExceptionHandler(BannerException.class)
     protected ResponseEntity BannerException(HttpServletRequest request, BannerException e) {
-        log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e.getErrorCode());
+        printError(request, e.getErrorCode());
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
                 .body(responseService.getFailResult(e.getErrorCode()));
     }
+
+    private void printError(HttpServletRequest request, ErrorCode e) {
+        log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e);
+    }
+    
 
 }

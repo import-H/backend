@@ -13,6 +13,7 @@ import com.importH.core.dto.post.PostDto;
 import com.importH.core.dto.tag.TagDto;
 import com.importH.core.service.CommentService;
 import com.importH.core.service.PostService;
+import com.importH.error.code.CommonErrorCode;
 import com.importH.error.code.PostErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -113,7 +114,7 @@ class PostControllerTest {
         // given
         PostDto.Request request = getRequest("", "", "자바");
         // when
-        PostErrorCode errorCode = PostErrorCode.NOT_VALIDATE_PARAM;
+        CommonErrorCode errorCode = CommonErrorCode.NOT_VALID_PARAM;
 
         mockMvc.perform(post("/v1/boards/"+post.getType()+"/posts")
                         .contentType(MediaType.APPLICATION_JSON)

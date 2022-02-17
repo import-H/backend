@@ -1,5 +1,6 @@
 package com.importH.controller;
 
+import com.importH.controller.common.ControllerCommon;
 import com.importH.core.domain.user.CurrentUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.user.PasswordDto;
@@ -21,6 +22,8 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.importH.controller.common.ControllerCommon.validParameter;
 
 @Api(tags = {"2. User"})
 @RestController
@@ -50,6 +53,7 @@ public class UserController {
              BindingResult bindingResult) {
 
         validParameter(bindingResult);
+
         return responseService.getSingleResult(userService.updateUser(userId, user, request));
     }
 
@@ -81,19 +85,7 @@ public class UserController {
         return responseService.getSuccessResult();
     }
 
-    private void validParameter(BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new UserException(UserErrorCode.NOT_VALID_REQUEST_PARAMETERS,
-                    getErrorMessage(bindingResult.getAllErrors()));
-        }
-    }
 
-    private String getErrorMessage(List<ObjectError> errors) {
-        return errors.stream()
-                .map(objectError -> objectError.getDefaultMessage())
-                .collect(Collectors.toList())
-                .toString();
-    }
 
 }
 

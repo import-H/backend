@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.importH.controller.common.ControllerCommon.validParameter;
+
 @Api(tags = "1. SignUp / Login")
 @Slf4j
 @RestController
@@ -74,17 +76,4 @@ public class SignController {
         return responseService.getSuccessResult();
     }
 
-    private void validParameter(BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new UserException(UserErrorCode.NOT_VALID_REQUEST_PARAMETERS,
-                    getErrorMessage(bindingResult.getAllErrors()));
-        }
-    }
-
-    private String getErrorMessage(List<ObjectError> errors) {
-        return errors.stream()
-                .map(objectError -> objectError.getDefaultMessage())
-                .collect(Collectors.toList())
-                .toString();
-    }
 }

@@ -18,6 +18,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import static com.importH.controller.common.ControllerCommon.validParameter;
+
 @Api(tags = "3. Post")
 @Slf4j
 @RestController
@@ -54,9 +56,7 @@ public class PostController {
                                  @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
                                  BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            throw new PostException(PostErrorCode.NOT_VALIDATE_PARAM);
-        }
+        validParameter(bindingResult);
         postService.registerPost(user, boardId, postRequestDto);
         return responseService.getSuccessResult();
     }
@@ -71,9 +71,7 @@ public class PostController {
                                          BindingResult bindingResult
     ) {
 
-        if (bindingResult.hasErrors()) {
-            throw new PostException(PostErrorCode.NOT_VALIDATE_PARAM);
-        }
+        validParameter(bindingResult);
 
         return responseService.getSingleResult(postService.updatePost(user, boardId, postId, postRequestDto));
 

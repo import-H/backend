@@ -1,5 +1,6 @@
 package com.importH.controller;
 
+import com.importH.controller.common.ControllerCommon;
 import com.importH.core.domain.user.CurrentUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.banner.BannerDto.Request;
@@ -22,9 +23,11 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.importH.controller.common.ControllerCommon.validParameter;
 import static com.importH.error.code.BannerErrorCode.NOT_AUTHORITY_ACCESS;
 
 
+@SuppressWarnings("ALL")
 @Api(tags = "7. Banner")
 @Slf4j
 @RestController
@@ -53,13 +56,7 @@ public class BannerController  {
         return responseService.getListResult(bannerService.getBanners());
     }
 
-    private void validParameter(BindingResult bindingResult) {
-            if (bindingResult.hasErrors()) {
-                throw new BannerException(NOT_AUTHORITY_ACCESS, getErrorMessage(bindingResult.getAllErrors()));
-            }
-    }
 
-    
     @ApiOperation(value = "배너 삭제", notes = "bannerId 에 해당하는 배너를 삭제합니다.")
     @DeleteMapping("/{bannerId}")
     public CommonResult deleteBanner(@ApiIgnore @CurrentUser User user,
@@ -69,10 +66,4 @@ public class BannerController  {
         return responseService.getSuccessResult();
     }
 
-    private String getErrorMessage(List<ObjectError> errors) {
-        return errors.stream()
-                .map(objectError -> objectError.getDefaultMessage())
-                .collect(Collectors.toList())
-                .toString();
-    }
 }
