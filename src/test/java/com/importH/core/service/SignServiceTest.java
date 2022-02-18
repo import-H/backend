@@ -279,7 +279,7 @@ class SignServiceTest {
     void emailVerified_fail2() throws Exception {
 
         //given
-        UserErrorCode err = UserErrorCode.EMAIL_LOGIN_FAILED;
+        UserErrorCode err = UserErrorCode.NOT_FOUND_USER_BY_EMAIL;
 
         // when
         UserException exception = assertThrows(UserException.class, () -> signService.completeSignup(user.getEmailCheckToken(), ""));

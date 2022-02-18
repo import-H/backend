@@ -10,6 +10,7 @@ import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.jwt.TokenDto.Info;
 import com.importH.core.dto.sign.SignupDto;
 import com.importH.error.code.JwtErrorCode;
+import com.importH.error.code.UserErrorCode;
 import com.importH.error.exception.JwtException;
 import com.importH.error.exception.UserException;
 import io.jsonwebtoken.Claims;
@@ -121,7 +122,7 @@ public class SignService {
     /** 로그인 */
     @Transactional
     public TokenDto login(String email, String password) {
-        User user = findUserByEmail(email);
+        User user = findUserByEmail(email, EMAIL_LOGIN_FAILED);
         validatePassword(password, user);
         
         TokenDto tokenDto = createToken(user);
@@ -165,8 +166,8 @@ public class SignService {
         return passwordEncoder.matches(password, accountPassword);
     }
 
-    private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserException(EMAIL_LOGIN_FAILED));
+    private User findUserByEmail(String email, UserErrorCode errorCode) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserException(errorCode));
     }
 
     private User findUserById(Long userId) {
@@ -220,7 +221,7 @@ public class SignService {
     @Transactional
     public void completeSignup(String emailToken, String email) {
 
-        User user = findUserByEmail(email);
+        User user = findUserByEmail(email, NOT_FOUND_USER_BY_EMAIL);
 
         if (!user.isValidToken(emailToken)) {
             throw new UserException(NOT_EQUALS_EMAIL_TOKEN);
@@ -235,7 +236,7 @@ public class SignService {
      */
     @Transactional
     public void resendConfirmEmail(String email) {
-        User user = findUserByEmail(email);
+        User user = findUserByEmail(email, NOT_FOUND_USER_BY_EMAIL);
 
         if (!user.canSendConfirmEmail()) {
             throw new UserException(NOT_PASSED_HOUR);

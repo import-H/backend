@@ -40,11 +40,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/v1/signup", "/v1/login",
-                        "/v1/reissue", "/v1/social/**").permitAll()
+                        "/v1/reissue", "/v1/social/**","/v1/email-token").permitAll()
                 .antMatchers(HttpMethod.GET, "/oauth/kakao/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/v1/boards/*/posts/*","/v1/boards/*/posts","/v1/file/upload/**"
-                        ,"/v1/main","/v1/banners","/v1/check-email-token").permitAll()
+                        ,"/v1/main","/v1/banners","/v1/email-token").permitAll()
                 .anyRequest().hasAnyRole("USER","ADMIN")
 
 

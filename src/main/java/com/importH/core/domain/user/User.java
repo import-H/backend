@@ -102,7 +102,7 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean isValidToken(String token) {
-        return this.getEmailCheckToken().equals(token);
+        return this.getEmailCheckToken() != null && this.getEmailCheckToken().equals(token);
     }
 
     public void completeSignup() {
