@@ -1,9 +1,9 @@
 ### 회원 정보 조회
-GET http://localhost:8090/v1/users/2
+GET http://localhost:8090/v1/users/1
 Authorization: {{Authorization}}
 
 ### 회원 정보 수정
-PUT http://localhost:8090/v1/users/2
+PUT http://localhost:8090/v1/users/1
 Authorization: {{Authorization}}
 Content-Type: application/json
 

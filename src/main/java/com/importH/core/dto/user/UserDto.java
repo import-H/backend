@@ -70,6 +70,9 @@ public class UserDto {
         @ApiModelProperty(value = "웹 수신 동의 여부", example = "true/false")
         private boolean infoByWeb;
 
+        @ApiModelProperty(value = "이메일 인증 여부", example = "true/false")
+        private boolean emailVerified;
+
         public static Response fromEntity(User user) {
             return Response.builder()
                     .nickname(user.getNickname())
@@ -79,6 +82,7 @@ public class UserDto {
                     .personalUrl(user.getPersonalUrl())
                     .infoByEmail(user.getInfoAgree().isInfoByEmail())
                     .infoByWeb(user.getInfoAgree().isInfoByWeb())
+                    .emailVerified(user.isEmailVerified())
                     .build();
         }
     }

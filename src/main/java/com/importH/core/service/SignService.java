@@ -169,14 +169,18 @@ public class SignService {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserException(EMAIL_LOGIN_FAILED));
     }
 
+    private User findUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
+    }
+
     /** 토큰 재발급 */
     @Transactional
     public TokenDto reissue(TokenDto tokenRequestDto) {
 
         Claims claims = jwtProvider.parseClaims(tokenRequestDto.getRefreshToken());
-        String email = claims.getSubject();
+        Long userId = Long.valueOf(claims.getSubject());
 
-        User user = findUserByEmail(email);
+        User user = findUserById(userId);
 
         RefreshToken refreshToken = getValidateRefreshToken(user, tokenRequestDto.getRefreshToken());
 

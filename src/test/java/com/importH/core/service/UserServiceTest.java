@@ -60,7 +60,8 @@ class UserServiceTest {
                 .hasFieldOrPropertyWithValue("introduction", user.getIntroduction())
                 .hasFieldOrPropertyWithValue("personalUrl", user.getPersonalUrl())
                 .hasFieldOrPropertyWithValue("infoByEmail", user.getInfoAgree().isInfoByEmail())
-                .hasFieldOrPropertyWithValue("infoByWeb", user.getInfoAgree().isInfoByWeb());
+                .hasFieldOrPropertyWithValue("infoByWeb", user.getInfoAgree().isInfoByWeb())
+                .hasFieldOrPropertyWithValue("emailVerified", user.isEmailVerified());
 
     }
 
@@ -100,7 +101,8 @@ class UserServiceTest {
                 .hasFieldOrPropertyWithValue("introduction", request.getIntroduction())
                 .hasFieldOrPropertyWithValue("personalUrl", request.getPersonalUrl())
                 .hasFieldOrPropertyWithValue("infoByEmail", request.isInfoByEmail())
-                .hasFieldOrPropertyWithValue("infoByWeb", request.isInfoByWeb());
+                .hasFieldOrPropertyWithValue("infoByWeb", request.isInfoByWeb())
+                .hasFieldOrPropertyWithValue("emailVerified", user.isEmailVerified());
 
     }
 

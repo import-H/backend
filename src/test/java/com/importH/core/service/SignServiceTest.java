@@ -239,10 +239,7 @@ class SignServiceTest {
         //then
         assertThat(claims)
                 .containsEntry("roles", user.getRole())
-                .containsEntry("nickname", user.getNickname())
-                .containsEntry("profileImage", user.getProfileImage())
-                .containsEntry("emailVerified", user.isEmailVerified())
-                .containsEntry("sub", user.getEmail());
+                .containsEntry("sub", String.valueOf(user.getId()));
 
     }
 

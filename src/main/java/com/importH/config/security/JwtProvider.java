@@ -54,12 +54,8 @@ public class JwtProvider {
     //JWT 토큰 생성
     public TokenDto createToken(Info info, String role) {
 
-        Claims claims = Jwts.claims().setSubject(info.getEmail()); // JWT PALYLOAD 에 저장되는 정보단위
+        Claims claims = Jwts.claims().setSubject(String.valueOf(info.getId())); // JWT PALYLOAD 에 저장되는 정보단위
         claims.put(ROLES, role);
-        claims.put("nickname", info.getNickname());
-        claims.put("userId", info.getId());
-        claims.put("profileImage", info.getProfileImage());
-        claims.put("emailVerified", info.isEmailVerified());
 
         Date now = new Date();
 
@@ -96,8 +92,9 @@ public class JwtProvider {
         }
 
         // 권한 정보가 없음
-        User user = userRepository.findByEmail(claims.getSubject()).orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_USERID));
-        return new UsernamePasswordAuthenticationToken(new CustomUser(user), "", List.of(new SimpleGrantedAuthority(user.getRole())));
+        User user = userRepository.findById(Long.valueOf(claims.getSubject()))
+                .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_USERID));
+        return new UsernamePasswordAuthenticationToken(new CustomUser(user), user.getPassword(), List.of(new SimpleGrantedAuthority(user.getRole())));
     }
 
     // jwt 에서 회원 구분 PK 추출

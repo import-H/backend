@@ -59,7 +59,8 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data.introduction").value(user.getIntroduction()))
                 .andExpect(jsonPath("$.data.personalUrl").value(user.getPersonalUrl()))
                 .andExpect(jsonPath("$.data.infoByEmail").value(user.getInfoAgree().isInfoByEmail()))
-                .andExpect(jsonPath("$.data.infoByWeb").value(user.getInfoAgree().isInfoByWeb()));
+                .andExpect(jsonPath("$.data.infoByWeb").value(user.getInfoAgree().isInfoByWeb()))
+                .andExpect(jsonPath("$.data.emailVerified").value(user.isEmailVerified()));
     }
 
 
@@ -104,6 +105,9 @@ class UserControllerTest {
         UserDto.Request request = UserDto.Request.builder()
                 .nickname("변경")
                 .introduction("소개입니다.")
+                .infoByEmail(true)
+                .infoByWeb(true)
+                .profileImage("")
                 .personalUrl("http://cafe.naver.com")
                 .build();
 
@@ -119,9 +123,10 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data.nickname").value(request.getNickname()))
                 .andExpect(jsonPath("$.data.introduction").value(request.getIntroduction()))
                 .andExpect(jsonPath("$.data.personalUrl").value(request.getPersonalUrl()))
-                .andExpect(jsonPath("$.data.profileImage").value(user.getProfileImage()))
-                .andExpect(jsonPath("$.data.infoByEmail").value(user.getInfoAgree().isInfoByWeb()))
-                .andExpect(jsonPath("$.data.infoByWeb").value(user.getInfoAgree().isInfoByWeb()));
+                .andExpect(jsonPath("$.data.profileImage").value(request.getProfileImage()))
+                .andExpect(jsonPath("$.data.infoByEmail").value(request.isInfoByWeb()))
+                .andExpect(jsonPath("$.data.infoByWeb").value(request.isInfoByWeb()))
+                .andExpect(jsonPath("$.data.emailVerified").value(user.isEmailVerified()));
     }
 
     @Test
