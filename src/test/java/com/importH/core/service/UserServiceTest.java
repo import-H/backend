@@ -1,6 +1,6 @@
 package com.importH.core.service;
 
-import com.importH.core.AccountFactory;
+import com.importH.core.UserFactory;
 import com.importH.core.WithAccount;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
@@ -31,7 +31,7 @@ class UserServiceTest {
     UserService userService;
 
     @Autowired
-    AccountFactory accountFactory;
+    UserFactory userFactory;
 
     @Autowired
     UserRepository userRepository;

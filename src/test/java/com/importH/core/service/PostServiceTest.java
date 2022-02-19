@@ -1,6 +1,6 @@
 package com.importH.core.service;
 
-import com.importH.core.AccountFactory;
+import com.importH.core.UserFactory;
 import com.importH.core.domain.post.Post;
 import com.importH.core.domain.post.PostRepository;
 import com.importH.core.domain.tag.Tag;
@@ -37,7 +37,7 @@ class PostServiceTest {
     PostService postService;
 
     @Autowired
-    AccountFactory accountFactory;
+    UserFactory userFactory;
 
     @Autowired
     TagService tagService;
@@ -47,7 +47,7 @@ class PostServiceTest {
 
     @BeforeEach
     void before() {
-        user = accountFactory.createNewAccount("test");
+        user = userFactory.createNewAccount("test", "test" + "@email.com", "pathId");
         post = postService.registerPost(user, "free", getRequest("테스트", "테스트 게시글 입니다.", "자바"));
     }
 

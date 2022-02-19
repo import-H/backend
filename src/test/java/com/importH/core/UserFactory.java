@@ -10,19 +10,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Transactional
 @RequiredArgsConstructor
-public class AccountFactory {
+public class UserFactory {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User createNewAccount(String nickname) {
+    public User createNewAccount(String nickname, String email, String pathId) {
 
         return userRepository.save(User.builder()
-                .email(nickname + "@email.com")
+                .email(email)
                 .nickname(nickname)
                 .introduction("테스트 입니다.")
                 .personalUrl("http://.com")
                 .password(nickname + "asd")
+                .pathId(pathId)
                 .weekAgree(true)
                 .build());
     }
