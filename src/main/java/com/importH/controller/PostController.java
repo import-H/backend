@@ -24,14 +24,14 @@ import static com.importH.controller.common.ControllerCommon.validParameter;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/boards/{boardId}/posts")
+@RequestMapping("/v1")
 public class PostController {
 
     private final ResponseService responseService;
     private final PostService postService;
 
 
-    @GetMapping
+    @GetMapping("/boards/{boardId}")
     @ApiOperation(value = "전체 게시글 조회", notes = "boardId 게시판에 게시글을 모두 조회합니다.")
     public ListResult<PostDto.ResponseAll> findAllPosts(@ApiParam(value = "게시판 유형", defaultValue = "free") @PathVariable String boardId) {
         //TODO 페이징
@@ -39,33 +39,30 @@ public class PostController {
         return responseService.getListResult(postService.findAllPost(boardId));
     }
 
-    @ApiOperation(value = "게시글 조회", notes = "boardId 게시판에 postId 게시글을 조회합니다.")
-    @GetMapping("/{postId}")
+    @ApiOperation(value = "게시글 조회", notes = "postId 게시글을 조회합니다.")
+    @GetMapping("/posts/{postId}")
     public SingleResult<PostDto.Response> findPost(@ApiIgnore @CurrentUser User user,
-                                                   @ApiParam(value = "게시판 유형", defaultValue = "free") @PathVariable String boardId,
                                                    @ApiParam(value = "게시글 ID", defaultValue = "1") @PathVariable Long postId) {
 
-        return responseService.getSingleResult(postService.getPost(user,boardId, postId));
+        return responseService.getSingleResult(postService.getPost(user, postId));
     }
 
     
-    @ApiOperation(value = "게시글 등록", notes = "boardId 게시판에 게시글을 등록합니다.")
-    @PostMapping
+    @ApiOperation(value = "게시글 등록", notes = "type 게시판에 게시글을 등록합니다.")
+    @PostMapping("/posts")
     public CommonResult savePost(@ApiIgnore @CurrentUser User user,
-                                 @ApiParam(value = "게시판 유형", defaultValue = "free") @PathVariable String boardId,
                                  @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
                                  BindingResult bindingResult) {
 
         validParameter(bindingResult);
-        postService.registerPost(user, boardId, postRequestDto);
+        postService.registerPost(user, postRequestDto);
         return responseService.getSuccessResult();
     }
 
     
-    @ApiOperation(value = "게시글 수정", notes = "boardId 게시판에 postId 게시글을 수정합니다.")
-    @PutMapping("/{postId}")
+    @ApiOperation(value = "게시글 수정", notes = "postId 게시글을 수정합니다.")
+    @PutMapping("/posts/{postId}")
     public SingleResult<Long> updatePost(@ApiIgnore @CurrentUser User user,
-                                         @ApiParam(value = "게시판 유형",defaultValue = "free") @PathVariable String boardId,
                                          @ApiParam(value = "게시글 ID", defaultValue = "1") @PathVariable Long postId,
                                          @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
                                          BindingResult bindingResult
@@ -73,17 +70,16 @@ public class PostController {
 
         validParameter(bindingResult);
 
-        return responseService.getSingleResult(postService.updatePost(user, boardId, postId, postRequestDto));
+        return responseService.getSingleResult(postService.updatePost(user, postId, postRequestDto));
 
     }
 
     
-    @ApiOperation(value = "게시글 삭제", notes = "boardId 게시판에 postId 게시글을 삭제합니다.")
-    @DeleteMapping("/{postId}")
+    @ApiOperation(value = "게시글 삭제", notes = "postId 게시글을 삭제합니다.")
+    @DeleteMapping("/posts/{postId}")
     public CommonResult deletePost(@ApiIgnore @CurrentUser User user,
-                                   @ApiParam(value = "게시판 유형", defaultValue = "free") @PathVariable String boardId,
                                    @ApiParam(value = "게시글 ID", defaultValue = "1") @PathVariable Long postId) {
-        postService.deletePost(user, boardId, postId);
+        postService.deletePost(user, postId);
         return responseService.getSuccessResult();
     }
 

@@ -27,15 +27,21 @@ public class SecurityContextFactory implements WithSecurityContextFactory<WithAc
 
         String nickname = withAccount.value();
 
-        User user = User.builder().nickname(nickname)
-                .email(nickname + "@email.com")
-                .password(passwordEncoder.encode("testtest"))
-                .role(nickname.equals("관리자") ? "ROLE_ADMIN" : "ROLE_USER")
-                .weekAgree(true)
-                .emailVerified(true)
-                .build();
+        User user;
 
-        userRepository.save(user);
+        if (!userRepository.existsByNickname(nickname)) {
+            user = User.builder().nickname(nickname)
+                    .email(nickname + "@email.com")
+                    .password(passwordEncoder.encode("testtest"))
+                    .role(nickname.equals("관리자") ? "ROLE_ADMIN" : "ROLE_USER")
+                    .weekAgree(true)
+                    .emailVerified(true)
+                    .build();
+
+            userRepository.save(user);
+        } else {
+            user = userRepository.findByNickname(nickname).get();
+        }
 
         UserDetails userDetailsService = userService.loadUserByUsername(user.getEmail());
 

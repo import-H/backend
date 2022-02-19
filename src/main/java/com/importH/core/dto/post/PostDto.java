@@ -36,14 +36,20 @@ public class PostDto {
         @NotBlank(message = "내용은 필수 입력값 입니다.")
         private String content;
 
+        @ApiModelProperty(value = "게시판 타입", example = "free/questions/notice")
+        @NotBlank(message = "게시판 타입은 필수 입니다.")
+        private String type;
+
         public Post toEntity() {
             return Post.builder()
                     .content(content)
+                    .type(type)
                     .comments(new ArrayList<>())
                     .postLikes(new ArrayList<>())
                     .title(title)
                     .tags(new HashSet<>()).build();
         }
+
     }
 
     @Getter

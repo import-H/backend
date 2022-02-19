@@ -30,7 +30,7 @@ public class PostFactory {
             Post build = Post.builder()
                     .title("test" + i)
                     .content("test" + i)
-                    .user(userRepository.save(User.builder().nickname("test"+i).email("test@"+i).password("test"+i).weekAgree(false).build()))
+                    .user(userRepository.save(User.builder().nickname("test"+i).email("test@"+i).password("test"+i).role("ROLE_USER").weekAgree(false).build()))
                     .likeCount(i)
                     .build();
             postRepository.save(build);
@@ -38,7 +38,7 @@ public class PostFactory {
     }
 
     public Post createPost(User user, PostDto.Request request) {
-       return postService.registerPost(user, "free",request);
+       return postService.registerPost(user,request);
     }
 
     public PostDto.Request getRequest(String title, String content, String... tagName) {

@@ -35,19 +35,18 @@ public class PostService {
      * 게시글 저장
      */
     @Transactional
-    public Post registerPost(User user, String boardType, PostDto.Request postRequestDto) {
+    public Post registerPost(User user, PostDto.Request postRequestDto) {
 
         Post post = postRequestDto.toEntity();
 
-        setPostRelation(user, boardType, postRequestDto, post);
+        setPostRelation(user, postRequestDto, post);
 
         return savePost(post);
     }
 
-    private void setPostRelation(User user, String boardType, PostDto.Request postRequestDto, Post post) {
+    private void setPostRelation(User user, PostDto.Request postRequestDto, Post post) {
         post.setTags(tagService.getTags(postRequestDto.getTags()));
         post.setUser(user);
-        post.setBoardType(boardType);
     }
 
 
@@ -61,9 +60,9 @@ public class PostService {
      * 게시글 조회
      */
     @Transactional
-    public PostDto.Response getPost(User user, String boardId, Long postId) {
+    public PostDto.Response getPost(User user, Long postId) {
 
-        Post post = findByTypeAndId(boardId, postId);
+        Post post = findByPostId(postId);
 
         increaseViewCount(user, post);
 
@@ -93,17 +92,13 @@ public class PostService {
         return post.getComments().stream().map(comment -> CommentDto.Response.fromEntity(comment)).collect(Collectors.toList());
     }
 
-    private Post findByTypeAndId(String boardId, Long postId) {
-        return postRepository.findByIdAndType(postId, boardId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
-    }
-
     /**
      * 게시글 수정
      */
     @Transactional
-    public Long updatePost(User user, String boardId, Long postId, PostDto.Request postRequestDto) {
+    public Long updatePost(User user, Long postId, PostDto.Request postRequestDto) {
 
-        Post findPost = findByTypeAndId(boardId, postId);
+        Post findPost = findByPostId(postId);
 
         Set<Tag> tags = tagService.getTags(postRequestDto.getTags());
 
@@ -127,8 +122,8 @@ public class PostService {
      * 게시글 삭제
      */
     @Transactional
-    public void deletePost(User user, String boardId, Long postId) {
-        Post findPost = findByTypeAndId(boardId, postId);
+    public void deletePost(User user, Long postId) {
+        Post findPost = findByPostId(postId);
         validateAccount(user, findPost);
         postRepository.delete(findPost);
 

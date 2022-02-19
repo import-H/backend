@@ -35,6 +35,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -43,6 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:/application-test.properties")
 class PostControllerTest {
 
+    public static final String V_1_POSTS = "/v1/posts";
     @Autowired
     PostService postService;
 
@@ -82,10 +84,10 @@ class PostControllerTest {
     void savePost_success() throws Exception {
         // given
 
-        PostDto.Request request = getRequest("테스트", "테스트 게시글", "자바");
+        PostDto.Request request = getRequest("테스트", "테스트 게시글", "free", "자바");
 
         // when
-        mockMvc.perform(post("/v1/boards/"+post.getType()+"/posts")
+        mockMvc.perform(post(V_1_POSTS)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -102,7 +104,7 @@ class PostControllerTest {
     void savePost_access_fail() throws Exception {
 
         // given
-        mockMvc.perform(post("/v1/boards/1/posts"))
+        mockMvc.perform(post(V_1_POSTS))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/exception/entryPoint"));
     }
@@ -112,11 +114,11 @@ class PostControllerTest {
     @DisplayName("[실패] 게시글 등록 - 유효하지 않은 파라미터")
     void savePost_fail_parameter() throws Exception {
         // given
-        PostDto.Request request = getRequest("", "", "자바");
+        PostDto.Request request = getRequest("", "", "free", "자바");
         // when
         CommonErrorCode errorCode = CommonErrorCode.NOT_VALID_PARAM;
 
-        mockMvc.perform(post("/v1/boards/"+post.getType()+"/posts")
+        mockMvc.perform(post(V_1_POSTS)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().is4xxClientError())
@@ -134,10 +136,11 @@ class PostControllerTest {
     void findPost_success() throws Exception {
 
         // when
-        ResultActions perform = mockMvc.perform(get("/v1/boards/"+post.getType()+"/posts/" + post.getId()));
+        ResultActions perform = mockMvc.perform(get(V_1_POSTS + "/" + post.getId()));
 
         //then
         perform.andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.msg").exists())
                 .andExpect(jsonPath("$.data.responseInfo.boardId").value(post.getType()))
@@ -155,13 +158,101 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("[성공] 단일 게시글 조회 - 익명 조회시 조회수 증가")
+    void findPost_success_2() throws Exception {
+
+        // given
+        int currentViewCount = post.getViewCount();
+        // when
+        ResultActions perform = mockMvc.perform(get(V_1_POSTS + "/" + post.getId()));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.msg").exists())
+                .andExpect(jsonPath("$.data.responseInfo.boardId").value(post.getType()))
+                .andExpect(jsonPath("$.data.responseInfo.postId").value(post.getId()))
+                .andExpect(jsonPath("$.data.responseInfo.title").value(post.getTitle()))
+                .andExpect(jsonPath("$.data.responseInfo.content").value(post.getContent()))
+                .andExpect(jsonPath("$.data.responseInfo.nickname").value(post.getUser().getNickname()))
+                .andExpect(jsonPath("$.data.responseInfo.profileImage").value(post.getUser().getProfileImage()))
+                .andExpect(jsonPath("$.data.responseInfo.likeCount").value(post.getLikeCount()))
+                .andExpect(jsonPath("$.data.responseInfo.tags[*].name").exists())
+                .andExpect(jsonPath("$.data.responseInfo.viewCount").value(currentViewCount + 1))
+                .andExpect(jsonPath("$.data.like").value(false))
+                .andExpect(jsonPath("$.data.comments[*].*", hasSize(5)));
+
+    }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 단일 게시글 조회 - 유저 조회시 조회수 증가")
+    void findPost_success_3() throws Exception {
+
+        // given
+        int currentViewCount = post.getViewCount();
+        // when
+        ResultActions perform = mockMvc.perform(get(V_1_POSTS + "/" + post.getId()));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.msg").exists())
+                .andExpect(jsonPath("$.data.responseInfo.boardId").value(post.getType()))
+                .andExpect(jsonPath("$.data.responseInfo.postId").value(post.getId()))
+                .andExpect(jsonPath("$.data.responseInfo.title").value(post.getTitle()))
+                .andExpect(jsonPath("$.data.responseInfo.content").value(post.getContent()))
+                .andExpect(jsonPath("$.data.responseInfo.nickname").value(post.getUser().getNickname()))
+                .andExpect(jsonPath("$.data.responseInfo.profileImage").value(post.getUser().getProfileImage()))
+                .andExpect(jsonPath("$.data.responseInfo.likeCount").value(post.getLikeCount()))
+                .andExpect(jsonPath("$.data.responseInfo.tags[*].name").exists())
+                .andExpect(jsonPath("$.data.responseInfo.viewCount").value(currentViewCount + 1))
+                .andExpect(jsonPath("$.data.like").value(false))
+                .andExpect(jsonPath("$.data.comments[*].*", hasSize(5)));
+
+    }
+
+    @Test
+    @WithAccount("test1")
+    @DisplayName("[성공] 단일 게시글 조회 - 같은 유저시 조회수 증가 X")
+    void findPost_success_4() throws Exception {
+
+        // given
+        int currentViewCount = post.getViewCount();
+        // when
+        ResultActions perform = mockMvc.perform(get(V_1_POSTS + "/" + post.getId()));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.msg").exists())
+                .andExpect(jsonPath("$.data.responseInfo.boardId").value(post.getType()))
+                .andExpect(jsonPath("$.data.responseInfo.postId").value(post.getId()))
+                .andExpect(jsonPath("$.data.responseInfo.title").value(post.getTitle()))
+                .andExpect(jsonPath("$.data.responseInfo.content").value(post.getContent()))
+                .andExpect(jsonPath("$.data.responseInfo.nickname").value(post.getUser().getNickname()))
+                .andExpect(jsonPath("$.data.responseInfo.profileImage").value(post.getUser().getProfileImage()))
+                .andExpect(jsonPath("$.data.responseInfo.likeCount").value(post.getLikeCount()))
+                .andExpect(jsonPath("$.data.responseInfo.tags[*].name").exists())
+                .andExpect(jsonPath("$.data.responseInfo.viewCount").value(currentViewCount))
+                .andExpect(jsonPath("$.data.like").value(false))
+                .andExpect(jsonPath("$.data.comments[*].*", hasSize(5)));
+
+    }
+
+
+
+    @Test
     @DisplayName("[실패] 단일 게시글 조회 - 옳바르지 않은 게시글 ID")
     void findPost_fail() throws Exception {
         //given
         PostErrorCode notFoundPost = PostErrorCode.NOT_FOUND_POST;
 
         // when
-        ResultActions perform = mockMvc.perform(get("/v1/boards/"+post.getType()+"/posts/2"));
+        ResultActions perform = mockMvc.perform(get(V_1_POSTS + "/999999"));
 
 
         //then
@@ -177,10 +268,10 @@ class PostControllerTest {
     void updatePost_success() throws Exception {
         // given
         post = createPost(userRepository.findByNickname("테스트").get());
-        PostDto.Request request = getRequest("테스트2", "테스트2", "스터디1","자바1");
+        PostDto.Request request = getRequest("테스트2", "테스트2", "free", "스터디1","자바1");
 
         // when
-        ResultActions perform = mockMvc.perform(put("/v1/boards/"+post.getType()+"/posts/" + post.getId())
+        ResultActions perform = mockMvc.perform(put(V_1_POSTS + "/" + post.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -195,11 +286,11 @@ class PostControllerTest {
     @DisplayName("[실패] 게시글 수정 - 작성자 아닌경우")
     void updatePost_fail() throws Exception {
         // given
-        PostDto.Request request = getRequest("테스트2", "테스트2", "스터디1","자바1");
+        PostDto.Request request = getRequest("테스트2", "테스트2", "free", "스터디1","자바1");
         PostErrorCode notAccordAccount = PostErrorCode.NOT_ACCORD_ACCOUNT;
 
         // when
-        ResultActions perform = mockMvc.perform(put("/v1/boards/"+post.getType()+"/posts/" + post.getId())
+        ResultActions perform = mockMvc.perform(put(V_1_POSTS + "/" + post.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -219,7 +310,7 @@ class PostControllerTest {
 
         // when
 
-        mockMvc.perform(delete("/v1/boards/"+post.getType()+"/posts/" + post.getId()))
+        mockMvc.perform(delete(V_1_POSTS + "/" + post.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.msg").exists());
@@ -230,7 +321,7 @@ class PostControllerTest {
     }
 
     private Post createPost(User user) {
-        return postFactory.createPost(user, getRequest("test", "test게시글", "스터디", "자바2"));
+        return postFactory.createPost(user, getRequest("test", "test게시글", "free", "스터디", "자바2"));
     }
 
     @Test
@@ -242,7 +333,7 @@ class PostControllerTest {
 
         // when
 
-        mockMvc.perform(delete("/v1/boards/"+post.getType()+"/posts/" + post.getId()))
+        mockMvc.perform(delete(V_1_POSTS + "/" + post.getId()))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.msg").value(notAccordAccount.getDescription()));
@@ -257,10 +348,11 @@ class PostControllerTest {
 
 
 
-    private PostDto.Request getRequest(String title, String content, String... tagName) {
+    private PostDto.Request getRequest(String title, String content, String type, String... tagName) {
         return PostDto.Request.
                 builder()
                 .title(title)
+                .type(type)
                 .content(content)
                 .tags(Arrays.stream(tagName).map(name ->TagDto.builder().name(name).build()).collect(Collectors.toList()))
                 .build();

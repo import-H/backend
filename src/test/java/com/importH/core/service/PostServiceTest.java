@@ -48,7 +48,7 @@ class PostServiceTest {
     @BeforeEach
     void before() {
         user = userFactory.createNewAccount("test", "test" + "@email.com", "pathId");
-        post = postService.registerPost(user, "free", getRequest("테스트", "테스트 게시글 입니다.", "자바"));
+        post = postService.registerPost(user , getRequest("테스트", "테스트 게시글 입니다.", "자바", "free"));
     }
 
     @AfterEach
@@ -60,10 +60,10 @@ class PostServiceTest {
     @DisplayName("[성공] 게시글 등록 정상적인 요청")
     void registerPost_success() throws Exception {
         // given
-        PostDto.Request request = getRequest("테스트", "테스트 게시글 입니다.", "자바");
+        PostDto.Request request = getRequest("테스트", "테스트 게시글 입니다.", "자바", "free");
 
         // when
-        Post post = postService.registerPost(user, "free", request);
+        Post post = postService.registerPost(user, request);
 
 
         //then
@@ -72,10 +72,11 @@ class PostServiceTest {
         assertThat(post.getTags()).contains(tagService.findByTitle("자바"));
     }
 
-    private PostDto.Request getRequest(String title, String content, String tagName) {
+    private PostDto.Request getRequest(String title, String content, String tagName, String type) {
         return PostDto.Request.
                 builder()
                 .title(title)
+                .type(type)
                 .content(content)
                 .tags(List.of(TagDto.builder()
                         .name(tagName)
@@ -88,10 +89,10 @@ class PostServiceTest {
     @DisplayName("[성공] 게시글 조회 정상적인 요청")
     void getPost_success() throws Exception {
         // given
-        Post post =  postService.registerPost(user, "free", getRequest("테스트", "테스트 게시글 입니다.", "자바"));
+        Post post =  postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", "자바", "free"));
 
         // when
-        Response response = postService.getPost(user, "free", post.getId());
+        Response response = postService.getPost(user, post.getId());
 
         //then
         assertThat(response)
@@ -112,13 +113,12 @@ class PostServiceTest {
     @DisplayName("[실패] 게시글 조회 - 옳바르지 않은 게시글 번호")
     void getPost_fail() throws Exception {
         // given
-        Long postId = 2L;
-        String boardId = "free";
+        Long postId = 99999999L;
 
         // when
         PostErrorCode notFoundPost = PostErrorCode.NOT_FOUND_POST;
 
-        PostException postException = assertThrows(PostException.class, () -> postService.getPost(user, boardId, postId));
+        PostException postException = assertThrows(PostException.class, () -> postService.getPost(user, postId));
 
         //then
         assertThat(postException).hasMessageContaining(notFoundPost.getDescription());
@@ -130,10 +130,10 @@ class PostServiceTest {
     @DisplayName("[성공] 게시글 수정")
     void updatePost_success() throws Exception {
         // given
-        PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1");
+        PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1", "free");
 
         // when
-        postService.updatePost(user, "free", post.getId(), request);
+        postService.updatePost(user, post.getId(), request);
 
         //then
         assertThat(post)
@@ -150,10 +150,10 @@ class PostServiceTest {
     @DisplayName("[실패] 게시글 수정 - 글 작성자 아닌경우")
     void updatePost_fail() throws Exception {
         // given
-        PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1");
+        PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1", "free");
         User test2 = User.builder().nickname("test2").build();
         // when
-        PostException postException = assertThrows(PostException.class, () -> postService.updatePost(test2, "free", post.getId(), request));
+        PostException postException = assertThrows(PostException.class, () -> postService.updatePost(test2, post.getId(), request));
 
         //then
         assertThat(postException).hasMessageContaining(PostErrorCode.NOT_ACCORD_ACCOUNT.getDescription());
@@ -164,7 +164,7 @@ class PostServiceTest {
     void deletePost_success() throws Exception {
         // given
         // when
-        postService.deletePost(user, "free", post.getId());
+        postService.deletePost(user, post.getId());
 
         //then
         assertThat(postRepository.existsById(post.getId())).isFalse();
@@ -177,7 +177,7 @@ class PostServiceTest {
         // given
         User test2 = User.builder().nickname("test2").build();
         // when
-        PostException postException = assertThrows(PostException.class, () -> postService.deletePost(test2, "free", post.getId()));
+        PostException postException = assertThrows(PostException.class, () -> postService.deletePost(test2, post.getId()));
 
         //then
         assertThat(postException).hasMessageContaining(PostErrorCode.NOT_ACCORD_ACCOUNT.getDescription());
@@ -189,7 +189,7 @@ class PostServiceTest {
     void findAll_success() throws Exception {
         // given
         for (int i = 0; i < 10; i++) {
-            postService.registerPost(user, "free", getRequest("테스트", "테스트 게시글 입니다.", "자바"));
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", "자바", "free"));
         }
         // when
         List<PostDto.ResponseAll> allPost = postService.findAllPost("free");
@@ -232,7 +232,7 @@ class PostServiceTest {
         user.delete();
 
         // when
-        Response post = postService.getPost(user, "free", this.post.getId());
+        Response post = postService.getPost(user, this.post.getId());
 
         //then
         assertThat(post.getResponseInfo())

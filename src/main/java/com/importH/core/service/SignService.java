@@ -59,12 +59,12 @@ public class SignService {
         String encodePassword = passwordEncoder.encode(userSignupDto.getPassword());
         user.setPassword(encodePassword);
 
-        sendEmailConfirmEmail(user);
+        sendConfirmEmail(user);
 
         return saveUser(user).getId();
     }
 
-    private void sendEmailConfirmEmail(User user) {
+    private void sendConfirmEmail(User user) {
         user.generateEmailToken();
         EmailDto emailDto = createEmailDto(user);
         emailService.sendEmail(emailDto);
@@ -242,7 +242,7 @@ public class SignService {
             throw new UserException(NOT_PASSED_HOUR);
         }
 
-        sendEmailConfirmEmail(user);
+        sendConfirmEmail(user);
     }
 
 }

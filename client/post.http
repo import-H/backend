@@ -1,36 +1,39 @@
 
 
-### 게시글 조회
-GET http://localhost:8090/v1/boards/{{boardId}}/posts/5
-Authorization: {{Authorization}}
 
 ### 게시글 전체 조회
-GET http://localhost:8090/v1/boards/{{boardId}}/posts
+GET http://localhost:8090/v1/boards/{{boardId}}
 
 ### 게시글 저장
-POST http://localhost:8090/v1/boards/{{boardId}}/posts
+POST http://localhost:8090/v1/posts
 Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
   "title": "샘플 포스트",
   "tags": ["aa","bb"],
-  "content": "샘플 포스트 컨텐츠"
+  "content": "샘플 포스트 컨텐츠",
+  "type" : "free"
 }
 
+### 게시글 조회
+GET http://localhost:8090/v1/posts/6
+Authorization: {{Authorization}}
+
 ### 게시글 수정
-PUT http://localhost:8090/v1/boards/{{boardId}}/posts/5
+PUT http://localhost:8090/v1/posts/6
 Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
   "title": "샘플 포스트1",
   "tags": ["aa1","bb2"],
+  "type" : "free",
   "content": "샘플 포스트 컨텐츠2"
 }
 
 ### 게시글 삭제
-DELETE http://localhost:8090/v1/boards/{{boardId}}/posts/5
+DELETE http://localhost:8090/v1/posts/6
 Authorization: {{Authorization}}
 
 ### 댓글 등록
@@ -57,5 +60,5 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 ### 게시글 좋아요 요청
-POST http://localhost:8090/v1/posts/5/like
+POST http://localhost:8090/v1/posts/7/like
 Authorization: {{Authorization}}
