@@ -75,7 +75,7 @@ public class SignService {
                 .subject("Import-H 이메일 인증")
                 .nickname(user.getNickname())
                 .message("Import - H 이메일 인증을 위해 아래의 링크를 클릭하세요")
-                .link("/v1/check-email-token?token=" + user.getEmailCheckToken() + "&email=" + user.getEmail())
+                .link("/v1/email-token?token=" + user.getEmailCheckToken() + "&email=" + user.getEmail())
                 .linkName("이메일 인증하기")
                 .email(user.getEmail())
                 .build();
