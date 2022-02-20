@@ -60,6 +60,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data.personalUrl").value(user.getPersonalUrl()))
                 .andExpect(jsonPath("$.data.infoByEmail").value(user.getInfoAgree().isInfoByEmail()))
                 .andExpect(jsonPath("$.data.infoByWeb").value(user.getInfoAgree().isInfoByWeb()))
+                .andExpect(jsonPath("$.data.pathId").value(user.getPathId()))
                 .andExpect(jsonPath("$.data.emailVerified").value(user.isEmailVerified()));
     }
 

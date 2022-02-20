@@ -44,6 +44,8 @@ class UserServiceTest {
     void before() {
         user = userRepository.findByNickname("테스트").get();
     }
+
+
     @Test
     @WithAccount("테스트")
     @DisplayName("[성공] 프로필 정보 가져오기")
@@ -61,6 +63,7 @@ class UserServiceTest {
                 .hasFieldOrPropertyWithValue("personalUrl", user.getPersonalUrl())
                 .hasFieldOrPropertyWithValue("infoByEmail", user.getInfoAgree().isInfoByEmail())
                 .hasFieldOrPropertyWithValue("infoByWeb", user.getInfoAgree().isInfoByWeb())
+                .hasFieldOrPropertyWithValue("pathId", user.getPathId())
                 .hasFieldOrPropertyWithValue("emailVerified", user.isEmailVerified());
 
     }

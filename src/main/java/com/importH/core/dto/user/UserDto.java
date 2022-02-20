@@ -64,11 +64,16 @@ public class UserDto {
         @ApiModelProperty(value = "개인 페이지 url", example = "http://github.com..")
         private String personalUrl;
 
+        @ApiModelProperty(value = "개인 게시판 ID", example = "true/false")
+        private String pathId;
+
         @ApiModelProperty(value = "이메일 수신 동의 여부", example = "true/false")
         private boolean infoByEmail;
 
         @ApiModelProperty(value = "웹 수신 동의 여부", example = "true/false")
         private boolean infoByWeb;
+
+
 
         @ApiModelProperty(value = "이메일 인증 여부", example = "true/false")
         private boolean emailVerified;
@@ -78,6 +83,7 @@ public class UserDto {
                     .nickname(user.getNickname())
                     .profileImage(user.getProfileImage())
                     .email(user.getEmail())
+                    .pathId(user.getPathId())
                     .introduction(user.getIntroduction())
                     .personalUrl(user.getPersonalUrl())
                     .infoByEmail(user.getInfoAgree().isInfoByEmail())
