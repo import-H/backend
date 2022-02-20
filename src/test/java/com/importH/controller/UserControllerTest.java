@@ -1,6 +1,7 @@
 package com.importH.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.importH.core.UserFactory;
 import com.importH.core.WithAccount;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,6 +41,8 @@ class UserControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    UserFactory userFactory;
 
     @Test
     @WithAccount("테스트")
@@ -248,6 +252,33 @@ class UserControllerTest {
         perform.andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.msg").value(err.getDescription()));
+    }
+
+    @Test
+    @DisplayName("[성공] 개인 게시판 모든 유저 정보 조회")
+    void findAllUsers_success() throws Exception {
+        // given
+        for (int i = 0; i < 5; i++) {
+            String test02 = "test02" + i;
+            userFactory.createNewAccount(test02, test02, test02, false);
+        }
+        for (int i = 0; i < 5; i++) {
+            String test03 = "test03" + i;
+            userFactory.createNewAccount(test03, test03, test03, true);
+        }
+
+        // when
+        ResultActions perform = mockMvc.perform(get("/v1/users"));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.list[*]", hasSize(Math.toIntExact(userRepository.countByEmailVerified(true)))))
+                .andExpect(jsonPath("$.list[*].userId").exists())
+                .andExpect(jsonPath("$.list[*].nickname").exists())
+                .andExpect(jsonPath("$.list[*].profileImage").exists())
+                .andExpect(jsonPath("$.list[*].pathId").exists());
     }
 
     private PasswordDto.Request getPasswordReq(String password, String confirmPassword) {

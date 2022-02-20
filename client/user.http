@@ -29,3 +29,7 @@ Content-Type: application/json
   "confirmPassword" : "12341234"
 
 }
+
+
+### 모든 유저 조회 ( 개인게시판 유저 정보 조회 )
+GET http://localhost:8090/v1/users

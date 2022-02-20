@@ -15,7 +15,7 @@ public class UserFactory {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User createNewAccount(String nickname, String email, String pathId) {
+    public User createNewAccount(String nickname, String email, String pathId, boolean emailVerified) {
 
         return userRepository.save(User.builder()
                 .email(email)
@@ -24,6 +24,7 @@ public class UserFactory {
                 .personalUrl("http://.com")
                 .password(nickname + "asd")
                 .pathId(pathId)
+                .emailVerified(emailVerified)
                 .weekAgree(true)
                 .build());
     }

@@ -81,7 +81,7 @@ class SignControllerTest {
     @DisplayName("[실패] 회원가입 - 이메일 중복 ")
     void signup_fail_02() throws Exception {
         // given
-        userFactory.createNewAccount("테스트", "테스트@mail.com", "test2");
+        userFactory.createNewAccount("테스트", "테스트@mail.com", "test2", true);
 
         SignupDto dto = getSignupDto("테스트@mail.com", "test1", "닉네임");
         UserErrorCode err = UserErrorCode.USER_EMAIL_DUPLICATED;
@@ -102,7 +102,7 @@ class SignControllerTest {
     @DisplayName("[실패] 회원가입 - 닉네임 중복 ")
     void signup_fail_03() throws Exception {
         // given
-        userFactory.createNewAccount("테스트", "테스트@mail.com", "test2");
+        userFactory.createNewAccount("테스트", "테스트@mail.com", "test2", true);
 
         SignupDto dto = getSignupDto("테스트2@mail.com", "test1", "테스트");
         UserErrorCode err = UserErrorCode.USER_NICKNAME_DUPLICATED;
@@ -123,7 +123,7 @@ class SignControllerTest {
     @DisplayName("[실패] 회원가입 - 주소 아이디 중복 ")
     void signup_fail_04() throws Exception {
         // given
-        userFactory.createNewAccount("테스트", "테스트@mail.com", "test2");
+        userFactory.createNewAccount("테스트", "테스트@mail.com", "test2", true);
         SignupDto dto = getSignupDto("테스트2@mail.com", "test2", "테스트2");
         UserErrorCode err = UserErrorCode.USER_PATH_ID_DUPLICATED;
         // when

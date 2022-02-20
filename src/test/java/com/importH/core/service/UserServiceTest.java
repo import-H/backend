@@ -5,8 +5,10 @@ import com.importH.core.WithAccount;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.user.PasswordDto;
+import com.importH.core.dto.user.UserDto;
 import com.importH.core.dto.user.UserDto.Request;
 import com.importH.core.dto.user.UserDto.Response;
+import com.importH.core.dto.user.UserDto.Response_findAllUsers;
 import com.importH.error.code.UserErrorCode;
 import com.importH.error.exception.UserException;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,9 +16,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -42,7 +48,13 @@ class UserServiceTest {
     User user;
     @BeforeEach
     void before() {
-        user = userRepository.findByNickname("테스트").get();
+        Optional<User> optionalUser = userRepository.findByNickname("테스트");
+
+        if (optionalUser.isPresent()) {
+            user = optionalUser.get();
+        } else {
+            user = null;
+        }
     }
 
 
@@ -238,6 +250,58 @@ class UserServiceTest {
                 .hasFieldOrPropertyWithValue("errorCode", err)
                 .hasFieldOrPropertyWithValue("errorMessage", err.getDescription());
 
+    }
+
+    @Test
+    @DisplayName("[성공] 유저 정보 가져오기 - 생성 날짜 최신순")
+    void findAllUsers_By_Created_Success_01() throws Exception {
+
+        // given
+        for (int i = 0; i < 20; i++) {
+            String test02 = "test02" + i;
+            userFactory.createNewAccount(test02, test02, test02, false);
+        }
+
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        // when
+        List<Response_findAllUsers> users = userService.findAllUsers(pageRequest);
+
+        //then
+        assertThat(users.size()).isEqualTo(10);
+        users.stream().forEach(responseAll -> assertThat(responseAll)
+                .hasFieldOrProperty("userId")
+                .hasFieldOrProperty("pathId")
+                .hasFieldOrProperty("nickname")
+                .hasFieldOrProperty("profileImage"));
+    }
+
+    @Test
+    @DisplayName("[성공] 유저 정보 가져오기 - 이메일 인증 여부에 따른 회원수")
+    void findAllUsers_By_Created_Success_02() throws Exception {
+
+        // given
+        for (int i = 0; i < 5; i++) {
+            String test02 = "test02" + i;
+            userFactory.createNewAccount(test02, test02, test02, false);
+        }
+        for (int i = 0; i < 5; i++) {
+            String test03 = "test03" + i;
+            userFactory.createNewAccount(test03, test03, test03, true);
+        }
+
+        PageRequest pageRequest = PageRequest.of(0, 5);
+
+        // when
+        List<Response_findAllUsers> users = userService.findAllUsers(pageRequest);
+
+        //then
+        assertThat(users.size()).isEqualTo(5);
+        users.stream().forEach(responseAll -> assertThat(responseAll)
+                .hasFieldOrProperty("userId")
+                .hasFieldOrProperty("pathId")
+                .hasFieldOrProperty("nickname")
+                .hasFieldOrProperty("profileImage"));
     }
 
 

@@ -64,7 +64,7 @@ public class UserDto {
         @ApiModelProperty(value = "개인 페이지 url", example = "http://github.com..")
         private String personalUrl;
 
-        @ApiModelProperty(value = "개인 게시판 ID", example = "true/false")
+        @ApiModelProperty(value = "개인 게시판 ID", example = "test1")
         private String pathId;
 
         @ApiModelProperty(value = "이메일 수신 동의 여부", example = "true/false")
@@ -89,6 +89,35 @@ public class UserDto {
                     .infoByEmail(user.getInfoAgree().isInfoByEmail())
                     .infoByWeb(user.getInfoAgree().isInfoByWeb())
                     .emailVerified(user.isEmailVerified())
+                    .build();
+        }
+    }
+
+
+
+    @Getter
+    @Builder
+    @ApiModel(value = "findAllUsers 응답 DTO")
+    public static class Response_findAllUsers {
+
+        @ApiModelProperty(value = "유저PK", example = "1")
+        private Long  userId;
+
+        @ApiModelProperty(value = "닉네임", example = "닉네임")
+        private String nickname;
+
+        @ApiModelProperty(value = "프로필 이미지 주소", example = "http://localhost:8090/v1/profile/...")
+        private String profileImage;
+
+        @ApiModelProperty(value = "개인 게시판 ID", example = "test1")
+        private String pathId;
+
+        public static Response_findAllUsers fromEntity(User user) {
+            return Response_findAllUsers.builder()
+                    .userId(user.getId())
+                    .nickname(user.getNickname())
+                    .profileImage(user.getProfileImage())
+                    .pathId(user.getPathId())
                     .build();
         }
     }

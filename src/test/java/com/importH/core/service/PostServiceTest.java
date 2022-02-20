@@ -47,7 +47,7 @@ class PostServiceTest {
 
     @BeforeEach
     void before() {
-        user = userFactory.createNewAccount("test", "test" + "@email.com", "pathId");
+        user = userFactory.createNewAccount("test", "test" + "@email.com", "pathId", true);
         post = postService.registerPost(user , getRequest("테스트", "테스트 게시글 입니다.", "자바", "free"));
     }
 

@@ -4,16 +4,23 @@ import com.importH.core.domain.user.CustomUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.domain.user.UserRepository;
 import com.importH.core.dto.user.PasswordDto;
+import com.importH.core.dto.user.UserDto;
 import com.importH.core.dto.user.UserDto.Request;
 import com.importH.core.dto.user.UserDto.Response;
+import com.importH.core.dto.user.UserDto.Response_findAllUsers;
 import com.importH.error.exception.UserException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.importH.error.code.UserErrorCode.*;
 
@@ -105,5 +112,13 @@ public class UserService implements UserDetailsService {
         User findUser = getValidatedUser(userId, user);
 
         findUser.delete();
+    }
+
+    public List<Response_findAllUsers> findAllUsers(Pageable pageable) {
+        Slice<User> users = userRepository.findAllUsers(pageable);
+
+        return users.stream()
+                .map(user -> Response_findAllUsers.fromEntity(user))
+                .collect(Collectors.toList());
     }
 }

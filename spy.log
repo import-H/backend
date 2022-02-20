@@ -1,5 +1,0 @@
-1644483228614|0|rollback|connection 104|url jdbc:h2:mem:test||
-1645282610794|0|rollback|connection 105|url jdbc:h2:mem:test||
-1645282797719|0|rollback|connection 105|url jdbc:h2:mem:test||
-1645282861541|0|rollback|connection 105|url jdbc:h2:mem:test||
-1645282930644|0|rollback|connection 105|url jdbc:h2:mem:test||
