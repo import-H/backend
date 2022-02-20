@@ -37,8 +37,7 @@ public class User extends BaseTimeEntity {
 
     private String role;
 
-    @Builder.Default
-    private String profileImage = "N";
+    private String profileImage;
 
     @Column(length = 100)
     private String introduction;

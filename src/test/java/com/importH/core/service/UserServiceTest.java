@@ -259,7 +259,7 @@ class UserServiceTest {
         // given
         for (int i = 0; i < 20; i++) {
             String test02 = "test02" + i;
-            userFactory.createNewAccount(test02, test02, test02, false);
+            userFactory.createNewAccount(test02, test02, test02, true);
         }
 
         PageRequest pageRequest = PageRequest.of(0, 10);
