@@ -10,10 +10,9 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post,Long>,PostCustomRepository  {
 
     Optional<Post> findByIdAndType(Long postId, String type);
-
-    List<Post> findAllByType(String type);
-
     boolean existsByTitle(String title);
 
     Post findByTitle(String title);
+
+    int countByType(String type);
 }

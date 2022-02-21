@@ -134,27 +134,18 @@ public class PostService {
     /**
      * 전체 게시글 조회
      */
-    public List<PostDto.ResponseAll> findAllPost(String boardId) {
+    public List<PostDto.ResponseAll> findAllPost(String type, Pageable pageable) {
 
-        List<Post> posts = postRepository.findAllByType(boardId);
-
-
-        return posts.stream()
-                .map(PostDto.ResponseAll::fromEntity)
-                .collect(Collectors.toList());
-    }
-
-    public Post findByPostId(Long postsId) {
-        return postRepository.findById(postsId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
-    }
-
-    public List<PostDto.ResponseAll> findAllPostOrderByLike(Pageable pageable) {
-        Slice<Post> postSlice = postRepository.findPostsAllOrderByLike(pageable);
+        Slice<Post> postSlice = postRepository.findAllPostsByType(type,pageable);
 
         List<Post> content = postSlice.getContent();
 
         return content.stream()
                 .map(PostDto.ResponseAll::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    public Post findByPostId(Long postsId) {
+        return postRepository.findById(postsId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
     }
 }

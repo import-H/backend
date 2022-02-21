@@ -5,5 +5,6 @@ import org.springframework.data.domain.Slice;
 
 public interface PostCustomRepository {
 
-    Slice<Post> findPostsAllOrderByLike(Pageable pageable);
+    Slice<Post> findAllPostsByType(String type , Pageable pageable);
+
 }

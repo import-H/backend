@@ -1,8 +1,5 @@
-
-
-
 ### 게시글 전체 조회
-GET http://localhost:8090/v1/boards/{{boardId}}
+GET http://localhost:8090/v1/boards/{{boardId}}?sort=id,desc
 
 ### 게시글 저장
 POST http://localhost:8090/v1/posts

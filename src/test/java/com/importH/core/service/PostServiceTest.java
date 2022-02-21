@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestPropertySource(locations = "classpath:/application-test.properties")
 class PostServiceTest {
 
+    public static final String FREE = "free";
+    public static final String QUESTIONS = "questions";
     @Autowired
     PostRepository postRepository;
 
@@ -48,7 +51,7 @@ class PostServiceTest {
     @BeforeEach
     void before() {
         user = userFactory.createNewAccount("test", "test" + "@email.com", "pathId", true);
-        post = postService.registerPost(user , getRequest("테스트", "테스트 게시글 입니다.", "자바", "free"));
+        post = postService.registerPost(user , getRequest("테스트", "테스트 게시글 입니다.", "자바", FREE));
     }
 
     @AfterEach
@@ -60,7 +63,7 @@ class PostServiceTest {
     @DisplayName("[성공] 게시글 등록 정상적인 요청")
     void registerPost_success() throws Exception {
         // given
-        PostDto.Request request = getRequest("테스트", "테스트 게시글 입니다.", "자바", "free");
+        PostDto.Request request = getRequest("테스트", "테스트 게시글 입니다.", "자바", FREE);
 
         // when
         Post post = postService.registerPost(user, request);
@@ -89,7 +92,7 @@ class PostServiceTest {
     @DisplayName("[성공] 게시글 조회 정상적인 요청")
     void getPost_success() throws Exception {
         // given
-        Post post =  postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", "자바", "free"));
+        Post post =  postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", "자바", FREE));
 
         // when
         Response response = postService.getPost(user, post.getId());
@@ -130,7 +133,7 @@ class PostServiceTest {
     @DisplayName("[성공] 게시글 수정")
     void updatePost_success() throws Exception {
         // given
-        PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1", "free");
+        PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1", FREE);
 
         // when
         postService.updatePost(user, post.getId(), request);
@@ -150,7 +153,7 @@ class PostServiceTest {
     @DisplayName("[실패] 게시글 수정 - 글 작성자 아닌경우")
     void updatePost_fail() throws Exception {
         // given
-        PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1", "free");
+        PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1", FREE);
         User test2 = User.builder().nickname("test2").build();
         // when
         PostException postException = assertThrows(PostException.class, () -> postService.updatePost(test2, post.getId(), request));
@@ -185,17 +188,50 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("[성공] 전체 게시글 조회")
-    void findAll_success() throws Exception {
+    @DisplayName("[성공] 전체 게시글 조회 - 자유 게시판 게시글 작성 날짜 최신순으로 조회 ")
+    void findAll_success_01() throws Exception {
         // given
-        for (int i = 0; i < 10; i++) {
-            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", "자바", "free"));
+        for (int i = 0; i < 5; i++) {
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", "자바", FREE));
         }
+        for (int i = 0; i < 5; i++) {
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", "자바", QUESTIONS));
+        }
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("createdAt").descending());
         // when
-        List<PostDto.ResponseAll> allPost = postService.findAllPost("free");
+        List<PostDto.ResponseAll> allPost = postService.findAllPost(FREE,pageRequest);
 
         //then
-        assertThat(allPost.size()).isEqualTo(11);
+        assertThat(allPost.size()).isEqualTo(postRepository.countByType(FREE));
+        allPost.stream().forEach(responseAll -> assertThat(responseAll)
+                .hasFieldOrProperty("responseInfo.boardId")
+                .hasFieldOrProperty("responseInfo.postId")
+                .hasFieldOrProperty("responseInfo.title")
+                .hasFieldOrProperty("responseInfo.content")
+                .hasFieldOrProperty("responseInfo.nickname")
+                .hasFieldOrProperty("responseInfo.profileImage")
+                .hasFieldOrProperty("responseInfo.likeCount")
+                .hasFieldOrProperty("responseInfo.viewCount")
+                .hasFieldOrProperty("commentsCount")
+                .hasFieldOrProperty("thumbnail"));
+    }
+
+    @Test
+    @DisplayName("[성공] 전체 게시글 조회 - 모든 게시판글 작성 날짜 최신순으로 조회 ")
+    void findAll_success_02() throws Exception {
+        // given
+        for (int i = 0; i < 5; i++) {
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", "자바", FREE));
+        }
+        for (int i = 0; i < 5; i++) {
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", "자바", QUESTIONS));
+        }
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("createdAt").descending());
+        // when
+        List<PostDto.ResponseAll> allPost = postService.findAllPost(null,pageRequest);
+
+        //then
+        assertThat(allPost.size()).isEqualTo(10);
         allPost.stream().forEach(responseAll -> assertThat(responseAll)
                 .hasFieldOrProperty("responseInfo.boardId")
                 .hasFieldOrProperty("responseInfo.postId")
@@ -211,17 +247,59 @@ class PostServiceTest {
 
 
     @Test
-    @DisplayName("[성공] 전체 게시글 좋아요 내림차순 으로 조회")
+    @DisplayName("[성공] 전체 게시글 조회 - 좋아요 내림차순 으로 조회")
     void findAllOrderByLike_success() throws Exception {
 
+        //given
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("likeCount").descending());
+
         // when
-        List<PostDto.ResponseAll> allList = postService.findAllPostOrderByLike(PageRequest.of(0,10));
+        List<PostDto.ResponseAll> allList = postService.findAllPost(null, pageRequest);
 
         int maxLike = allList.stream().mapToInt(value -> value.getResponseInfo().getLikeCount()).max().getAsInt();
 
         //then
         assertThat(allList.size()).isEqualTo(10);
         assertThat(allList.get(0).getResponseInfo().getLikeCount()).isEqualTo(maxLike);
+        allList.stream().forEach(responseAll -> assertThat(responseAll)
+                .hasFieldOrProperty("responseInfo.boardId")
+                .hasFieldOrProperty("responseInfo.postId")
+                .hasFieldOrProperty("responseInfo.title")
+                .hasFieldOrProperty("responseInfo.content")
+                .hasFieldOrProperty("responseInfo.nickname")
+                .hasFieldOrProperty("responseInfo.profileImage")
+                .hasFieldOrProperty("responseInfo.likeCount")
+                .hasFieldOrProperty("responseInfo.viewCount")
+                .hasFieldOrProperty("commentsCount")
+                .hasFieldOrProperty("thumbnail"));
+
+    }
+
+    @Test
+    @DisplayName("[실패] 전체 게시글 조회 - 잘못된 페이징 정보")
+    void findAll_fail_01() throws Exception {
+
+        //given
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("id").descending());
+
+        // when
+        List<PostDto.ResponseAll> allList = postService.findAllPost(null, pageRequest);
+
+
+        //then
+        assertThat(allList.size()).isEqualTo(10);
+        assertThat(allList.get(0).getResponseInfo().getLikeCount()).isEqualTo(maxLike);
+        allList.stream().forEach(responseAll -> assertThat(responseAll)
+                .hasFieldOrProperty("responseInfo.boardId")
+                .hasFieldOrProperty("responseInfo.postId")
+                .hasFieldOrProperty("responseInfo.title")
+                .hasFieldOrProperty("responseInfo.content")
+                .hasFieldOrProperty("responseInfo.nickname")
+                .hasFieldOrProperty("responseInfo.profileImage")
+                .hasFieldOrProperty("responseInfo.likeCount")
+                .hasFieldOrProperty("responseInfo.viewCount")
+                .hasFieldOrProperty("commentsCount")
+                .hasFieldOrProperty("thumbnail"));
 
     }
 

@@ -13,6 +13,9 @@ import com.importH.error.exception.PostException;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,10 +36,11 @@ public class PostController {
 
     @GetMapping("/boards/{boardId}")
     @ApiOperation(value = "전체 게시글 조회", notes = "boardId 게시판에 게시글을 모두 조회합니다.")
-    public ListResult<PostDto.ResponseAll> findAllPosts(@ApiParam(value = "게시판 유형", defaultValue = "free") @PathVariable String boardId) {
+    public ListResult<PostDto.ResponseAll> findAllPosts(@ApiParam(value = "게시판 유형", defaultValue = "free") @PathVariable String boardId,
+                                                        @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         //TODO 페이징
 
-        return responseService.getListResult(postService.findAllPost(boardId));
+        return responseService.getListResult(postService.findAllPost(boardId,pageable));
     }
 
     @ApiOperation(value = "게시글 조회", notes = "postId 게시글을 조회합니다.")

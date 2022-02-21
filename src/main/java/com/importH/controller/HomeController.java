@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,8 +30,8 @@ public class HomeController {
 
     @ApiOperation(value = "메인 화면 게시글 좋아요순으로 조회", notes = "전체 게시글을 좋아요 순으로 조회 합니다.")
     @GetMapping
-    public ListResult<PostDto.ResponseAll> mainPosts(Pageable pageable) {
-        return responseService.getListResult(postService.findAllPostOrderByLike(pageable));
+    public ListResult<PostDto.ResponseAll> mainPosts(@PageableDefault(sort = "likeCount", direction = Sort.Direction.DESC) Pageable pageable) {
+        return responseService.getListResult(postService.findAllPost(null,pageable));
     }
 
 

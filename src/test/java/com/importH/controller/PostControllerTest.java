@@ -21,6 +21,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -45,6 +47,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostControllerTest {
 
     public static final String V_1_POSTS = "/v1/posts";
+    private static final String FREE = "free";
+    public static final String QUESTIONS = "questions";
     @Autowired
     PostService postService;
 
@@ -70,10 +74,11 @@ class PostControllerTest {
     CommentService commentService;
 
     Post post;
+    User user;
 
     @BeforeEach
     void before() {
-        User user = userRepository.findByNickname("test1").get();
+        user = userRepository.findByNickname("test1").get();
         post = createPost(user);
         commentService.registerComment(post.getId(), user, CommentDto.Request.builder().content("테스트 댓글").build());
     }
@@ -344,7 +349,64 @@ class PostControllerTest {
     }
 
 
-    // TODO 전체게시글 조회 테스트
+    @Test
+    @DisplayName("[성공] 전체 게시글 조회 - 자유 게시판 / 전체 게시글이 페이징 갯수보다 적을때")
+    void findAllPost_Success_01() throws Exception {
+        // given
+        for (int i = 0; i < 8; i++) {
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.",FREE));
+        }
+        for (int i = 0; i < 5; i++) {
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", QUESTIONS));
+        }
+        // when
+        ResultActions perform = mockMvc.perform(get("/v1/boards/"+FREE+"?size=10"));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.msg").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.boardId").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.postId").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.title").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.content").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.nickname").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.profileImage").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.likeCount").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.tags[*].name").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.viewCount").exists())
+                .andExpect(jsonPath("$.list[*]", hasSize(postRepository.countByType(FREE))));
+    }
+
+    @Test
+    @DisplayName("[성공] 전체 게시글 조회 - 자유 게시판 / 전체 게시글이 페이징 갯수보다 많을때")
+    void findAllPost_Success_02() throws Exception {
+        // given
+        for (int i = 0; i < 10; i++) {
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.",FREE));
+        }
+        for (int i = 0; i < 5; i++) {
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", QUESTIONS));
+        }
+        String limit = "5";
+
+        // when
+        ResultActions perform = mockMvc.perform(get("/v1/boards/"+FREE+ "?size=" + limit));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.msg").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.boardId").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.postId").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.title").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.content").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.nickname").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.profileImage").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.likeCount").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.viewCount").exists())
+                .andExpect(jsonPath("$.list[*]", hasSize(Integer.valueOf(limit))));
+    }
 
 
 
