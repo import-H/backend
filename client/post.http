@@ -10,7 +10,8 @@ Content-Type: application/json
   "title": "샘플 포스트",
   "tags": ["aa","bb"],
   "content": "샘플 포스트 컨텐츠",
-  "type" : "free"
+  "type" : "free",
+  "images" : ["{{imageURL}}","{{imageURL1}}"]
 }
 
 ### 게시글 조회
@@ -34,7 +35,7 @@ DELETE http://localhost:8090/v1/posts/6
 Authorization: {{Authorization}}
 
 ### 댓글 등록
-POST http://localhost:8090/v1/posts/4/comments
+POST http://localhost:8090/v1/posts/6/comments
 Authorization: {{Authorization}}
 Content-Type: application/json
 

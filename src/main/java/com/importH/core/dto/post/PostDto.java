@@ -40,6 +40,11 @@ public class PostDto {
         @NotBlank(message = "게시판 타입은 필수 입니다.")
         private String type;
 
+        @Builder.Default
+        @ApiModelProperty(value = "이미지 목록")
+        private List<String> images = new ArrayList<>();
+
+
         public Post toEntity() {
             return Post.builder()
                     .content(content)
@@ -152,7 +157,7 @@ public class PostDto {
                             .likeCount(post.getLikeCount())
                             .build())
                     .commentsCount(post.getComments().size())
-                    .thumbnail(null) // TODO 썸네일 작업
+                    .thumbnail(post.getImages().isEmpty() ? null : post.getImages().get(0).getStoreFileName()) // TODO 썸네일 작업
                     .build();
         }
 

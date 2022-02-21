@@ -2,6 +2,7 @@ package com.importH.core.service;
 
 import com.importH.core.domain.image.Image;
 import com.importH.core.domain.image.ImageRepository;
+import com.importH.core.domain.post.Post;
 import com.importH.core.dto.post.ImageDto;
 import com.importH.error.code.FileErrorCode;
 import com.importH.error.exception.FileException;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -29,6 +32,7 @@ public class FileService {
     private String fileDir;
 
 
+    @Transactional
     public ImageDto.Response uploadImage(ImageDto.Request requestDto, HttpServletRequest request) throws URISyntaxException {
 
         if (requestDto.getImage() == null) {
@@ -51,6 +55,7 @@ public class FileService {
                 .imageURL(request.getRequestURI() + "/" + storeFilename)
                 .build();
     }
+
 
     private void saveImage(String originalFilename, String storeFilename) {
         imageRepository.save(Image.builder().storeFileName(storeFilename)
@@ -82,5 +87,13 @@ public class FileService {
         } else {
             log.info("파일이 존재하지 않습니다.");
         }
+    }
+
+
+    /**
+     * 해당 게시글의 이미지 가져오기
+     */
+    public List<Image> getPostImages(List<String> images) {
+           return imageRepository.findAllByStoreFileNameIn(images);
     }
 }

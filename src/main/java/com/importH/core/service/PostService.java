@@ -31,6 +31,8 @@ public class PostService {
     private final TagService tagService;
     private final PostLikeRepository postLikeRepository;
 
+    private final FileService fileService;
+
     /**
      * 게시글 저장
      */
@@ -47,6 +49,7 @@ public class PostService {
     private void setPostRelation(User user, PostDto.Request postRequestDto, Post post) {
         post.setTags(tagService.getTags(postRequestDto.getTags()));
         post.setUser(user);
+        post.addImage(fileService.getPostImages(postRequestDto.getImages()));
     }
 
 

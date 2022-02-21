@@ -276,34 +276,6 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("[실패] 전체 게시글 조회 - 잘못된 페이징 정보")
-    void findAll_fail_01() throws Exception {
-
-        //given
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("id").descending());
-
-        // when
-        List<PostDto.ResponseAll> allList = postService.findAllPost(null, pageRequest);
-
-
-        //then
-        assertThat(allList.size()).isEqualTo(10);
-        assertThat(allList.get(0).getResponseInfo().getLikeCount()).isEqualTo(maxLike);
-        allList.stream().forEach(responseAll -> assertThat(responseAll)
-                .hasFieldOrProperty("responseInfo.boardId")
-                .hasFieldOrProperty("responseInfo.postId")
-                .hasFieldOrProperty("responseInfo.title")
-                .hasFieldOrProperty("responseInfo.content")
-                .hasFieldOrProperty("responseInfo.nickname")
-                .hasFieldOrProperty("responseInfo.profileImage")
-                .hasFieldOrProperty("responseInfo.likeCount")
-                .hasFieldOrProperty("responseInfo.viewCount")
-                .hasFieldOrProperty("commentsCount")
-                .hasFieldOrProperty("thumbnail"));
-
-    }
-
-    @Test
     @DisplayName("유저 탈퇴 후 게시글 조회")
     void getPostByDeletedUser() throws Exception {
         // given
@@ -317,4 +289,7 @@ class PostServiceTest {
                 .hasFieldOrPropertyWithValue("nickname","삭제된 계정")
                 .hasFieldOrPropertyWithValue("profileImage","N");
     }
+
+
+
 }

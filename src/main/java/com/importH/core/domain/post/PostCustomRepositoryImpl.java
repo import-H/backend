@@ -1,5 +1,6 @@
 package com.importH.core.domain.post;
 
+import com.importH.core.domain.image.QImage;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.importH.core.domain.comment.QComment.comment;
+import static com.importH.core.domain.image.QImage.image;
 import static com.importH.core.domain.post.QPost.post;
 import static com.importH.core.domain.tag.QTag.tag;
 import static com.importH.core.domain.user.QUser.user;
@@ -40,7 +42,6 @@ public class PostCustomRepositoryImpl implements PostCustomRepository{
                 .from(post)
                 .where(typeEq(type))
                 .leftJoin(post.user, user).fetchJoin()
-                .leftJoin(post.tags, tag).fetchJoin()
                 .leftJoin(post.comments, comment).fetchJoin()
                 .orderBy(getAllOrderSpecifiers(pageable))
                 .offset(pageable.getOffset())

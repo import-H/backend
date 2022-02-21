@@ -1,6 +1,7 @@
 package com.importH.core.domain.post;
 
 import com.importH.core.domain.comment.Comment;
+import com.importH.core.domain.image.Image;
 import com.importH.core.domain.tag.Tag;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.PostDto;
@@ -46,13 +47,16 @@ public class Post extends BaseTimeEntity {
 
 
     @Builder.Default
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PostLike> postLikes = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 
     public Long updatePost(PostDto.Request postRequestDto, Set<Tag> tags) {
         this.tags = tags;
@@ -88,11 +92,13 @@ public class Post extends BaseTimeEntity {
         this.user = user;
     }
 
-    public void setBoardType(String boardType) {
-        this.type = boardType;
-    }
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public void addImage(List<Image> images) {
+        this.images = images;
+        images.stream().forEach(image -> image.setPost(this));
     }
 }

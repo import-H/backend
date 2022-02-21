@@ -38,7 +38,6 @@ public class PostController {
     @ApiOperation(value = "전체 게시글 조회", notes = "boardId 게시판에 게시글을 모두 조회합니다.")
     public ListResult<PostDto.ResponseAll> findAllPosts(@ApiParam(value = "게시판 유형", defaultValue = "free") @PathVariable String boardId,
                                                         @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        //TODO 페이징
 
         return responseService.getListResult(postService.findAllPost(boardId,pageable));
     }
