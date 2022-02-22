@@ -133,6 +133,19 @@ public class SignService {
         return tokenDto;
     }
 
+    /**
+     * 소셜 로그인
+     */
+    @Transactional
+    public TokenDto socialLogin(User user) {
+        TokenDto tokenDto = createToken(user);
+        RefreshToken refreshToken = getRefreshToken(user);
+
+        saveRefreshToken(user, tokenDto, refreshToken);
+
+        return tokenDto;
+    }
+
     private void saveRefreshToken(User user, TokenDto tokenDto, RefreshToken refreshToken) {
         if (refreshToken == null) {
             RefreshToken newRefreshToken = RefreshToken.create(user.getId(), tokenDto.getRefreshToken());

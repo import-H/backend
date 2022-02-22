@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 //@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @RequiredArgsConstructor
-@Configuration
+@EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JwtProvider jwtProvider;
@@ -40,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/v1/signup", "/v1/login",
                         "/v1/reissue", "/v1/social/**", "/v1/email-token").permitAll()
-                .antMatchers(HttpMethod.GET, "v1/login/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/v1/login/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/v1/posts/*", "/v1/users", "/v1/boards/*", "/v1/file/upload/**"
                         , "/v1/main", "/v1/banners", "/v1/email-token").permitAll()

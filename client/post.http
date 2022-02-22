@@ -15,7 +15,7 @@ Content-Type: application/json
 }
 
 ### 게시글 조회
-GET http://localhost:8090/v1/posts/6
+GET http://localhost:8090/v1/posts/8
 Authorization: {{Authorization}}
 
 ### 게시글 수정
@@ -35,8 +35,8 @@ DELETE http://localhost:8090/v1/posts/6
 Authorization: {{Authorization}}
 
 ### 댓글 등록
-POST http://localhost:8090/v1/posts/6/comments
-Authorization: {{Authorization}}
+POST http://localhost:8090/v1/posts/8/comments
+Authorization: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDU1Mjk4MDMsImV4cCI6MTY0NTYxNjIwM30.uQK1tZNAehp3g3PnL9gDOOXl5_zZN0ceBDn3W4GM-cI"
 Content-Type: application/json
 
 {

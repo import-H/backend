@@ -43,8 +43,8 @@ POST http://localhost:8090/v1/reissue
 Content-Type: application/json
 
 {
-  "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLqtIDrpqzsnpAiLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJuaWNrbmFtZSI6Iuq0gOumrOyekCIsInVzZXJJZCI6MiwicHJvZmlsZUltYWdlIjoiTiIsImlhdCI6MTY0NTAxNDMyOSwiZXhwIjoxNjQ1MTAwNzI5fQ.V7yKuIK0A5TCR4Uf3mdKDnKwYxVpLNCM7DNccnvQHzk",
-  "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLqtIDrpqzsnpAiLCJyb2xlcyI6IlJPTEVfQURNSU4iLCJuaWNrbmFtZSI6Iuq0gOumrOyekCIsInVzZXJJZCI6MiwicHJvZmlsZUltYWdlIjoiTiIsImlhdCI6MTY0NTAxNDMyOSwiZXhwIjoxNjU3NTQyMzI5fQ.WIlVYYNONzpAs2_SMxw0kIo-m24iLOgZsh0ooucbPQo"
+  "accessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDU1MjkzMTQsImV4cCI6MTY0NTYxNTcxNH0.QUEboBR9HCI4ff0gfV6OhhFxlikhabmdgBHOcKlJb54",
+  "refreshToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDU1MjkzMTQsImV4cCI6MTY1ODA1NzMxNH0.Q8jMcuTaPbuFyCSp1SdqyOu8Zx3sUYFUjph_W8ATa0o"
 }
 
 ### 이메일 인증
@@ -52,4 +52,8 @@ GET http://localhost:8090/v1/email-token?email={{email}}&token={{token}}
 
 ### 이메일 인증 재전송
 POST http://localhost:8090/v1/email-token
-Authorization: {{Authorization}}
+Authorization: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDU1MzE1MTMsImV4cCI6MTY0NTYxNzkxM30.OdwRpRbh9yS_9YigDygv1YEsfX_XaT0dLSBsqvgqWKw"
+
+
+### 구글 로그인
+http://localhost:8090/oauth2/authorization/google

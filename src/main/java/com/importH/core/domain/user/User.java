@@ -48,6 +48,8 @@ public class User extends BaseTimeEntity {
 
     private String personalUrl;
 
+    private String provider;
+
     @Embedded
     @Builder.Default
     private InfoAgree infoAgree = new InfoAgree();

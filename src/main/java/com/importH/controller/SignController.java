@@ -22,6 +22,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,6 +85,9 @@ public class SignController {
     @PostMapping("/email-token")
     public CommonResult resendEmailToken(@ApiIgnore @CurrentUser User user) {
 
+        if (user == null) {
+            //TODO null 에 대한 처리
+        }
         signService.resendConfirmEmail(user.getEmail());
 
         return responseService.getSuccessResult();

@@ -94,7 +94,7 @@ public class JwtProvider {
         // 권한 정보가 없음
         User user = userRepository.findById(Long.valueOf(claims.getSubject()))
                 .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_USERID));
-        return new UsernamePasswordAuthenticationToken(new CustomUser(user), user.getPassword(), List.of(new SimpleGrantedAuthority(user.getRole())));
+        return new UsernamePasswordAuthenticationToken(new CustomUser(user), "", List.of(new SimpleGrantedAuthority(user.getRole())));
     }
 
     // jwt 에서 회원 구분 PK 추출

@@ -1,5 +1,6 @@
 package com.importH.controller;
 
+import com.importH.core.domain.post.Post;
 import com.importH.core.domain.user.CurrentUser;
 import com.importH.core.domain.user.User;
 import com.importH.core.dto.post.PostDto;
@@ -53,13 +54,13 @@ public class PostController {
     
     @ApiOperation(value = "게시글 등록", notes = "type 게시판에 게시글을 등록합니다.")
     @PostMapping("/posts")
-    public CommonResult savePost(@ApiIgnore @CurrentUser User user,
+    public SingleResult<Long> savePost(@ApiIgnore @CurrentUser User user,
                                  @ApiParam(value = "게시글 요청 DTO") @RequestBody @Validated PostDto.Request postRequestDto,
                                  BindingResult bindingResult) {
 
         validParameter(bindingResult);
-        postService.registerPost(user, postRequestDto);
-        return responseService.getSuccessResult();
+        Post post = postService.registerPost(user, postRequestDto);
+        return responseService.getSingleResult(post.getId());
     }
 
     
