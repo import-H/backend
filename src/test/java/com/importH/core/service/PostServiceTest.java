@@ -168,6 +168,7 @@ class PostServiceTest {
     @DisplayName("[성공] 게시글 삭제")
     void deletePost_success() throws Exception {
         // given
+
         // when
         postService.deletePost(user, post.getId());
 

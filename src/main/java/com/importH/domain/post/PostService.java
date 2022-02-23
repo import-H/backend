@@ -126,9 +126,12 @@ public class PostService {
     public void deletePost(User user, Long postId) {
         Post findPost = findByPostId(postId);
         validateAccount(user, findPost);
+
+        fileService.deletePostImages(findPost);
         postRepository.delete(findPost);
 
         //TODO 이미지 서버에서 삭제
+
     }
 
 

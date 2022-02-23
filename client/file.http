@@ -12,7 +12,7 @@ Content-Type: image/png
 --WebAppBoundary--
 
 > {%
-client.global.set("imageURL1", response.body.data.imageURL.substr(response.body.data.imageURL.indexOf("d/") + 2,response.body.data.imageURL.indexOf('.')));
+client.global.set("imageURL", response.body.data.imageURL.substr(response.body.data.imageURL.indexOf("d/") + 2,response.body.data.imageURL.indexOf('.')));
 client.log("생성된 URL " + client.global.get("imageURL"));
 %}
 

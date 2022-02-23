@@ -1,5 +1,6 @@
 package com.importH.domain.image;
 
+import com.importH.domain.post.Post;
 import com.importH.global.error.code.FileErrorCode;
 import com.importH.global.error.exception.FileException;
 import lombok.RequiredArgsConstructor;
@@ -90,5 +91,21 @@ public class FileService {
      */
     public List<Image> getPostImages(List<String> images) {
            return imageRepository.findAllByStoreFileNameIn(images);
+    }
+
+    /**
+     * 게시글 삭제시 서버에 저장된 이미지 삭제
+     * @param findPost
+     */
+    public void deletePostImages(Post findPost) {
+
+        if (findPost.getImages() == null) {
+            return;
+        }
+
+        for (Image image : findPost.getImages()) {
+            deleteImage(image.getStoreFileName());
+        }
+
     }
 }

@@ -16,7 +16,6 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.importH.domain.comment.QComment.comment;
 import static com.importH.domain.post.QPost.post;
 import static com.importH.domain.user.QUser.user;
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -38,7 +37,6 @@ public class PostCustomRepositoryImpl implements PostCustomRepository{
                 .from(post)
                 .where(typeEq(type))
                 .leftJoin(post.user, user).fetchJoin()
-                .leftJoin(post.comments, comment).fetchJoin()
                 .orderBy(getAllOrderSpecifiers(pageable))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)

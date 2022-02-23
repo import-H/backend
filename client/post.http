@@ -11,15 +11,18 @@ Content-Type: application/json
   "tags": ["aa","bb"],
   "content": "샘플 포스트 컨텐츠",
   "type" : "free",
-  "images" : ["{{imageURL}}","{{imageURL1}}"]
+  "images" : ["{{imageURL1}}","{{imageURL}}"]
 }
+> {%
+client.global.set("postId", response.body.data);
+%}
 
 ### 게시글 조회
-GET http://localhost:8090/v1/posts/8
+GET http://localhost:8090/v1/posts/{{postId}}
 Authorization: {{Authorization}}
 
 ### 게시글 수정
-PUT http://localhost:8090/v1/posts/6
+PUT http://localhost:8090/v1/posts/{{postId}}
 Authorization: {{Authorization}}
 Content-Type: application/json
 
@@ -31,11 +34,11 @@ Content-Type: application/json
 }
 
 ### 게시글 삭제
-DELETE http://localhost:8090/v1/posts/6
+DELETE http://localhost:8090/v1/posts/{{postId}}
 Authorization: {{Authorization}}
 
 ### 댓글 등록
-POST http://localhost:8090/v1/posts/8/comments
+POST http://localhost:8090/v1/posts/{{postId}}/comments
 Authorization: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDU1Mjk4MDMsImV4cCI6MTY0NTYxNjIwM30.uQK1tZNAehp3g3PnL9gDOOXl5_zZN0ceBDn3W4GM-cI"
 Content-Type: application/json
 
@@ -44,7 +47,7 @@ Content-Type: application/json
 }
 
 ### 댓글 수정
-PUT http://localhost:8090/v1/posts/5/comments/5
+PUT http://localhost:8090/v1/posts/{{postId}}/comments/5
 Authorization: {{Authorization}}
 Content-Type: application/json
 
@@ -53,10 +56,10 @@ Content-Type: application/json
 }
 
 ### 댓글 삭제
-DELETE http://localhost:8090/v1/posts/5/comments/8
+DELETE http://localhost:8090/v1/posts/{{postId}}/comments/8
 Authorization: {{Authorization}}
 Content-Type: application/json
 
 ### 게시글 좋아요 요청
-POST http://localhost:8090/v1/posts/7/like
+POST http://localhost:8090/v1/posts/{{postId}}/like
 Authorization: {{Authorization}}
