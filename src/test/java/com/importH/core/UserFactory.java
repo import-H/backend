@@ -1,7 +1,7 @@
 package com.importH.core;
 
-import com.importH.core.domain.user.User;
-import com.importH.core.domain.user.UserRepository;
+import com.importH.domain.user.entity.User;
+import com.importH.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

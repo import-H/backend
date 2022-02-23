@@ -1,12 +1,12 @@
 package com.importH.core;
 
-import com.importH.core.domain.post.Post;
-import com.importH.core.domain.post.PostRepository;
-import com.importH.core.domain.user.User;
-import com.importH.core.domain.user.UserRepository;
-import com.importH.core.dto.post.PostDto;
-import com.importH.core.dto.tag.TagDto;
-import com.importH.core.service.PostService;
+import com.importH.domain.post.Post;
+import com.importH.domain.post.PostDto;
+import com.importH.domain.post.PostRepository;
+import com.importH.domain.post.PostService;
+import com.importH.domain.tag.TagDto;
+import com.importH.domain.user.entity.User;
+import com.importH.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

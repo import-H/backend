@@ -1,6 +1,7 @@
 package com.importH.core.service;
 
-import com.importH.core.dto.email.EmailDto;
+import com.importH.domain.user.dto.EmailDto;
+import com.importH.domain.user.service.EmailService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

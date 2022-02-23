@@ -1,8 +1,8 @@
 package com.importH.core;
 
-import com.importH.core.domain.user.User;
-import com.importH.core.domain.user.UserRepository;
-import com.importH.core.service.UserService;
+import com.importH.domain.user.entity.User;
+import com.importH.domain.user.repository.UserRepository;
+import com.importH.domain.user.service.SignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityContextFactory implements WithSecurityContextFactory<WithAccount> {
 
-    private final UserService userService;
+    private final SignService signService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
@@ -43,7 +43,7 @@ public class SecurityContextFactory implements WithSecurityContextFactory<WithAc
             user = userRepository.findByNickname(nickname).get();
         }
 
-        UserDetails userDetailsService = userService.loadUserByUsername(user.getEmail());
+        UserDetails userDetailsService = signService.loadUserByUsername(user.getEmail());
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 userDetailsService, userDetailsService.getPassword(), List.of(new SimpleGrantedAuthority(user.getRole()))

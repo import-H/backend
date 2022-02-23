@@ -2,10 +2,10 @@ package com.importH.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.importH.core.UserFactory;
-import com.importH.core.domain.user.UserRepository;
-import com.importH.core.dto.sign.SignupDto;
-import com.importH.error.code.CommonErrorCode;
-import com.importH.error.code.UserErrorCode;
+import com.importH.domain.user.dto.SignupDto;
+import com.importH.domain.user.repository.UserRepository;
+import com.importH.global.error.code.CommonErrorCode;
+import com.importH.global.error.code.UserErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

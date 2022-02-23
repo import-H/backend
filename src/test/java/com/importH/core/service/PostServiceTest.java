@@ -1,15 +1,17 @@
 package com.importH.core.service;
 
 import com.importH.core.UserFactory;
-import com.importH.core.domain.post.Post;
-import com.importH.core.domain.post.PostRepository;
-import com.importH.core.domain.tag.Tag;
-import com.importH.core.domain.user.User;
-import com.importH.core.dto.post.PostDto;
-import com.importH.core.dto.post.PostDto.Response;
-import com.importH.core.dto.tag.TagDto;
-import com.importH.error.code.PostErrorCode;
-import com.importH.error.exception.PostException;
+import com.importH.domain.post.Post;
+import com.importH.domain.post.PostDto;
+import com.importH.domain.post.PostDto.Response;
+import com.importH.domain.post.PostRepository;
+import com.importH.domain.post.PostService;
+import com.importH.domain.tag.Tag;
+import com.importH.domain.tag.TagDto;
+import com.importH.domain.tag.TagService;
+import com.importH.domain.user.entity.User;
+import com.importH.global.error.code.PostErrorCode;
+import com.importH.global.error.exception.PostException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

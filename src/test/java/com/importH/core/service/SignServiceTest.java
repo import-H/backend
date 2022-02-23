@@ -1,17 +1,18 @@
 package com.importH.core.service;
 
-import com.importH.config.security.JwtProvider;
-import com.importH.core.domain.token.RefreshToken;
-import com.importH.core.domain.token.RefreshTokenRepository;
-import com.importH.core.domain.user.User;
-import com.importH.core.domain.user.UserRepository;
-import com.importH.core.dto.jwt.TokenDto;
-import com.importH.core.dto.jwt.TokenDto.Info;
-import com.importH.core.dto.sign.SignupDto;
-import com.importH.error.code.JwtErrorCode;
-import com.importH.error.code.UserErrorCode;
-import com.importH.error.exception.JwtException;
-import com.importH.error.exception.UserException;
+import com.importH.domain.user.token.RefreshToken;
+import com.importH.domain.user.token.RefreshTokenRepository;
+import com.importH.domain.user.token.TokenDto;
+import com.importH.domain.user.token.TokenDto.Info;
+import com.importH.domain.user.service.SignService;
+import com.importH.domain.user.dto.SignupDto;
+import com.importH.domain.user.entity.User;
+import com.importH.domain.user.repository.UserRepository;
+import com.importH.global.error.code.JwtErrorCode;
+import com.importH.global.error.code.UserErrorCode;
+import com.importH.global.error.exception.JwtException;
+import com.importH.global.error.exception.UserException;
+import com.importH.global.security.JwtProvider;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,8 +28,6 @@ import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
