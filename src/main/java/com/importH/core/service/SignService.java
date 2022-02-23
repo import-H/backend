@@ -1,6 +1,9 @@
 package com.importH.core.service;
 
 import com.importH.config.security.JwtProvider;
+import com.importH.config.security.oauth.InMemoryProviderRepository;
+import com.importH.config.security.oauth.OauthProvider;
+import com.importH.config.security.oauth.OauthTokenResponse;
 import com.importH.core.domain.token.RefreshToken;
 import com.importH.core.domain.token.RefreshTokenRepository;
 import com.importH.core.domain.user.User;
@@ -9,6 +12,7 @@ import com.importH.core.dto.email.EmailDto;
 import com.importH.core.dto.jwt.TokenDto;
 import com.importH.core.dto.jwt.TokenDto.Info;
 import com.importH.core.dto.sign.SignupDto;
+import com.importH.core.dto.user.UserDto;
 import com.importH.error.code.JwtErrorCode;
 import com.importH.error.code.UserErrorCode;
 import com.importH.error.exception.JwtException;
@@ -257,5 +261,4 @@ public class SignService {
 
         sendConfirmEmail(user);
     }
-
 }

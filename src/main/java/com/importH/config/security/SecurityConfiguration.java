@@ -23,10 +23,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    private final CustomOAuth2UserService customOAuth2UserService;
-
-    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -39,8 +35,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/v1/signup", "/v1/login",
-                        "/v1/reissue", "/v1/social/**", "/v1/email-token").permitAll()
-                .antMatchers(HttpMethod.GET, "/v1/login/**").permitAll()
+                        "/v1/reissue", "/v1/social/**","/v1/email-token").permitAll()
+                .antMatchers(HttpMethod.GET, "/v1/oauth2/code/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/exception/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/v1/posts/*", "/v1/users", "/v1/boards/*", "/v1/file/upload/**"
                         , "/v1/main", "/v1/banners", "/v1/email-token").permitAll()
@@ -50,16 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
-                .accessDeniedHandler(customAccessDeniedHandler)
-
-                .and()
-                .oauth2Login()
-                .userInfoEndpoint() // oauth2 로그인 성공 후 가져올 때의 설정들
-                // 소셜로그인 성공 시 후속 조치를 진행할 UserService 인터페이스 구현체 등록
-                .userService(customOAuth2UserService)
-                .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler); // 리소스 서버에서 사용자 정보를 가져온 상태에서 추가로 진행하고자 하는 기능 명시
-
+                .accessDeniedHandler(customAccessDeniedHandler);
 
 
         http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);

@@ -1,5 +1,6 @@
 package com.importH.core.domain.user;
 
+import com.google.common.io.Files;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,8 +12,6 @@ public interface UserRepository extends JpaRepository<User,Long> , UserCustomRep
     Optional<User> findByEmail(String email);
 
     Optional<User> findByNickname(String nickname);
-    Optional<User> findByEmailAndProvider(String email, String provider);
-
 
     boolean existsByEmail(String email);
 
@@ -21,4 +20,6 @@ public interface UserRepository extends JpaRepository<User,Long> , UserCustomRep
     boolean existsByPathId(String pathId);
 
     Long countByEmailVerified(boolean verified);
+
+    Optional<User> findByOauthId(String oauthId);
 }
