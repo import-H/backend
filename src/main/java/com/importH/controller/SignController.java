@@ -7,6 +7,7 @@ import com.importH.core.dto.sign.LoginDto;
 import com.importH.core.dto.sign.SignupDto;
 import com.importH.core.model.response.CommonResult;
 import com.importH.core.model.response.SingleResult;
+import com.importH.core.service.OauthService;
 import com.importH.core.service.SignService;
 import com.importH.core.service.response.ResponseService;
 import com.importH.error.code.UserErrorCode;
@@ -16,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
@@ -37,6 +39,8 @@ public class SignController {
     private final SignService signService;
     private final ResponseService responseService;
 
+    private final OauthService oauthService;
+
     @ApiOperation(value = "로그인", notes = "로그인을 합니다.")
     @PostMapping("/login")
     public SingleResult<TokenDto> login(
@@ -57,6 +61,12 @@ public class SignController {
 
         Long userId = signService.signup(userSignupDto);
         return responseService.getSingleResult(userId);
+    }
+
+    @GetMapping("/oauth2/code/{provider}")
+    public ResponseEntity<TokenDto> login(@PathVariable String provider, @RequestParam String code) {
+        TokenDto loginResponse = oauthService.socialLogin(provider, code);
+        return ResponseEntity.ok().body(loginResponse);
     }
 
     @ApiOperation(value = "엑세스 , 리프레시 토큰 재발급",

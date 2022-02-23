@@ -26,7 +26,6 @@ public class User extends BaseTimeEntity {
     private Long id;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(nullable = false, length = 100)
     private String password;
 
     @Column(nullable = false, unique = true, length = 30)
@@ -49,6 +48,8 @@ public class User extends BaseTimeEntity {
     private String pathId;
 
     private String personalUrl;
+
+    private String oauthId;
 
     @Embedded
     @Builder.Default
@@ -112,4 +113,10 @@ public class User extends BaseTimeEntity {
         return emailCheckTokenGeneratedAt == null || emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusHours(1));
     }
 
+    public User update(String email, String name, String imageUrl) {
+        this.email = email;
+        this.nickname = name;
+        this.profileImage = imageUrl;
+        return this;
+    }
 }
