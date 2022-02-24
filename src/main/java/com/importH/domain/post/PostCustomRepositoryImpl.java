@@ -1,6 +1,6 @@
 package com.importH.domain.post;
 
-import com.importH.domain.user.QUser;
+import com.importH.domain.user.entity.QUser;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;

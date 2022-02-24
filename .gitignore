@@ -38,3 +38,4 @@ out/
 
 /src/main/resources/application-ouath.properties
 /src/main/resources/application.properties
+/src/main/resources/application-test.properties

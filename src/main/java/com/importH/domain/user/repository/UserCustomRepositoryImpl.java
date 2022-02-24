@@ -1,6 +1,6 @@
 package com.importH.domain.user.repository;
 
-import com.importH.domain.user.QUser;
+import com.importH.domain.user.entity.QUser;
 import com.importH.domain.user.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
