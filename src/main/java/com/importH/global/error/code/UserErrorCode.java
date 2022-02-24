@@ -17,7 +17,8 @@ public enum UserErrorCode implements ErrorCode{
     NOT_FOUND_USER_BY_EMAIL("요청한 이메일에 해당하는 계정이 없습니다.",400),
     USER_PATH_ID_DUPLICATED("해당 주소 id 값은 사용중입니다.", 400),
     NOT_EQUALS_EMAIL_TOKEN("이메일 인증 토큰이 동일하지 않습니다.", 400),
-    NOT_PASSED_HOUR("이메일 인증을 보낸지 1시간이 지나지 않았습니다.", 400);
+    NOT_PASSED_HOUR("이메일 인증을 보낸지 1시간이 지나지 않았습니다.", 400),
+    NOT_FOUND_PATH_ID("게시판 아이디가 존재하지 않습니다.", 400);
 
     private final String description;
     private final int status;

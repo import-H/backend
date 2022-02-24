@@ -30,7 +30,7 @@ public class PostFactory {
             Post build = Post.builder()
                     .title("test" + i)
                     .content("test" + i)
-                    .user(userRepository.save(User.builder().nickname("test"+i).email("test@"+i).password("test"+i).role("ROLE_USER").weekAgree(false).build()))
+                    .user(userRepository.save(User.builder().nickname("test"+i).email("test@"+i).password("test"+i).role("ROLE_USER").pathId("t"+i).weekAgree(false).build()))
                     .likeCount(i)
                     .build();
             postRepository.save(build);
@@ -46,6 +46,7 @@ public class PostFactory {
                 builder()
                 .title(title)
                 .content(content)
+                .type("free")
                 .tags(Arrays.stream(tagName).map(name -> TagDto.builder().name(name).build()).collect(Collectors.toList()))
                 .build();
     }

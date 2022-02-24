@@ -14,6 +14,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,9 +40,27 @@ public class PostService {
 
         Post post = postRequestDto.toEntity();
 
+        validateType(user,post);
         setPostRelation(user, postRequestDto, post);
 
         return savePost(post);
+    }
+
+    private void validateType(User user, Post post) {
+        if (isPathId(user, post) || isExistType(post)) return;
+        throw new PostException(PostErrorCode.NOT_EXIST_TYPE);
+    }
+
+    private boolean isExistType(Post post) {
+        return Arrays.stream(PostType.values())
+                .anyMatch(postType -> postType.getType().equals(post.getType()));
+    }
+
+    private boolean isPathId(User user, Post post) {
+        if (user.getPathId().equals(post.getType())) {
+            return true;
+        }
+        return false;
     }
 
     private void setPostRelation(User user, PostDto.Request postRequestDto, Post post) {

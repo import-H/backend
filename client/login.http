@@ -53,7 +53,3 @@ GET http://localhost:8090/v1/email-token?email={{email}}&token={{token}}
 ### 이메일 인증 재전송
 POST http://localhost:8090/v1/email-token
 Authorization: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDU1MzE1MTMsImV4cCI6MTY0NTYxNzkxM30.OdwRpRbh9yS_9YigDygv1YEsfX_XaT0dLSBsqvgqWKw"
-
-
-### 구글 로그인
-http://localhost:8090/oauth2/authorization/google

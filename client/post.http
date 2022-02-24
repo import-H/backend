@@ -39,7 +39,7 @@ Authorization: {{Authorization}}
 
 ### 댓글 등록
 POST http://localhost:8090/v1/posts/{{postId}}/comments
-Authorization: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDU1Mjk4MDMsImV4cCI6MTY0NTYxNjIwM30.uQK1tZNAehp3g3PnL9gDOOXl5_zZN0ceBDn3W4GM-cI"
+Authorization: {{Authorization}}
 Content-Type: application/json
 
 {

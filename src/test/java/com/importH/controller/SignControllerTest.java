@@ -43,7 +43,7 @@ class SignControllerTest {
     @DisplayName("[성공] 회원가입")
     void signup_success() throws Exception {
         // given
-        SignupDto dto = getSignupDto("테스트@mail.com", "test1", "테스트");
+        SignupDto dto = getSignupDto("테스트@mail.com", "test0000", "테스트");
 
         // when
         ResultActions perform = mvc.perform(post("/v1/signup")

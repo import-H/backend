@@ -77,6 +77,20 @@ class PostServiceTest {
         assertThat(post.getTags()).contains(tagService.findByTitle("자바"));
     }
 
+    @Test
+    @DisplayName("[실패] 게시글 등록 - 존재하지 않는 게시판")
+    void registerPost_fail() throws Exception {
+        // given
+        PostDto.Request request = getRequest("테스트", "테스트 게시글 입니다.", "자바", "FREES");
+
+        // when
+        PostException exception = assertThrows(PostException.class, () -> postService.registerPost(user, request));
+
+
+        //then
+        assertThat(exception).hasMessageContaining(exception.getErrorMessage());
+    }
+
     private PostDto.Request getRequest(String title, String content, String tagName, String type) {
         return PostDto.Request.
                 builder()

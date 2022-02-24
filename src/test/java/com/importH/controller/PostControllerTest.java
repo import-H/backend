@@ -83,11 +83,33 @@ class PostControllerTest {
 
     @Test
     @WithAccount("테스트")
-    @DisplayName("[성공] 게시글 등록")
+    @DisplayName("[성공] 게시글 등록 - 기존 게시판")
     void savePost_success() throws Exception {
         // given
 
         PostDto.Request request = getRequest("테스트", "테스트 게시글", "free", "자바");
+
+        // when
+        mockMvc.perform(post(V_1_POSTS)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.msg").exists());
+
+        //then
+        assertEquals(postRepository.existsByTitle("테스트"), true);
+        assertNotNull(tagRepository.findByName("자바"));
+    }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 게시글 등록 - 개인 게시판")
+    void savePost_success_pathId() throws Exception {
+
+        // given
+        user = userRepository.findByNickname("테스트").get();
+        PostDto.Request request = getRequest("테스트", "테스트 게시글", user.getPathId(), "자바");
 
         // when
         mockMvc.perform(post(V_1_POSTS)
@@ -127,6 +149,29 @@ class PostControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.msg").value(errorCode.getDescription()));
+
+        //then
+        assertThat(postRepository.existsByTitle(request.getTitle())).isFalse();
+        assertThat(tagRepository.findByName("자바")).isEmpty();
+
+    }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[실패] 게시글 등록 - 옳바르지 않은 게시판 타입")
+    void savePost_fail_type() throws Exception {
+        // given
+        PostDto.Request request = getRequest("테스트", "테스트 게시글", "frees", "자바");
+
+        // when
+        PostErrorCode err = PostErrorCode.NOT_EXIST_TYPE;
+
+        mockMvc.perform(post(V_1_POSTS)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.msg").value(err.getDescription()));
 
         //then
         assertThat(postRepository.existsByTitle(request.getTitle())).isFalse();
