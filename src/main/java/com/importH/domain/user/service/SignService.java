@@ -173,7 +173,7 @@ public class SignService implements UserDetailsService {
     }
 
     private RefreshToken getRefreshToken(User user) {
-        return tokenRepository.findByKey(user.getId()).orElse(null);
+        return tokenRepository.findByUserId(user.getId()).orElse(null);
     }
 
     private TokenDto createToken(User user) {

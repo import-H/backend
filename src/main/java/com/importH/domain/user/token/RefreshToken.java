@@ -1,24 +1,22 @@
 package com.importH.domain.user.token;
 
 import com.importH.domain.BaseTimeEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class RefreshToken extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "refresh_token_id")
     private Long id;
 
-    @Column(nullable = false)
-    private Long key;
+    private Long userId;
 
     @Lob
     @Column(nullable = false)
@@ -26,7 +24,7 @@ public class RefreshToken extends BaseTimeEntity {
 
     public static RefreshToken create(Long userId, String refreshToken) {
         return RefreshToken.builder()
-                .key(userId)
+                .userId(userId)
                 .token(refreshToken)
                 .build();
     }
@@ -34,12 +32,6 @@ public class RefreshToken extends BaseTimeEntity {
     public RefreshToken updateToken(String token) {
         this.token = token;
         return this;
-    }
-
-    @Builder
-    public RefreshToken(Long key, String token) {
-        this.key = key;
-        this.token = token;
     }
 
 }

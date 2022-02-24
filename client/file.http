@@ -1,6 +1,6 @@
 
 ### 이미지 업로드 테스트
-POST http://localhost:8090/v1/file/upload
+POST http://{{serverUrl}}/v1/file/upload
 Authorization: {{Authorization}}
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
