@@ -18,6 +18,10 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
+application.properties
+application-dev.properties
+application-oauth.properties
+application-test.properties
 .idea
 *.iws
 *.iml
@@ -35,7 +39,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-/src/main/resources/application-ouath.properties
-/src/main/resources/application.properties
-/src/main/resources/application-test.properties

@@ -44,6 +44,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'org.projectlombok:lombok:1.18.22'
+    implementation 'mysql:mysql-connector-java'
     runtimeOnly 'com.h2database:h2'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
