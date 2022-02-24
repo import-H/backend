@@ -1,5 +1,6 @@
 package com.importH.domain.post;
 
+import com.importH.domain.user.QUser;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
@@ -16,14 +17,14 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.importH.domain.post.QPost.post;
-import static com.importH.domain.user.QUser.user;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 public class PostCustomRepositoryImpl implements PostCustomRepository{
 
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
+    QPost post = QPost.post;
+    QUser user = QUser.user;
 
     public PostCustomRepositoryImpl(EntityManager em) {
         this.em = em;

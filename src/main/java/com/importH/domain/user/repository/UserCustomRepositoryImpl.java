@@ -1,5 +1,6 @@
 package com.importH.domain.user.repository;
 
+import com.importH.domain.user.QUser;
 import com.importH.domain.user.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +10,6 @@ import org.springframework.data.domain.SliceImpl;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static com.importH.domain.user.QUser.user;
 
 
 public class UserCustomRepositoryImpl implements UserCustomRepository{
@@ -24,6 +24,7 @@ public class UserCustomRepositoryImpl implements UserCustomRepository{
 
     @Override
     public Slice<User> findAllUsers(Pageable pageable) {
+        QUser user = QUser.user;
         List<User> users = queryFactory.selectFrom(user)
                 .where(user.emailVerified.isTrue())
                 .orderBy(user.createdAt.desc())
