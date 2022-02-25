@@ -1,9 +1,9 @@
 package com.importH.domain.user.service;
 
 
-import com.importH.global.config.AppProperties;
 import com.importH.domain.user.dto.EmailDto;
 import com.importH.domain.user.dto.EmailMessageDto;
+import com.importH.global.config.AppProperties;
 import com.importH.global.mail.EmailMessenger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

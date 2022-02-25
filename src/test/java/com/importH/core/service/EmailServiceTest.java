@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class EmailServiceTest {
 
     @Autowired
-    EmailService emailService;
+    EmailService consoleEmailService;
 
     @Test
     @DisplayName("[성공] 이메일 보내기")
@@ -32,7 +32,7 @@ class EmailServiceTest {
 
         // when
         // then
-        emailService.sendEmail(dto);
+        consoleEmailService.sendEmail(dto);
     }
 
     @Test
@@ -47,7 +47,7 @@ class EmailServiceTest {
 
         // when
         // then
-        assertThrows(ConstraintViolationException.class , () -> emailService.sendEmail(dto));
+        assertThrows(ConstraintViolationException.class , () -> consoleEmailService.sendEmail(dto));
     }
 
 }
