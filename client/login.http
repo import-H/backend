@@ -1,6 +1,6 @@
 
 ### 회원가입  정상 요청
-POST http://localhost:8090/v1/signup
+POST http://{{serverUrl}}/v1/signup
 Content-Type: application/json
 
 {
@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ### 관리자 로그인
-POST http://localhost:8090/v1/login
+POST http://{{serverUrl}}/v1/login
 Content-Type: application/json
 
 {
@@ -39,7 +39,7 @@ client.log("생성된 보안키" + client.global.get("Authorization"));
 %}
 
 ### 토큰 재발급 정상 요청
-POST http://localhost:8090/v1/reissue
+POST http://{{serverUrl}}/v1/reissue
 Content-Type: application/json
 
 {
@@ -48,8 +48,8 @@ Content-Type: application/json
 }
 
 ### 이메일 인증
-GET http://localhost:8090/v1/email-token?email={{email}}&token={{token}}
+GET http://{{serverUrl}}/v1/email-token?email={{email}}&token={{token}}
 
 ### 이메일 인증 재전송
-POST http://localhost:8090/v1/email-token
+POST http://{{serverUrl}}/v1/email-token
 Authorization: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwicm9sZXMiOiJST0xFX1VTRVIiLCJpYXQiOjE2NDU1MzE1MTMsImV4cCI6MTY0NTYxNzkxM30.OdwRpRbh9yS_9YigDygv1YEsfX_XaT0dLSBsqvgqWKw"

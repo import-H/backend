@@ -26,12 +26,12 @@ public class QRefreshToken extends EntityPathBase<RefreshToken> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final NumberPath<Long> key = createNumber("key", Long.class);
-
     public final StringPath token = createString("token");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
+
+    public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
     public QRefreshToken(String variable) {
         super(RefreshToken.class, forVariable(variable));

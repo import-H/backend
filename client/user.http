@@ -1,9 +1,9 @@
 ### 회원 정보 조회
-GET http://localhost:8090/v1/users/1
+GET http://{{serverUrl}}/v1/users/1
 Authorization: {{Authorization}}
 
 ### 회원 정보 수정
-PUT http://localhost:8090/v1/users/1
+PUT http://{{serverUrl}}/v1/users/1
 Authorization: {{Authorization}}
 Content-Type: application/json
 
@@ -16,11 +16,11 @@ Content-Type: application/json
 }
 
 ### 회원 탈퇴
-DELETE http://localhost:8090/v1/users/2
+DELETE http://{{serverUrl}}/v1/users/2
 Authorization: {{Authorization}}
 
 ### 회원 비밀번호 변경
-PUT http://localhost:8090/v1/users/1/updatePassword
+PUT http://{{serverUrl}}/v1/users/1/updatePassword
 Authorization: {{Authorization}}
 Content-Type: application/json
 

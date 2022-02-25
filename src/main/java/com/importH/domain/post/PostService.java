@@ -57,7 +57,7 @@ public class PostService {
     }
 
     private boolean isPathId(User user, Post post) {
-        if (user.getPathId().equals(post.getType())) {
+        if (user.getPathId() != null && user.getPathId().equals(post.getType())) {
             return true;
         }
         return false;

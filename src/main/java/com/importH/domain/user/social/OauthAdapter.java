@@ -14,4 +14,9 @@ public interface OauthAdapter {
                 new OauthProvider(value, properties.getProvider().get(key))));
         return oauthProvider;
     }
+
+    OauthTokenResponse getToken(String code, OauthProvider provider);
+
+    SocialProfile getUserProfile(String providerName, OauthTokenResponse tokenResponse, OauthProvider provider);
+
 }

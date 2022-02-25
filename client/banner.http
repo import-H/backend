@@ -1,5 +1,5 @@
 ### 배너 등록
-POST http://localhost:8090/v1/banners
+POST http://{{serverUrl}}/v1/banners
 Authorization: {{Authorization}}
 Content-Type: application/json
 
@@ -17,9 +17,9 @@ client.global.set("bannerId", response.body.data.bannerId);
 
 
 ### 배너 가져오기
-GET http://localhost:8090/v1/banners
+GET http://{{serverUrl}}/v1/banners
 
 
 ### 배너 삭제하기
-DELETE http://localhost:8090/v1/banners/{{bannerId}}
+DELETE http://{{serverUrl}}/v1/banners/{{bannerId}}
 Authorization: {{Authorization}}
