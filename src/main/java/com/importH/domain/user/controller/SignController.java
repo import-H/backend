@@ -1,21 +1,20 @@
 package com.importH.domain.user.controller;
 
-import com.importH.domain.user.token.TokenDto;
 import com.importH.domain.user.CurrentUser;
 import com.importH.domain.user.dto.LoginDto;
 import com.importH.domain.user.dto.SignupDto;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.service.OauthService;
 import com.importH.domain.user.service.SignService;
-import com.importH.global.response.ResponseService;
+import com.importH.domain.user.token.TokenDto;
 import com.importH.global.response.CommonResult;
+import com.importH.global.response.ResponseService;
 import com.importH.global.response.SingleResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -59,10 +58,10 @@ public class SignController {
 
     @ApiOperation(value = "소셜 로그인", notes = "소셜 아이디로 로그인 및 회원가입을 합니다.")
     @GetMapping("/oauth2/code/{provider}")
-    public ResponseEntity<TokenDto> login(@ApiParam(value = "API 제공자" ,required = true, example = "google")@PathVariable String provider,
+    public SingleResult<TokenDto> login(@ApiParam(value = "API 제공자" ,required = true, example = "google")@PathVariable String provider,
                                           @ApiParam(value = "외부 API 로 부터 받은 code" ,required = true) @RequestParam String code) {
         TokenDto loginResponse = oauthService.socialLogin(provider, code);
-        return ResponseEntity.ok().body(loginResponse);
+        return responseService.getSingleResult(loginResponse);
     }
 
     @ApiOperation(value = "엑세스 , 리프레시 토큰 재발급",
