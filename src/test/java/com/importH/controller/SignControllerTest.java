@@ -181,8 +181,9 @@ class SignControllerTest {
         perform
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("accessToken").exists())
-                .andExpect(jsonPath("refreshToken").exists());
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.refreshToken").exists());
 
     }
 
