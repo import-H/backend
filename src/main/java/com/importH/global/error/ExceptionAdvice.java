@@ -80,6 +80,14 @@ public class ExceptionAdvice {
                 .body(responseService.getFailResult(e.getErrorCode()));
     }
 
+    @ExceptionHandler(SocialException.class)
+    protected ResponseEntity socialException(HttpServletRequest request, SocialException e) {
+        printError(request, e.getErrorCode());
+        return ResponseEntity
+                .status(e.getErrorCode().getStatus())
+                .body(responseService.getFailResult(e.getErrorCode()));
+    }
+
     private void printError(HttpServletRequest request, ErrorCode e) {
         log.error("requestUrl : {} , errorCode : {}", request.getRequestURI(), e);
     }

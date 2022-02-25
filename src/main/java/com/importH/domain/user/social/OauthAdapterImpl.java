@@ -1,16 +1,22 @@
 package com.importH.domain.user.social;
 
+import com.importH.global.error.code.SocialErrorCode;
+import com.importH.global.error.exception.SocialException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class OauthAdapterImpl implements OauthAdapter {
 
@@ -40,13 +46,22 @@ public class OauthAdapterImpl implements OauthAdapter {
 
 
     private Map<String, Object> getUserAttributes(OauthProvider provider, OauthTokenResponse tokenResponse) {
-        return WebClient.create()
-                .get()
-                .uri(provider.getUserInfoUrl())
-                .headers(header -> header.setBearerAuth(tokenResponse.getAccessToken()))
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
-                .block();
+
+        Map<String, Object> userAttributes = new LinkedHashMap<>();
+        try {
+            userAttributes = WebClient.create()
+                    .get()
+                    .uri(provider.getUserInfoUrl())
+                    .headers(header -> header.setBearerAuth(tokenResponse.getAccessToken()))
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
+                    })
+                    .block();
+        } catch (WebClientResponseException e) {
+            log.error("[SocialLogin Error] : {}" , e.getResponseBodyAsString());
+            throw new SocialException(SocialErrorCode.NOT_VALID_ACCESS);
+        }
+        return userAttributes;
     }
     @Override
     public SocialProfile getUserProfile(String providerName, OauthTokenResponse tokenResponse, OauthProvider provider) {

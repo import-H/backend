@@ -4,10 +4,14 @@ import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
 import com.importH.domain.user.social.*;
 import com.importH.domain.user.token.TokenDto;
+import com.importH.global.error.exception.SocialException;
 import com.importH.global.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.importH.global.error.code.SocialErrorCode.SOCIAL_LOGIN_FAILED;
+
 
 @Service
 @RequiredArgsConstructor
@@ -40,8 +44,17 @@ public class OauthService {
         User member = userRepository.findByOauthId(socialProfile.getOauthId())
                 .map(entity -> entity.update(
                         socialProfile.getEmail(), socialProfile.getName(), socialProfile.getImageUrl()))
-                .orElseGet(() -> userRepository.save(socialProfile.toUser()));
+                .orElseGet(() -> {
+                    validateProfile(socialProfile);
+                    return userRepository.save(socialProfile.toUser());
+                });
         return member;
+    }
+
+    private void validateProfile(SocialProfile socialProfile) {
+        if (socialProfile.getEmail() == null || socialProfile.getName() == null) {
+            throw new SocialException(SOCIAL_LOGIN_FAILED);
+        }
     }
 
 

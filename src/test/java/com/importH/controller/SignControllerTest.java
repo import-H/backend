@@ -4,13 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.importH.core.UserFactory;
 import com.importH.domain.user.dto.SignupDto;
 import com.importH.domain.user.repository.UserRepository;
+import com.importH.domain.user.service.OauthService;
+import com.importH.domain.user.token.TokenDto;
 import com.importH.global.error.code.CommonErrorCode;
+import com.importH.global.error.code.SocialErrorCode;
 import com.importH.global.error.code.UserErrorCode;
+import com.importH.global.error.exception.SocialException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,11 +23,15 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Transactional
 @TestPropertySource(locations = "classpath:/application-test.properties")
@@ -31,6 +40,8 @@ class SignControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @MockBean
+    OauthService oauthService;
     @Autowired
     private ObjectMapper mapper;
     @Autowired
@@ -38,6 +49,9 @@ class SignControllerTest {
 
     @Autowired
     private UserFactory userFactory;
+
+
+
 
     @Test
     @DisplayName("[성공] 회원가입")
@@ -147,6 +161,54 @@ class SignControllerTest {
                 .agree(true)
                 .build();
         return dto;
+    }
+
+    public static final String OAUTH_URL = "/v1/oauth2/code/";
+
+    @Test
+    @DisplayName("[성공] 소셜 로그인")
+    void socialLogin_success() throws Exception {
+
+        // given
+        String provider = "google";
+        given(oauthService.socialLogin(any(), any())).willReturn(getTokenDto());
+
+        // when
+        ResultActions perform = mvc.perform(get(OAUTH_URL + provider)
+                .param("code", "code"));
+
+        //then
+        perform
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("accessToken").exists())
+                .andExpect(jsonPath("refreshToken").exists());
+
+    }
+
+
+    @Test
+    @DisplayName("[실패] 소셜 로그인 - 사용자 정보에 이메일 , 이름 존재하지 않음")
+    void socialLogin_fail() throws Exception {
+
+        // given
+        String provider = "google";
+        given(oauthService.socialLogin(any(), any())).willThrow(new SocialException(SocialErrorCode.SOCIAL_LOGIN_FAILED));
+
+        // when
+        ResultActions perform = mvc.perform(get(OAUTH_URL + provider)
+                .param("code", "code"));
+
+        //then
+        perform
+                .andExpect(status().is4xxClientError())
+                .andDo(print());
+
+    }
+
+
+    private TokenDto getTokenDto() {
+        return TokenDto.builder().accessToken("accessToken").refreshToken("refreshToken").build();
     }
 
 

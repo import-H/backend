@@ -1,6 +1,7 @@
 package com.importH.global.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -49,8 +50,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**",
-                "/swagger-ui.html", "/webjars/**", "/swagger/**", "/h2-console/**");
+        web.ignoring().
+                antMatchers("/v2/api-docs", "/swagger-resources/**",
+                        "/swagger-ui.html", "/webjars/**", "/swagger/**", "/h2-console/**")
+                .antMatchers("/favicon.ico", "/resources/**", "/error")
+                .requestMatchers(PathRequest.toStaticResources()
+                        .atCommonLocations());
     }
 
 
