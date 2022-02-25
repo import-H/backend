@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static com.importH.global.error.code.SocialErrorCode.SOCIAL_LOGIN_FAILED;
 
 
@@ -41,9 +43,16 @@ public class OauthService {
     }
 
     private User saveOrUpdate(SocialProfile socialProfile) {
+        //TODO 기존 이메일 있을때 해당 유저 반환
+        Optional<User> user = userRepository.findByEmail(socialProfile.getEmail());
+
+        if (user.isPresent()) {
+            return user.get();
+        }
+
         User member = userRepository.findByOauthId(socialProfile.getOauthId())
                 .map(entity -> entity.update(
-                        socialProfile.getEmail(), socialProfile.getName(), socialProfile.getImageUrl()))
+                        socialProfile.getEmail(), socialProfile.getImageUrl()))
                 .orElseGet(() -> {
                     validateProfile(socialProfile);
                     return userRepository.save(socialProfile.toUser());

@@ -113,9 +113,8 @@ public class User extends BaseTimeEntity {
         return emailCheckTokenGeneratedAt == null || emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusHours(1));
     }
 
-    public User update(String email, String name, String imageUrl) {
+    public User update(String email, String imageUrl) {
         this.email = email;
-        this.nickname = name;
         this.profileImage = imageUrl;
         return this;
     }

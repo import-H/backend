@@ -126,6 +126,35 @@ class OauthServiceTest {
         verify(userRepository, never()).save(any());
     }
 
+    @Test
+    @DisplayName("[성공] 소셜 로그인 및 계정 저장 - 소셜 이메일로 가입된 이메일 있을때 기존에 있던 계정으로 로그인")
+    void googleLogin_Success_existEmail() throws Exception {
+        // given
+        String provider = "google";
+
+        given(oauthProviderRepository.findByProviderName(any())).willReturn(getOauthProvider());
+        given(oauthAdapter.getToken(any(), any())).willReturn(OauthTokenResponse.builder().accessToken(ACCESS_TOKEN).build());
+        given(oauthAdapter.getUserProfile(any(),any(),any())).willReturn(getSocialProfile("test@mail.com"));
+        given(jwtProvider.createToken(any(), any())).willReturn(getTokenDto());
+        given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(getUser()));
+
+        // when
+        TokenDto tokenDto = oauthService.socialLogin(provider, CODE);
+
+
+        //then
+        assertThat(tokenDto)
+                .hasFieldOrProperty("accessToken")
+                .hasFieldOrProperty("refreshToken");
+
+        verify(oauthAdapter, times(1)).getToken(any(), any());
+        verify(oauthAdapter, times(1)).getUserProfile(any(), any(), any());
+        verify(userRepository, never()).save(any());
+        verify(userRepository, times(1)).findByEmail(any());
+        verify(jwtProvider, times(1)).createToken(any(), any());
+        verify(userRepository, never()).findByOauthId(any());
+    }
+
     private OauthProvider getOauthProvider() {
         return OauthProvider.builder().build();
     }
