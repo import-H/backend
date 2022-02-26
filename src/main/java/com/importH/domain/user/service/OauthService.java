@@ -37,13 +37,13 @@ public class OauthService {
 
         User user = saveOrUpdate(socialProfile);
 
-        TokenDto token = jwtProvider.createToken(TokenDto.Info.fromEntity(user), user.getRole());
+        TokenDto token = jwtProvider.createToken(user);
 
         return token;
     }
 
     private User saveOrUpdate(SocialProfile socialProfile) {
-        //TODO 기존 이메일 있을때 해당 유저 반환
+
         Optional<User> user = userRepository.findByEmail(socialProfile.getEmail());
 
         if (user.isPresent()) {
@@ -51,8 +51,6 @@ public class OauthService {
         }
 
         User member = userRepository.findByOauthId(socialProfile.getOauthId())
-                .map(entity -> entity.update(
-                        socialProfile.getEmail(), socialProfile.getImageUrl()))
                 .orElseGet(() -> {
                     validateProfile(socialProfile);
                     return userRepository.save(socialProfile.toUser());

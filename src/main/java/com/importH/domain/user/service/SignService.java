@@ -1,18 +1,17 @@
 package com.importH.domain.user.service;
 
-import com.importH.domain.user.token.RefreshToken;
-import com.importH.domain.user.token.RefreshTokenRepository;
-import com.importH.domain.user.token.TokenDto;
-import com.importH.domain.user.token.TokenDto.Info;
 import com.importH.domain.user.CustomUser;
+import com.importH.domain.user.dto.EmailDto;
 import com.importH.domain.user.dto.SignupDto;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
+import com.importH.domain.user.token.RefreshToken;
+import com.importH.domain.user.token.RefreshTokenRepository;
+import com.importH.domain.user.token.TokenDto;
 import com.importH.global.error.code.JwtErrorCode;
 import com.importH.global.error.code.UserErrorCode;
 import com.importH.global.error.exception.JwtException;
 import com.importH.global.error.exception.UserException;
-import com.importH.domain.user.dto.EmailDto;
 import com.importH.global.security.JwtProvider;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -146,19 +145,6 @@ public class SignService implements UserDetailsService {
         return tokenDto;
     }
 
-    /**
-     * 소셜 로그인
-     */
-    @Transactional
-    public TokenDto socialLogin(User user) {
-        TokenDto tokenDto = createToken(user);
-        RefreshToken refreshToken = getRefreshToken(user);
-
-        saveRefreshToken(user, tokenDto, refreshToken);
-
-        return tokenDto;
-    }
-
     private void saveRefreshToken(User user, TokenDto tokenDto, RefreshToken refreshToken) {
         if (refreshToken == null) {
             RefreshToken newRefreshToken = RefreshToken.create(user.getId(), tokenDto.getRefreshToken());
@@ -177,9 +163,8 @@ public class SignService implements UserDetailsService {
     }
 
     private TokenDto createToken(User user) {
-        Info info = Info.fromEntity(user);
 
-        return jwtProvider.createToken(info, user.getRole());
+        return jwtProvider.createToken(user);
     }
 
     private void validatePassword(String password, User user) {

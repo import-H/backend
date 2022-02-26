@@ -30,7 +30,7 @@ POST http://{{serverUrl}}/v1/login
 Content-Type: application/json
 
 {
-  "email": "abc@hongik.ac.kr",
+  "email": "p2062199@gmail.com",
   "password": "12341234"
 }
 > {%

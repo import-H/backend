@@ -1,10 +1,9 @@
 package com.importH.global.security;
 
-import com.importH.domain.user.token.TokenDto;
-import com.importH.domain.user.token.TokenDto.Info;
 import com.importH.domain.user.CustomUser;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
+import com.importH.domain.user.token.TokenDto;
 import com.importH.global.error.code.UserErrorCode;
 import com.importH.global.error.exception.JwtException;
 import com.importH.global.error.exception.UserException;
@@ -52,10 +51,10 @@ public class JwtProvider {
     }
 
     //JWT 토큰 생성
-    public TokenDto createToken(Info info, String role) {
+    public TokenDto createToken(User user) {
 
-        Claims claims = Jwts.claims().setSubject(String.valueOf(info.getId())); // JWT PALYLOAD 에 저장되는 정보단위
-        claims.put(ROLES, role);
+        Claims claims = Jwts.claims().setSubject(String.valueOf(user.getId())); // JWT PALYLOAD 에 저장되는 정보단위
+        claims.put(ROLES, user.getRole());
 
         Date now = new Date();
 
@@ -78,7 +77,12 @@ public class JwtProvider {
         return TokenDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .isNew(isNewUser(user))
                 .build();
+    }
+
+    private boolean isNewUser(User user) {
+        return user.getPathId() == null;
     }
 
     // Jwt 로 인증정보를 조회

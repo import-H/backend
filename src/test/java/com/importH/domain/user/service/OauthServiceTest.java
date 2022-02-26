@@ -52,7 +52,7 @@ class OauthServiceTest {
         given(oauthProviderRepository.findByProviderName(any())).willReturn(getOauthProvider());
         given(oauthAdapter.getToken(any(), any())).willReturn(OauthTokenResponse.builder().accessToken(ACCESS_TOKEN).build());
         given(oauthAdapter.getUserProfile(any(),any(),any())).willReturn(getSocialProfile("test@mail.com"));
-        given(jwtProvider.createToken(any(), any())).willReturn(getTokenDto());
+        given(jwtProvider.createToken(any())).willReturn(getTokenDto());
         given(userRepository.save(any())).willReturn(getUser());
 
         // when
@@ -67,7 +67,7 @@ class OauthServiceTest {
         verify(oauthAdapter, times(1)).getToken(any(), any());
         verify(oauthAdapter, times(1)).getUserProfile(any(), any(), any());
         verify(userRepository, times(1)).save(any());
-        verify(jwtProvider, times(1)).createToken(any(), any());
+        verify(jwtProvider, times(1)).createToken(any());
         verify(userRepository, times(1)).findByOauthId(any());
     }
 
@@ -80,7 +80,7 @@ class OauthServiceTest {
         given(oauthProviderRepository.findByProviderName(any())).willReturn(getOauthProvider());
         given(oauthAdapter.getToken(any(), any())).willReturn(OauthTokenResponse.builder().accessToken(ACCESS_TOKEN).build());
         given(oauthAdapter.getUserProfile(any(),any(),any())).willReturn(getSocialProfile("test@mail.com"));
-        given(jwtProvider.createToken(any(), any())).willReturn(getTokenDto());
+        given(jwtProvider.createToken(any())).willReturn(getTokenDto());
         given(userRepository.findByOauthId(any())).willReturn(Optional.ofNullable(getUser()));
 
         // when
@@ -95,7 +95,7 @@ class OauthServiceTest {
         verify(oauthAdapter, times(1)).getToken(any(), any());
         verify(oauthAdapter, times(1)).getUserProfile(any(), any(), any());
         verify(userRepository, times(1)).findByOauthId(any());
-        verify(jwtProvider, times(1)).createToken(any(), any());
+        verify(jwtProvider, times(1)).createToken(any());
         verify(userRepository, never()).save(any());
     }
 
@@ -121,7 +121,7 @@ class OauthServiceTest {
         verify(oauthAdapter, times(1)).getToken(any(), any());
         verify(oauthAdapter, times(1)).getUserProfile(any(), any(), any());
         verify(userRepository, times(1)).findByOauthId(any());
-        verify(jwtProvider, never()).createToken(any(), any());
+        verify(jwtProvider, never()).createToken(any());
         verify(userRepository, times(1)).findByOauthId(any());
         verify(userRepository, never()).save(any());
     }
@@ -135,7 +135,7 @@ class OauthServiceTest {
         given(oauthProviderRepository.findByProviderName(any())).willReturn(getOauthProvider());
         given(oauthAdapter.getToken(any(), any())).willReturn(OauthTokenResponse.builder().accessToken(ACCESS_TOKEN).build());
         given(oauthAdapter.getUserProfile(any(),any(),any())).willReturn(getSocialProfile("test@mail.com"));
-        given(jwtProvider.createToken(any(), any())).willReturn(getTokenDto());
+        given(jwtProvider.createToken(any())).willReturn(getTokenDto());
         given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(getUser()));
 
         // when
@@ -151,7 +151,7 @@ class OauthServiceTest {
         verify(oauthAdapter, times(1)).getUserProfile(any(), any(), any());
         verify(userRepository, never()).save(any());
         verify(userRepository, times(1)).findByEmail(any());
-        verify(jwtProvider, times(1)).createToken(any(), any());
+        verify(jwtProvider, times(1)).createToken(any());
         verify(userRepository, never()).findByOauthId(any());
     }
 

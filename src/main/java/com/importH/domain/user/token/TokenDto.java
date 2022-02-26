@@ -13,6 +13,9 @@ public class TokenDto {
     private String accessToken;
     private String refreshToken;
 
+    @Builder.Default
+    private boolean isNew = false;
+
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor

@@ -208,10 +208,9 @@ class SignServiceTest {
     void reissue_fail_1() throws Exception {
         // given
         TokenDto tokenDto = loginUser();
+        User admin = userRepository.findByNickname("test1").get();
 
-        Info info = getTokenClaims();
-
-        TokenDto newTokenDto = jwtProvider.createToken(info, "ADMIN");
+        TokenDto newTokenDto = jwtProvider.createToken(admin);
         tokenDto.setRefreshToken(newTokenDto.getRefreshToken());
 
         JwtErrorCode errorCode = JwtErrorCode.REFRESH_TOKEN_VALID;
