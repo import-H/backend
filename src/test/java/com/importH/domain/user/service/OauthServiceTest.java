@@ -62,7 +62,8 @@ class OauthServiceTest {
         //then
         assertThat(tokenDto)
                 .hasFieldOrProperty("accessToken")
-                .hasFieldOrProperty("refreshToken");
+                .hasFieldOrProperty("refreshToken")
+                .hasFieldOrProperty("new");
 
         verify(oauthAdapter, times(1)).getToken(any(), any());
         verify(oauthAdapter, times(1)).getUserProfile(any(), any(), any());
@@ -90,7 +91,8 @@ class OauthServiceTest {
         //then
         assertThat(tokenDto)
                 .hasFieldOrProperty("accessToken")
-                .hasFieldOrProperty("refreshToken");
+                .hasFieldOrProperty("refreshToken")
+                .hasFieldOrProperty("new");
 
         verify(oauthAdapter, times(1)).getToken(any(), any());
         verify(oauthAdapter, times(1)).getUserProfile(any(), any(), any());
@@ -145,7 +147,8 @@ class OauthServiceTest {
         //then
         assertThat(tokenDto)
                 .hasFieldOrProperty("accessToken")
-                .hasFieldOrProperty("refreshToken");
+                .hasFieldOrProperty("refreshToken")
+                .hasFieldOrProperty("new");
 
         verify(oauthAdapter, times(1)).getToken(any(), any());
         verify(oauthAdapter, times(1)).getUserProfile(any(), any(), any());

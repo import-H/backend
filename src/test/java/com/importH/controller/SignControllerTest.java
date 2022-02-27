@@ -3,13 +3,13 @@ package com.importH.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.importH.core.UserFactory;
 import com.importH.domain.user.dto.SignupDto;
+import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
-import com.importH.domain.user.service.OauthService;
-import com.importH.domain.user.token.TokenDto;
+import com.importH.domain.user.social.OauthAdapterImpl;
+import com.importH.domain.user.social.OauthTokenResponse;
+import com.importH.domain.user.social.SocialProfile;
 import com.importH.global.error.code.CommonErrorCode;
-import com.importH.global.error.code.SocialErrorCode;
 import com.importH.global.error.code.UserErrorCode;
-import com.importH.global.error.exception.SocialException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ class SignControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    OauthService oauthService;
+    OauthAdapterImpl oauthAdapter;
     @Autowired
     private ObjectMapper mapper;
     @Autowired
@@ -171,11 +171,14 @@ class SignControllerTest {
 
         // given
         String provider = "google";
-        given(oauthService.socialLogin(any(), any())).willReturn(getTokenDto());
+        given(oauthAdapter.getToken(any(),any())).willReturn(OauthTokenResponse.builder().build());
+        given(oauthAdapter.getUserProfile(any(), any(), any())).willReturn(socialProfile("테스트", "테스트@mail.com"));
+
 
         // when
         ResultActions perform = mvc.perform(get(OAUTH_URL + provider)
                 .param("code", "code"));
+
 
         //then
         perform
@@ -183,10 +186,38 @@ class SignControllerTest {
                 .andDo(print())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.accessToken").exists())
-                .andExpect(jsonPath("$.data.refreshToken").exists());
+                .andExpect(jsonPath("$.data.refreshToken").exists())
+                .andExpect(jsonPath("$.data.new").value(true));
 
     }
 
+    @Test
+    @DisplayName("[성공] 소셜 로그인 - 기존 계정 존재시 기존 계정으로 로그인")
+    void socialLogin_success_existUser() throws Exception {
+
+        // given
+        String provider = "google";
+        User user = userRepository.findByNickname("test1").get();
+
+        given(oauthAdapter.getToken(any(),any())).willReturn(OauthTokenResponse.builder().build());
+        given(oauthAdapter.getUserProfile(any(), any(), any())).willReturn(socialProfile("테스트", user.getEmail()));
+
+
+        // when
+        ResultActions perform = mvc.perform(get(OAUTH_URL + provider)
+                .param("code", "code"));
+
+
+        //then
+        perform
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.refreshToken").exists())
+                .andExpect(jsonPath("$.data.new").value(false));
+
+    }
 
     @Test
     @DisplayName("[실패] 소셜 로그인 - 사용자 정보에 이메일 , 이름 존재하지 않음")
@@ -194,7 +225,8 @@ class SignControllerTest {
 
         // given
         String provider = "google";
-        given(oauthService.socialLogin(any(), any())).willThrow(new SocialException(SocialErrorCode.SOCIAL_LOGIN_FAILED));
+        given(oauthAdapter.getToken(any(),any())).willReturn(OauthTokenResponse.builder().build());
+        given(oauthAdapter.getUserProfile(any(), any(), any())).willReturn(socialProfile(null, null));
 
         // when
         ResultActions perform = mvc.perform(get(OAUTH_URL + provider)
@@ -207,9 +239,8 @@ class SignControllerTest {
 
     }
 
-
-    private TokenDto getTokenDto() {
-        return TokenDto.builder().accessToken("accessToken").refreshToken("refreshToken").build();
+    private SocialProfile socialProfile(String name, String email) {
+        return SocialProfile.builder().name(name).email(email).oauthId("100").imageUrl("...").build();
     }
 
 
