@@ -76,6 +76,7 @@ class UserServiceTest {
                 .hasFieldOrPropertyWithValue("infoByEmail", user.getInfoAgree().isInfoByEmail())
                 .hasFieldOrPropertyWithValue("infoByWeb", user.getInfoAgree().isInfoByWeb())
                 .hasFieldOrPropertyWithValue("pathId", user.getPathId())
+                .hasFieldOrPropertyWithValue("oauthId", user.getOauthId())
                 .hasFieldOrPropertyWithValue("emailVerified", user.isEmailVerified());
 
     }
@@ -117,6 +118,7 @@ class UserServiceTest {
                 .hasFieldOrPropertyWithValue("personalUrl", request.getPersonalUrl())
                 .hasFieldOrPropertyWithValue("infoByEmail", request.isInfoByEmail())
                 .hasFieldOrPropertyWithValue("infoByWeb", request.isInfoByWeb())
+                .hasFieldOrPropertyWithValue("oauthId", user.getOauthId())
                 .hasFieldOrPropertyWithValue("emailVerified", user.isEmailVerified());
 
     }

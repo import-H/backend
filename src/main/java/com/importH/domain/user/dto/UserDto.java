@@ -67,12 +67,15 @@ public class UserDto {
         @ApiModelProperty(value = "개인 게시판 ID", example = "test1")
         private String pathId;
 
+        @ApiModelProperty(value = "소셜 로그인 ID")
+        private String oauthId;
+
+
         @ApiModelProperty(value = "이메일 수신 동의 여부", example = "true/false")
         private boolean infoByEmail;
 
         @ApiModelProperty(value = "웹 수신 동의 여부", example = "true/false")
         private boolean infoByWeb;
-
 
 
         @ApiModelProperty(value = "이메일 인증 여부", example = "true/false")
@@ -88,6 +91,7 @@ public class UserDto {
                     .personalUrl(user.getPersonalUrl())
                     .infoByEmail(user.getInfoAgree().isInfoByEmail())
                     .infoByWeb(user.getInfoAgree().isInfoByWeb())
+                    .oauthId(user.getOauthId())
                     .emailVerified(user.isEmailVerified())
                     .build();
         }
