@@ -2,12 +2,16 @@ package com.importH.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.importH.core.UserFactory;
+import com.importH.domain.user.dto.LoginDto;
 import com.importH.domain.user.dto.SignupDto;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
+import com.importH.domain.user.service.SignService;
 import com.importH.domain.user.social.OauthAdapterImpl;
 import com.importH.domain.user.social.OauthTokenResponse;
 import com.importH.domain.user.social.SocialProfile;
+import com.importH.domain.user.token.RefreshToken;
+import com.importH.domain.user.token.RefreshTokenRepository;
 import com.importH.global.error.code.CommonErrorCode;
 import com.importH.global.error.code.UserErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -22,21 +26,25 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 @TestPropertySource(locations = "classpath:/application-test.properties")
 class SignControllerTest {
 
+    public static final String V_1_LOGIN = "/v1/login";
     @Autowired
     private MockMvc mvc;
 
@@ -46,6 +54,12 @@ class SignControllerTest {
     private ObjectMapper mapper;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    SignService signService;
+
+    @MockBean
+    private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     private UserFactory userFactory;
@@ -237,6 +251,79 @@ class SignControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andDo(print());
 
+    }
+
+
+    @Test
+    @DisplayName("[성공] 로그인 - 정상적인 요청 ")
+    void login_success() throws Exception {
+        // given
+        User user = getNewUser();
+        LoginDto loginDto = getLoginDto(user, "12341234");
+
+        // when
+        ResultActions perform = mvc.perform(post(V_1_LOGIN)
+                .content(mapper.writeValueAsString(loginDto))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.refreshToken").exists());
+
+        verify(refreshTokenRepository, times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("[성공] 로그인 - 리프레시 토큰 저장이 아닌 업데이트되는 경우")
+    void login_success_update_refreshToken() throws Exception {
+        // given
+        User user = getNewUser();
+        LoginDto loginDto = getLoginDto(user, "12341234");
+        given(refreshTokenRepository.findByUserId(any())).willReturn(Optional.of(RefreshToken.builder().build()));
+
+        // when
+        ResultActions perform = mvc.perform(post(V_1_LOGIN)
+                .content(mapper.writeValueAsString(loginDto))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.accessToken").exists())
+                .andExpect(jsonPath("$.data.refreshToken").exists());
+
+        verify(refreshTokenRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("[실패] 로그인 실패 - 옳바르지 않은 패스워드")
+    void login_fail_different_Password() throws Exception {
+        // given
+        User user = getNewUser();
+        LoginDto loginDto = getLoginDto(user, "123412345");
+        UserErrorCode errorCode = UserErrorCode.EMAIL_LOGIN_FAILED;
+
+        // when
+        ResultActions perform = mvc.perform(post(V_1_LOGIN)
+                .content(mapper.writeValueAsString(loginDto))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        perform.andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.msg").value(errorCode.getDescription()));
+
+        verify(refreshTokenRepository, times(0)).save(any());
+    }
+
+    private User getNewUser() {
+        return userFactory.createNewAccount("테스트", "테스트", "테스트", true);
+    }
+
+    private LoginDto getLoginDto(User user, String password) {
+        return LoginDto.builder().email(user.getEmail()).password(password).build();
     }
 
     private SocialProfile socialProfile(String name, String email) {
