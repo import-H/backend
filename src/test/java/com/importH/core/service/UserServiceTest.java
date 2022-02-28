@@ -3,10 +3,11 @@ package com.importH.core.service;
 import com.importH.core.UserFactory;
 import com.importH.core.WithAccount;
 import com.importH.domain.user.dto.PasswordDto;
-import com.importH.domain.user.entity.User;
+import com.importH.domain.user.dto.SocialDto;
 import com.importH.domain.user.dto.UserDto.Request;
 import com.importH.domain.user.dto.UserDto.Response;
 import com.importH.domain.user.dto.UserDto.Response_findAllUsers;
+import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
 import com.importH.domain.user.service.UserService;
 import com.importH.global.error.code.UserErrorCode;
@@ -307,5 +308,59 @@ class UserServiceTest {
     }
 
 
+    @Test
+    @WithAccount("소셜로그인")
+    @DisplayName("[성공] 유저 게시판 id 생성 - 소셜 로그인 유저 이면서 게시판 아이디가 없는 경우")
+    void createPathId_success() throws Exception {
+        // given
+        SocialDto socialDto = getSocialDto();
+        User user = userRepository.findByNickname("소셜로그인").get();
+
+        // when
+        userService.createPathId(user.getId(),socialDto);
+
+        //then
+        assertThat(user)
+                .hasFieldOrPropertyWithValue("pathId", socialDto.getPathId());
+    }
+
+    private SocialDto getSocialDto() {
+        SocialDto socialDto = SocialDto.builder().pathId("social1").build();
+        return socialDto;
+    }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 유저 게시판 id 생성 - 소셜 로그인 유저가 아닌경우")
+    void createPathId_fail_notSocialUser() throws Exception {
+        // given
+        SocialDto socialDto = getSocialDto();
+        UserErrorCode err = UserErrorCode.NOT_CREATE_SOCIAL_PATH_ID;
+
+        // when
+        UserException exception = assertThrows(UserException.class, () -> userService.createPathId(user.getId(), socialDto));
+
+        //then
+        assertThat(exception)
+                .hasMessageContaining(err.getDescription());
+    }
+
+    @Test
+    @WithAccount("소셜로그인")
+    @DisplayName("[성공] 유저 게시판 id 생성 - 소셜 유저이나 게시판 아이디가 있는경우")
+    void createPathId_fail_havePathId() throws Exception {
+        // given
+        SocialDto socialDto = getSocialDto();
+        User user = userRepository.findByNickname("소셜로그인").get();
+        user.setPathId("social");
+        UserErrorCode err = UserErrorCode.NOT_CREATE_SOCIAL_PATH_ID;
+
+        // when
+        UserException exception = assertThrows(UserException.class, () -> userService.createPathId(user.getId(), socialDto));
+
+        //then
+        assertThat(exception)
+                .hasMessageContaining(err.getDescription());
+    }
 
 }

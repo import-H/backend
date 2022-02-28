@@ -1,6 +1,7 @@
 package com.importH.domain.user.service;
 
 import com.importH.domain.user.dto.PasswordDto;
+import com.importH.domain.user.dto.SocialDto;
 import com.importH.domain.user.dto.UserDto.Request;
 import com.importH.domain.user.dto.UserDto.Response;
 import com.importH.domain.user.dto.UserDto.Response_findAllUsers;
@@ -104,5 +105,28 @@ public class UserService {
         return users.stream()
                 .map(user -> Response_findAllUsers.fromEntity(user))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 소셜 로그인 게시판 ID 생성
+     */
+    @Transactional
+    public void createPathId(Long userId, SocialDto socialDto) {
+        User user = findById(userId);
+        if (!isSocialUser(user)) {
+            throw new UserException(NOT_CREATE_SOCIAL_PATH_ID);
+        }
+        user.setPathId(socialDto.getPathId());
+
+
+
+    }
+
+    private boolean isSocialUser(User user) {
+        return notHavePathId(user) && user.getOauthId() != null;
+    }
+
+    private boolean notHavePathId(User user) {
+        return user.getPathId() == null;
     }
 }

@@ -36,7 +36,8 @@ public class SecurityContextFactory implements WithSecurityContextFactory<WithAc
                     .role(nickname.equals("관리자") ? "ROLE_ADMIN" : "ROLE_USER")
                     .weekAgree(true)
                     .emailVerified(true)
-                    .pathId(nickname)
+                    .pathId(nickname.equals("소셜로그인") ? null : nickname)
+                    .oauthId(nickname.equals("소셜로그인") ? "social" : null)
                     .build();
 
             userRepository.save(user);

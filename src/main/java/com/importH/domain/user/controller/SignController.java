@@ -57,7 +57,7 @@ public class SignController {
     }
 
     @ApiOperation(value = "소셜 로그인", notes = "소셜 아이디로 로그인 및 회원가입을 합니다.")
-    @GetMapping("/oauth2/code/{provider}")
+    @GetMapping("/social/{provider}")
     public SingleResult<TokenDto> login(@ApiParam(value = "API 제공자" ,required = true, example = "google")@PathVariable String provider,
                                           @ApiParam(value = "외부 API 로 부터 받은 code" ,required = true) @RequestParam String code) {
         TokenDto loginResponse = oauthService.socialLogin(provider, code);

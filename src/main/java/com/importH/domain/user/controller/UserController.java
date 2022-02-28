@@ -2,6 +2,7 @@ package com.importH.domain.user.controller;
 
 import com.importH.domain.user.CurrentUser;
 import com.importH.domain.user.dto.PasswordDto;
+import com.importH.domain.user.dto.SocialDto;
 import com.importH.domain.user.dto.UserDto;
 import com.importH.domain.user.dto.UserDto.Request;
 import com.importH.domain.user.dto.UserDto.Response;
@@ -82,6 +83,21 @@ public class UserController {
 
         return responseService.getSuccessResult();
     }
+
+    @ApiOperation(value = "게시판 ID 생성", notes = "userId 회원의 게시판 id 를 생성합니다.")
+    @PutMapping("/{userId}/path-id")
+    public CommonResult createPathId
+            (@ApiParam(value = "회원 ID", required = true) @PathVariable Long userId,
+             @ApiParam(value = "게시판 주소 id 요청 DTO") @RequestBody @Validated SocialDto request,
+             BindingResult bindingResult) {
+
+        validParameter(bindingResult);
+
+        userService.createPathId(userId, request);
+
+        return responseService.getSuccessResult();
+    }
+
 
     @ApiOperation(value = "이메일 인증된 유저들 정보 불러오기", notes = "모든 유저 정보를 조회 합니다.")
     @GetMapping

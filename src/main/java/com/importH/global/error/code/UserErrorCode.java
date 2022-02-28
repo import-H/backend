@@ -18,7 +18,8 @@ public enum UserErrorCode implements ErrorCode{
     USER_PATH_ID_DUPLICATED("해당 주소 id 값은 사용중입니다.", 400),
     NOT_EQUALS_EMAIL_TOKEN("이메일 인증 토큰이 동일하지 않습니다.", 400),
     NOT_PASSED_HOUR("이메일 인증을 보낸지 1시간이 지나지 않았습니다.", 400),
-    NOT_VALID_EMAIL("옳바르지 않은 이메일 주소 입니다.", 400);
+    NOT_VALID_EMAIL("옳바르지 않은 이메일 주소 입니다.", 400),
+    NOT_CREATE_SOCIAL_PATH_ID("소셜 유저가 아니거나 게시판 ID가 존재합니다.", 400);
     private final String description;
     private final int status;
 }

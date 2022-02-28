@@ -163,7 +163,7 @@ class SignControllerTest {
         return dto;
     }
 
-    public static final String OAUTH_URL = "/v1/oauth2/code/";
+    public static final String OAUTH_URL = "/v1/social/";
 
     @Test
     @DisplayName("[성공] 소셜 로그인")

@@ -118,4 +118,8 @@ public class User extends BaseTimeEntity {
         this.profileImage = imageUrl;
         return this;
     }
+
+    public void setPathId(String pathId) {
+        this.pathId = pathId;
+    }
 }

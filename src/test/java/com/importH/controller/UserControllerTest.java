@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.importH.core.UserFactory;
 import com.importH.core.WithAccount;
 import com.importH.domain.user.dto.PasswordDto;
+import com.importH.domain.user.dto.SocialDto;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.dto.UserDto;
 import com.importH.domain.user.repository.UserRepository;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -282,8 +284,79 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.list[*].pathId").exists());
     }
 
+
+    @Test
+    @WithAccount("소셜로그인")
+    @DisplayName("[성공] 유저 게시판 id 생성 - 소셜 로그인 유저 이면서 게시판 아이디가 없는 경우")
+    void createPathId_success() throws Exception {
+        // given
+        SocialDto socialDto = getSocialDto();
+        User user = userRepository.findByNickname("소셜로그인").get();
+
+        // when
+        ResultActions perform = mockMvc.perform(put("/v1/users/" + user.getId() + "/path-id")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(socialDto)));
+
+        //then
+        perform
+                .andExpect(jsonPath("$.success").value(true));
+
+        assertThat(user.getPathId()).isNotNull();
+    }
+
+    @Test
+    @WithAccount("소셜로그인")
+    @DisplayName("[성공] 유저 게시판 id 생성 - 소셜 로그인 유저 이지만 게시판 아이디가 있는경우")
+    void createPathId_fail_exist_PathId() throws Exception {
+        // given
+        SocialDto socialDto = getSocialDto();
+        User user = userRepository.findByNickname("소셜로그인").get();
+        user.setPathId("social0");
+        UserErrorCode errorCode = UserErrorCode.NOT_CREATE_SOCIAL_PATH_ID;
+
+        // when
+        ResultActions perform = mockMvc.perform(put("/v1/users/" + user.getId() + "/path-id")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(socialDto)));
+
+        //then
+        perform
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.msg").value(errorCode.getDescription()));
+
+        assertThat(user.getPathId()).isNotEqualTo(socialDto.getPathId());
+
+    }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 유저 게시판 id 생성 - 소셜 로그인 유저가 아닌경우")
+    void createPathId_fail_not_socialLogin() throws Exception {
+        // given
+        SocialDto socialDto = getSocialDto();
+        User user = userRepository.findByNickname("테스트").get();
+        UserErrorCode errorCode = UserErrorCode.NOT_CREATE_SOCIAL_PATH_ID;
+
+        // when
+        ResultActions perform = mockMvc.perform(put("/v1/users/" + user.getId() + "/path-id")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(socialDto)));
+
+        //then
+        perform
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.msg").value(errorCode.getDescription()));
+
+    }
+
     private PasswordDto.Request getPasswordReq(String password, String confirmPassword) {
         return PasswordDto.Request.builder().password(password).confirmPassword(confirmPassword).build();
+    }
+
+    private SocialDto getSocialDto() {
+        SocialDto socialDto = SocialDto.builder().pathId("social1").build();
+        return socialDto;
     }
 
 }
