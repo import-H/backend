@@ -127,6 +127,9 @@ public class UserService {
         if (!isSocialUser(user)) {
             throw new UserException(NOT_CREATE_SOCIAL_PATH_ID);
         }
+        if (userRepository.existsByPathId(socialDto.getPathId())) {
+            throw new UserException(USER_PATH_ID_DUPLICATED);
+        }
         user.setPathId(socialDto.getPathId());
 
 

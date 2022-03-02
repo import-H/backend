@@ -26,7 +26,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(swaggerInfo()) // API Docu 및 작성자 정보 매핑
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.importH.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.importH"))
                 .paths(PathSelectors.any()) // controller package 전부
                 //.paths(PathSelectors.ant("/v1/**"))  // controller 패키지 내 v1만 택해서 할수도 있다.
                 .build()

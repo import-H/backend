@@ -318,7 +318,7 @@ class UserServiceTest {
     @DisplayName("[성공] 유저 게시판 id 생성 - 소셜 로그인 유저 이면서 게시판 아이디가 없는 경우")
     void createPathId_success() throws Exception {
         // given
-        SocialDto socialDto = getSocialDto();
+        SocialDto socialDto = getSocialDto("social1");
         User user = userRepository.findByNickname("소셜로그인").get();
 
         // when
@@ -329,17 +329,33 @@ class UserServiceTest {
                 .hasFieldOrPropertyWithValue("pathId", socialDto.getPathId());
     }
 
-    private SocialDto getSocialDto() {
-        SocialDto socialDto = SocialDto.builder().pathId("social1").build();
+    @Test
+    @WithAccount("소셜로그인")
+    @DisplayName("[성공] 유저 게시판 id 생성 - 해당 게시판 id 가 이미 존재하는경우")
+    void createPathId_fail_Duplicated_Path_Id() throws Exception {
+        // given
+        SocialDto socialDto = getSocialDto("t0");
+        User user = userRepository.findByNickname("소셜로그인").get();
+        UserErrorCode errorCode = UserErrorCode.USER_PATH_ID_DUPLICATED;
+        // when
+        UserException exception = assertThrows(UserException.class, () -> userService.createPathId(user.getId(), socialDto));
+
+        //then
+        assertThat(exception)
+                .hasMessageContaining(errorCode.getDescription());
+    }
+
+    private SocialDto getSocialDto(String pathId) {
+        SocialDto socialDto = SocialDto.builder().pathId(pathId).build();
         return socialDto;
     }
 
     @Test
     @WithAccount("테스트")
-    @DisplayName("[성공] 유저 게시판 id 생성 - 소셜 로그인 유저가 아닌경우")
+    @DisplayName("[실패] 유저 게시판 id 생성 - 소셜 로그인 유저가 아닌경우")
     void createPathId_fail_notSocialUser() throws Exception {
         // given
-        SocialDto socialDto = getSocialDto();
+        SocialDto socialDto = getSocialDto("social1");
         UserErrorCode err = UserErrorCode.NOT_CREATE_SOCIAL_PATH_ID;
 
         // when
@@ -352,10 +368,10 @@ class UserServiceTest {
 
     @Test
     @WithAccount("소셜로그인")
-    @DisplayName("[성공] 유저 게시판 id 생성 - 소셜 유저이나 게시판 아이디가 있는경우")
+    @DisplayName("[실패] 유저 게시판 id 생성 - 소셜 유저이나 게시판 아이디가 있는경우")
     void createPathId_fail_havePathId() throws Exception {
         // given
-        SocialDto socialDto = getSocialDto();
+        SocialDto socialDto = getSocialDto("social1");
         User user = userRepository.findByNickname("소셜로그인").get();
         user.setPathId("social");
         UserErrorCode err = UserErrorCode.NOT_CREATE_SOCIAL_PATH_ID;
