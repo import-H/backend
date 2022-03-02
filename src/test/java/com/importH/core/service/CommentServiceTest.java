@@ -16,7 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Optional;
 
@@ -38,6 +40,9 @@ class CommentServiceTest {
 
     @Mock
     PostService postService;
+
+    @Spy
+    ApplicationEventPublisher publisher;
 
     Post post;
     User user;

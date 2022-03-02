@@ -124,4 +124,8 @@ public class User extends BaseTimeEntity {
     public boolean hasProfileImage() {
         return getProfileImage() != null;
     }
+
+    public boolean isInfoByWeb() {
+        return infoAgree.isInfoByWeb();
+    }
 }

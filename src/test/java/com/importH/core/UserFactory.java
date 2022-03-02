@@ -1,5 +1,6 @@
 package com.importH.core;
 
+import com.importH.domain.user.entity.InfoAgree;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,17 @@ public class UserFactory {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+
     public User createNewAccount(String nickname, String email, String pathId, boolean emailVerified) {
+
+        return createNewAccount(nickname,email,pathId,emailVerified,false,false);
+    }
+
+    public User createNewAccount(String nickname, boolean infoByWeb, boolean infoByEmail) {
+        return createNewAccount(nickname, nickname, nickname, true, infoByWeb, infoByEmail);
+    }
+
+    public User createNewAccount(String nickname, String email, String pathId, boolean emailVerified, boolean infoByWeb , boolean infoByEmail) {
 
         return userRepository.save(User.builder()
                 .email(email)
@@ -26,6 +37,7 @@ public class UserFactory {
                 .pathId(pathId)
                 .emailVerified(emailVerified)
                 .weekAgree(true)
+                .infoAgree(new InfoAgree(infoByEmail,infoByWeb))
                 .build());
     }
 }

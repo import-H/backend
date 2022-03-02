@@ -6,7 +6,9 @@ import com.importH.domain.post.PostService;
 import com.importH.domain.user.entity.User;
 import com.importH.global.error.code.CommentErrorCode;
 import com.importH.global.error.exception.CommentException;
+import com.importH.global.event.PostUpdatedEventDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,8 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostService postService;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * 댓글 등록
@@ -30,6 +34,8 @@ public class CommentService {
         setCommentRelation(user, post, comment);
 
         saveComment(comment);
+
+        eventPublisher.publishEvent(new PostUpdatedEventDto(post,post.getTitle() + "게시글에 댓글이 달렸습니다."));
 
         return comment.getId();
     }

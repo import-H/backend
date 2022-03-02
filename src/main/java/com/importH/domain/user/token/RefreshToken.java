@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class RefreshToken extends BaseTimeEntity {
