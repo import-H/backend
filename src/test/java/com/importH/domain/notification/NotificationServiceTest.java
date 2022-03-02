@@ -2,6 +2,7 @@ package com.importH.domain.notification;
 
 import com.importH.domain.post.Post;
 import com.importH.domain.user.entity.User;
+import com.importH.domain.user.repository.UserRepository;
 import com.importH.global.event.PostUpdatedEventDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,6 +25,8 @@ class NotificationServiceTest {
 
     @Mock
     NotificationRepository notificationRepository;
+    @Mock
+    UserRepository userRepository;
 
     @InjectMocks
     NotificationService notificationService;
@@ -42,6 +48,27 @@ class NotificationServiceTest {
 
         verify(notificationRepository, times(1)).save(any());
 
+    }
+
+    @Test
+    @DisplayName("[성공] 알람 가져오기")
+    void findAllNotification_success() throws Exception {
+
+        // given
+        given(notificationRepository.findAllByUser(any())).willReturn(List.of(getNotification()));
+        given(userRepository.findById(any())).willReturn(Optional.of(User.builder().build()));
+
+        // when
+        List<NotificationDto.Response> responses = notificationService.findAll(any());
+
+        //then
+        assertThat(responses.get(0))
+                .hasFieldOrPropertyWithValue("title", getNotification().getTitle())
+                .hasFieldOrPropertyWithValue("link", getNotification().getLink())
+                .hasFieldOrPropertyWithValue("checked", getNotification().isChecked());
+
+        verify(notificationRepository, times(1)).findAllByUser(any());
+        verify(userRepository, times(1)).findById(any());
     }
 
     private Notification getNotification() {

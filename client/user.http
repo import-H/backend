@@ -12,7 +12,8 @@ Content-Type: application/json
   "introduction" : "소개입니다.",
   "personalUrl" : "http://cafe.naver.com",
   "infoByEmail" : true,
-  "infoByWeb" : true
+  "infoByWeb" : true,
+  "profileImage" : "{{serverUrl}}/{{imageURL}}"
 }
 
 ### 회원 탈퇴
@@ -28,6 +29,15 @@ Content-Type: application/json
   "password" : "12341234",
   "confirmPassword" : "12341234"
 
+}
+
+### 소셜 유저 path-id 생성
+PUT http://{{serverUrl}}/v1/users/1/path-id
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "pathId" : "test1234"
 }
 
 

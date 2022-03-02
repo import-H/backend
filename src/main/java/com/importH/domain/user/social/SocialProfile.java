@@ -21,6 +21,7 @@ public class SocialProfile {
                 .profileImage(imageUrl)
                 .role("ROLE_USER")
                 .weekAgree(true)
+                .emailVerified(true)
                 .build();
     }
 }

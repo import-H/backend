@@ -1,0 +1,4 @@
+### 로그인한 유저 모든 알림 조회하기
+
+GET http://{{serverUrl}}/v1/messages
+Authorization: {{Authorization}}

@@ -327,7 +327,7 @@ class SignControllerTest {
     }
 
     private SocialProfile socialProfile(String name, String email) {
-        return SocialProfile.builder().name(name).email(email).oauthId("100").imageUrl("...").build();
+        return SocialProfile.builder().name(name).email(email).oauthId("..").imageUrl("...").build();
     }
 
 
