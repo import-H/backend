@@ -122,6 +122,9 @@ public class PostService {
 
         Set<Tag> tags = tagService.getTags(postRequestDto.getTags());
 
+        //TODO 없어진 이미지들 삭제
+//        postRequestDto.getImages()
+
         validateAccount(user, findPost);
 
         return findPost.updatePost(postRequestDto, tags);
@@ -148,9 +151,6 @@ public class PostService {
 
         fileService.deletePostImages(findPost);
         postRepository.delete(findPost);
-
-        //TODO 이미지 서버에서 삭제
-
     }
 
 

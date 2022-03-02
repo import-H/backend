@@ -15,6 +15,7 @@ import javax.persistence.Id;
 public class Tag {
 
     @Id @GeneratedValue
+    @Column(name = "tag_id")
     private Long id;
 
     @Column(nullable = false, unique = true)

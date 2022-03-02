@@ -147,7 +147,7 @@ public class SignService implements UserDetailsService {
 
     private void saveRefreshToken(User user, TokenDto tokenDto, RefreshToken refreshToken) {
         if (refreshToken == null) {
-            RefreshToken newRefreshToken = RefreshToken.create(user.getId(), tokenDto.getRefreshToken());
+            RefreshToken newRefreshToken = RefreshToken.create(user, tokenDto.getRefreshToken());
             saveRefreshToken(newRefreshToken);
         } else {
             refreshToken.updateToken(tokenDto.getRefreshToken());
@@ -159,7 +159,7 @@ public class SignService implements UserDetailsService {
     }
 
     private RefreshToken getRefreshToken(User user) {
-        return tokenRepository.findByUserId(user.getId()).orElse(null);
+        return tokenRepository.findByUser(user).orElse(null);
     }
 
     private TokenDto createToken(User user) {

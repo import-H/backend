@@ -1,6 +1,7 @@
 package com.importH.domain.user.token;
 
 import com.importH.domain.BaseTimeEntity;
+import com.importH.domain.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,17 +15,20 @@ public class RefreshToken extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
+    @Column(name = "refresh_token_id")
     private Long id;
 
-    private Long userId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Lob
     @Column(nullable = false)
     private String token;
 
-    public static RefreshToken create(Long userId, String refreshToken) {
+    public static RefreshToken create(User user, String refreshToken) {
         return RefreshToken.builder()
-                .userId(userId)
+                .user(user)
                 .token(refreshToken)
                 .build();
     }

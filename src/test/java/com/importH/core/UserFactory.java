@@ -22,7 +22,7 @@ public class UserFactory {
                 .nickname(nickname)
                 .introduction("테스트 입니다.")
                 .personalUrl("http://.com")
-                .password(nickname + "asd")
+                .password(passwordEncoder.encode("12341234"))
                 .pathId(pathId)
                 .emailVerified(emailVerified)
                 .weekAgree(true)

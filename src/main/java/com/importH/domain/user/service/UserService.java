@@ -1,5 +1,6 @@
 package com.importH.domain.user.service;
 
+import com.importH.domain.image.FileService;
 import com.importH.domain.user.dto.PasswordDto;
 import com.importH.domain.user.dto.SocialDto;
 import com.importH.domain.user.dto.UserDto.Request;
@@ -27,6 +28,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final FileService fileService;
 
     /**
      * 유저 프로필 정보 조회
@@ -95,8 +98,16 @@ public class UserService {
     public void deleteUser(Long userId, User user) {
 
         User findUser = getValidatedUser(userId, user);
+        //TODO 프로필 이미지 삭제시 서버에서 삭제
+//        deleteProfileImage(user);
 
         findUser.delete();
+    }
+
+    private void deleteProfileImage(User user) {
+        if (user.hasProfileImage()) {
+            fileService.deleteImage(user.getStoreProfileImage());
+        }
     }
 
     public List<Response_findAllUsers> findAllUsers(Pageable pageable) {

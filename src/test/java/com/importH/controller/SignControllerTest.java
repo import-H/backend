@@ -281,7 +281,7 @@ class SignControllerTest {
         // given
         User user = getNewUser();
         LoginDto loginDto = getLoginDto(user, "12341234");
-        given(refreshTokenRepository.findByUserId(any())).willReturn(Optional.of(RefreshToken.builder().build()));
+        given(refreshTokenRepository.findByUser(any())).willReturn(Optional.of(RefreshToken.builder().build()));
 
         // when
         ResultActions perform = mvc.perform(post(V_1_LOGIN)

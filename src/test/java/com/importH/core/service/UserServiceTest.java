@@ -2,6 +2,7 @@ package com.importH.core.service;
 
 import com.importH.core.UserFactory;
 import com.importH.core.WithAccount;
+import com.importH.domain.image.FileService;
 import com.importH.domain.user.dto.PasswordDto;
 import com.importH.domain.user.dto.SocialDto;
 import com.importH.domain.user.dto.UserDto.Request;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
@@ -36,6 +38,9 @@ class UserServiceTest {
 
     @Autowired
     UserService userService;
+
+    @MockBean
+    FileService fileService;
 
     @Autowired
     UserFactory userFactory;
