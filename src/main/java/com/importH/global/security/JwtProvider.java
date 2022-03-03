@@ -5,7 +5,7 @@ import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
 import com.importH.domain.user.token.TokenDto;
 import com.importH.global.error.code.UserErrorCode;
-import com.importH.global.error.exception.JwtException;
+import com.importH.global.error.exception.SecurityException;
 import com.importH.global.error.exception.UserException;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
-import static com.importH.global.error.code.JwtErrorCode.AUTHENTICATION_ENTRYPOINT;
+import static com.importH.global.error.code.SecurityErrorCode.AUTHENTICATION_ENTRYPOINT;
 
 
 /**
@@ -92,7 +92,7 @@ public class JwtProvider {
         Claims claims = parseClaims(token);
 
         if (claims.get(ROLES) == null) {
-            throw new JwtException(AUTHENTICATION_ENTRYPOINT);
+            throw new SecurityException(AUTHENTICATION_ENTRYPOINT);
         }
 
         // 권한 정보가 없음
@@ -124,7 +124,7 @@ public class JwtProvider {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException | SignatureException e) {
+        } catch (java.lang.SecurityException | MalformedJwtException | SignatureException e) {
             log.error("잘못된 Jwt 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.error("만료된 토큰입니다.");

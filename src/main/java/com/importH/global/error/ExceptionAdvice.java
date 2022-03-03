@@ -1,5 +1,6 @@
 package com.importH.global.error;
 
+import com.importH.global.error.exception.SecurityException;
 import com.importH.global.response.ResponseService;
 import com.importH.global.response.CommonResult;
 import com.importH.global.error.code.ErrorCode;
@@ -43,11 +44,20 @@ public class ExceptionAdvice {
 
     }
 
-    @ExceptionHandler(JwtException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected CommonResult jwtException(HttpServletRequest request, JwtException e) {
+    @ExceptionHandler(NotificationException.class)
+    protected ResponseEntity notificationException(HttpServletRequest request, NotificationException e) {
         printError(request, e.getErrorCode());
-        return responseService.getFailResult(e.getErrorCode());
+        return ResponseEntity
+                .status(e.getErrorCode().getStatus())
+                .body(responseService.getFailResult(e.getErrorCode()));
+    }
+
+    @ExceptionHandler(SecurityException.class)
+    protected ResponseEntity securityException(HttpServletRequest request, SecurityException e) {
+        printError(request, e.getErrorCode());
+        return ResponseEntity
+                .status(e.getErrorCode().getStatus())
+                .body(responseService.getFailResult(e.getErrorCode()));
     }
 
     @ExceptionHandler(PostException.class)

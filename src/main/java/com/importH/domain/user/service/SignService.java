@@ -3,14 +3,15 @@ package com.importH.domain.user.service;
 import com.importH.domain.user.CustomUser;
 import com.importH.domain.user.dto.EmailDto;
 import com.importH.domain.user.dto.SignupDto;
+import com.importH.domain.user.entity.InfoAgree;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
 import com.importH.domain.user.token.RefreshToken;
 import com.importH.domain.user.token.RefreshTokenRepository;
 import com.importH.domain.user.token.TokenDto;
-import com.importH.global.error.code.JwtErrorCode;
+import com.importH.global.error.code.SecurityErrorCode;
 import com.importH.global.error.code.UserErrorCode;
-import com.importH.global.error.exception.JwtException;
+import com.importH.global.error.exception.SecurityException;
 import com.importH.global.error.exception.UserException;
 import com.importH.global.security.JwtProvider;
 import io.jsonwebtoken.Claims;
@@ -46,7 +47,7 @@ public class SignService implements UserDetailsService {
     }
 
     private void initAccount() {
-        userRepository.save(User.builder().nickname("test").email("p2062199@gmail.com").password(passwordEncoder.encode("12341234")).role("ROLE_USER").oauthId("100").emailCheckToken("5fde96c1-46d0-464b-84e3-478170402815").build());
+        userRepository.save(User.builder().nickname("test").email("p2062199@gmail.com").password(passwordEncoder.encode("12341234")).role("ROLE_USER").oauthId("100").emailCheckToken("5fde96c1-46d0-464b-84e3-478170402815").infoAgree(new InfoAgree(true,true)).build());
         userRepository.save(User.builder().nickname("관리자").email("관리자").password(passwordEncoder.encode("1234")).role("ROLE_ADMIN").emailVerified(true).build());
     }
 
@@ -214,7 +215,7 @@ public class SignService implements UserDetailsService {
             !isValidationRefreshToken(requestRefreshToken) ||
             !isEqualsRefreshToken(refreshToken, requestRefreshToken)) {
 
-            throw new JwtException(JwtErrorCode.REFRESH_TOKEN_VALID);
+            throw new SecurityException(SecurityErrorCode.REFRESH_TOKEN_VALID);
         }
     }
 

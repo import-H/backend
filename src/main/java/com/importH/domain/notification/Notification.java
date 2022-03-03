@@ -46,5 +46,9 @@ public class Notification extends BaseTimeEntity {
     }
 
 
+    public void checked() {
+        this.checked = true;
+    }
+
 
 }

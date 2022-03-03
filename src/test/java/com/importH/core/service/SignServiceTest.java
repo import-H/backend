@@ -8,9 +8,9 @@ import com.importH.domain.user.service.SignService;
 import com.importH.domain.user.dto.SignupDto;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
-import com.importH.global.error.code.JwtErrorCode;
+import com.importH.global.error.code.SecurityErrorCode;
 import com.importH.global.error.code.UserErrorCode;
-import com.importH.global.error.exception.JwtException;
+import com.importH.global.error.exception.SecurityException;
 import com.importH.global.error.exception.UserException;
 import com.importH.global.security.JwtProvider;
 import io.jsonwebtoken.Claims;
@@ -213,10 +213,10 @@ class SignServiceTest {
         TokenDto newTokenDto = jwtProvider.createToken(admin);
         tokenDto.setRefreshToken(newTokenDto.getRefreshToken());
 
-        JwtErrorCode errorCode = JwtErrorCode.REFRESH_TOKEN_VALID;
+        SecurityErrorCode errorCode = SecurityErrorCode.REFRESH_TOKEN_VALID;
 
         // when
-        JwtException exception = assertThrows(JwtException.class, () -> signService.reissue(tokenDto));
+        SecurityException exception = assertThrows(SecurityException.class, () -> signService.reissue(tokenDto));
 
         //then
         assertThat(exception)

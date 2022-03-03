@@ -48,7 +48,7 @@ public class SecurityContextFactory implements WithSecurityContextFactory<WithAc
         UserDetails userDetailsService = signService.loadUserByUsername(user.getEmail());
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                userDetailsService, userDetailsService.getPassword(), List.of(new SimpleGrantedAuthority(user.getRole()))
+                userDetailsService, "", List.of(new SimpleGrantedAuthority(user.getRole()))
         );
 
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();

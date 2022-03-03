@@ -2,3 +2,12 @@
 
 GET http://{{serverUrl}}/v1/messages
 Authorization: {{Authorization}}
+
+> {%
+client.global.set("messageId", response.body.list[0].id);
+%}
+
+### 알림 읽기
+
+GET http://{{serverUrl}}/v1/messages/{{messageId}}
+Authorization: {{Authorization}}

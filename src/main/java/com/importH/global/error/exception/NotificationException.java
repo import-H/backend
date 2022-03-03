@@ -4,11 +4,11 @@ import com.importH.global.error.code.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class JwtException extends RuntimeException {
+public class NotificationException extends RuntimeException {
     ErrorCode errorCode;
     String errorMessage;
 
-    public JwtException(ErrorCode errorCode) {
+    public NotificationException(ErrorCode errorCode) {
         super(errorCode.getDescription());
         this.errorCode = errorCode;
         this.errorMessage = errorCode.getDescription();
