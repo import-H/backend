@@ -1,6 +1,6 @@
 package com.importH.domain.notification;
 
-import com.importH.domain.notification.NotificationDto.Response;
+import com.importH.domain.notification.NotificationDto.ResponseAll;
 import com.importH.domain.user.entity.User;
 import com.importH.global.error.code.SecurityErrorCode;
 import com.importH.global.error.exception.NotificationException;
@@ -30,12 +30,12 @@ public class NotificationService {
         return notificationRepository.save(notification).getId();
     }
 
-    public List<Response> findAll(User user) {
+    public List<ResponseAll> findAll(User user) {
 
 
         List<Notification> notifications = notificationRepository.findAllByUser(user);
 
-        return notifications.stream().map(notification -> Response.FromEntity(notification))
+        return notifications.stream().map(notification -> ResponseAll.FromEntity(notification))
                 .collect(Collectors.toList());
     }
 

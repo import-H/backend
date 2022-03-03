@@ -28,7 +28,7 @@ public class NotificationController {
 
     @ApiOperation(value = "알림 가져오기", notes = "로그인한 유저의 알람 목록을 가져옵니다.")
     @GetMapping
-    public ListResult<NotificationDto.Response> findAllNotification(
+    public ListResult<NotificationDto.ResponseAll> findAllNotification(
             @ApiIgnore @CurrentUser User user
             ) {
         return responseService.getListResult(notificationService.findAll(user));

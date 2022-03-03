@@ -1,6 +1,7 @@
 package com.importH.domain.notification;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -9,26 +10,31 @@ import java.time.LocalDateTime;
 public class NotificationDto {
 
     @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @AllArgsConstructor
     @Builder
-    public static class Response {
+    public static class ResponseAll {
 
+        @ApiModelProperty(value = "알림 id", example = "1")
         private Long id;
+
+        @ApiModelProperty(value = "알림 제목", example = "...게시글에 댓글이 달렸습니다.")
         private String title;
-        private String link;
+
+        @ApiModelProperty(value = "생성 시간")
         private LocalDateTime createdAt;
+
+
+        @ApiModelProperty(value = "알림 확인 여부", example = "true")
         private boolean checked;
 
-        public static Response FromEntity(Notification notification) {
-            return Response.builder()
+        public static ResponseAll FromEntity(Notification notification) {
+            return ResponseAll.builder()
                     .id(notification.getId())
                     .title(notification.getTitle())
-                    .link(notification.getLink())
                     .createdAt(notification.getCreatedAt())
                     .checked(notification.isChecked())
                     .build();
         }
-
     }
+
+
 }

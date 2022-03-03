@@ -18,6 +18,6 @@ public class PostUpdatedEventDto{
     }
 
     public String getUri() {
-        return "/v1/posts/" + post.getId();
+        return post.getType() + "/" + post.getId();
     }
 }

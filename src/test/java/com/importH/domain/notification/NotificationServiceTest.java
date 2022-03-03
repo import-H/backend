@@ -64,12 +64,11 @@ class NotificationServiceTest {
         given(notificationRepository.findAllByUser(any())).willReturn(List.of(getNotification()));
 
         // when
-        List<NotificationDto.Response> responses = notificationService.findAll(any());
+        List<NotificationDto.ResponseAll> respons = notificationService.findAll(any());
 
         //then
-        assertThat(responses.get(0))
+        assertThat(respons.get(0))
                 .hasFieldOrPropertyWithValue("title", getNotification().getTitle())
-                .hasFieldOrPropertyWithValue("link", getNotification().getLink())
                 .hasFieldOrPropertyWithValue("checked", getNotification().isChecked());
 
         verify(notificationRepository, times(1)).findAllByUser(any());

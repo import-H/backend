@@ -73,7 +73,6 @@ class NotificationControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.list[*]", hasSize(quantity)))
                 .andExpect(jsonPath("$.list[*].id").exists())
-                .andExpect(jsonPath("$.list[*].link").exists())
                 .andExpect(jsonPath("$.list[*].title").exists())
                 .andExpect(jsonPath("$.list[*].checked").exists());
 
