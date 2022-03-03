@@ -9,6 +9,7 @@ import com.importH.domain.user.entity.User;
 import com.importH.domain.user.dto.UserDto;
 import com.importH.domain.user.repository.UserRepository;
 import com.importH.global.error.code.CommonErrorCode;
+import com.importH.global.error.code.SecurityErrorCode;
 import com.importH.global.error.code.UserErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,7 +79,7 @@ class UserControllerTest {
     void getUserInfo_fail() throws Exception {
         // given
         User another = userRepository.findByNickname("test1").get();
-        UserErrorCode errorCode = UserErrorCode.NOT_EQUALS_USER;
+        SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
 
         // when
         ResultActions perform = mockMvc.perform(get("/v1/users/" + another.getId()));
@@ -185,7 +186,7 @@ class UserControllerTest {
     void deleteUser_fail() throws Exception {
         // given
         User another = userRepository.findByNickname("test1").get();
-        UserErrorCode errorCode = UserErrorCode.NOT_EQUALS_USER;
+        SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
 
         // when
         ResultActions perform = mockMvc.perform(delete("/v1/users/" + another.getId()));
@@ -222,7 +223,7 @@ class UserControllerTest {
         // given
         User user = userRepository.findByNickname("test1").get();
         PasswordDto.Request request = getPasswordReq("testtest", "testtest");
-        UserErrorCode err = UserErrorCode.NOT_EQUALS_USER;
+        SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
 
         // when
         ResultActions perform = mockMvc.perform(
@@ -233,7 +234,7 @@ class UserControllerTest {
         //then
         perform.andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.msg").value(err.getDescription()));
+                .andExpect(jsonPath("$.msg").value(errorCode.getDescription()));
     }
 
     @Test

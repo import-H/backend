@@ -8,8 +8,10 @@ import com.importH.domain.post.Post;
 import com.importH.domain.post.PostService;
 import com.importH.domain.user.entity.User;
 import com.importH.global.error.code.CommentErrorCode;
+import com.importH.global.error.code.SecurityErrorCode;
 import com.importH.global.error.exception.CommentException;
 import com.importH.global.error.exception.PostException;
+import com.importH.global.error.exception.SecurityException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -139,18 +141,18 @@ class CommentServiceTest {
         Request updateRequest = getRequest("댓글 입니다.2");
         Comment comment = getComment(request,post,user);
         User another = getUser(10L);
-        CommentErrorCode err = CommentErrorCode.NOT_EQUALS_USER;
+        SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
 
         given(postService.findByPostId(any())).willReturn(post);
         given(commentRepository.findById(any())).willReturn(Optional.of(comment));
 
         // when
-        CommentException exception = assertThrows(CommentException.class, () -> commentService.updateComment(post.getId(), comment.getId(), another, updateRequest));
+        SecurityException exception = assertThrows(SecurityException.class, () -> commentService.updateComment(post.getId(), comment.getId(), another, updateRequest));
 
         //then
         assertThat(exception)
-                .hasFieldOrPropertyWithValue("errorCode", err)
-                .hasFieldOrPropertyWithValue("errorMessage",err.getDescription());
+                .hasFieldOrPropertyWithValue("errorCode", errorCode)
+                .hasFieldOrPropertyWithValue("errorMessage",errorCode.getDescription());
 
     }
 
@@ -182,17 +184,17 @@ class CommentServiceTest {
         given(postService.findByPostId(any())).willReturn(post);
         given(commentRepository.findById(any())).willReturn(Optional.of(comment));
 
-        CommentErrorCode err = CommentErrorCode.NOT_EQUALS_USER;
+        SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
 
         // when
-        CommentException exception = assertThrows(CommentException.class, () -> {
+        SecurityException exception = assertThrows(SecurityException.class, () -> {
             commentService.deleteComment(post.getId(), comment.getId(), user);
         });
 
         //then
         assertThat(exception)
-                .hasFieldOrPropertyWithValue("errorCode", err)
-                .hasFieldOrPropertyWithValue("errorMessage",err.getDescription());
+                .hasFieldOrPropertyWithValue("errorCode", errorCode)
+                .hasFieldOrPropertyWithValue("errorMessage",errorCode.getDescription());
 
 
         verify(commentRepository, never()).delete(any());

@@ -13,6 +13,7 @@ import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
 import com.importH.global.error.code.CommentErrorCode;
 import com.importH.global.error.code.PostErrorCode;
+import com.importH.global.error.code.SecurityErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -154,7 +155,7 @@ class CommentControllerTest {
         Long commentId = commentService.registerComment(post.getId(), another, getRequest("테스트 댓글"));
         Request request = getRequest("테스트 댓글 2");
         Comment comment = commentRepository.findById(commentId).get();
-        CommentErrorCode err = CommentErrorCode.NOT_EQUALS_USER;
+        SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
 
         // when
         ResultActions perform = mockMvc.perform(put("/v1/posts/" + post.getId() + "/comments/" + commentId)
@@ -164,7 +165,7 @@ class CommentControllerTest {
         //then
         perform.andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.msg").value(err.getDescription()));
+                .andExpect(jsonPath("$.msg").value(errorCode.getDescription()));
 
 
         assertThat(comment.getContent())

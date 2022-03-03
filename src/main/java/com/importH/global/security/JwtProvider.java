@@ -2,25 +2,20 @@ package com.importH.global.security;
 
 import com.importH.domain.user.CustomUser;
 import com.importH.domain.user.entity.User;
-import com.importH.domain.user.repository.UserRepository;
 import com.importH.domain.user.token.TokenDto;
-import com.importH.global.error.code.UserErrorCode;
 import com.importH.global.error.exception.SecurityException;
-import com.importH.global.error.exception.UserException;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 
 import static com.importH.global.error.code.SecurityErrorCode.AUTHENTICATION_ENTRYPOINT;
 
@@ -43,7 +38,7 @@ public class JwtProvider {
     private Long accessTokenValidTime = 24 * 60 * 60 * 1000L; // 30 min // 24 hours
     private Long refreshTokenValidTime = 145 * 24 * 60 * 60 * 1000L; // 14day
 
-    private final UserRepository userRepository;
+    private final CustomUserDetailsService userDetailsService;
 
     @PostConstruct
     protected void init() {
@@ -95,10 +90,8 @@ public class JwtProvider {
             throw new SecurityException(AUTHENTICATION_ENTRYPOINT);
         }
 
-        // 권한 정보가 없음
-        User user = userRepository.findById(Long.valueOf(claims.getSubject()))
-                .orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_USERID));
-        return new UsernamePasswordAuthenticationToken(new CustomUser(user), "", List.of(new SimpleGrantedAuthority(user.getRole())));
+        CustomUser customUser = (CustomUser) userDetailsService.loadUserByUsername(claims.getSubject());
+        return new UsernamePasswordAuthenticationToken(customUser, "", customUser.getAuthorities());
     }
 
     // jwt 에서 회원 구분 PK 추출

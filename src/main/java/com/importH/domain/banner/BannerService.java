@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.importH.global.error.code.BannerErrorCode.NOT_AUTHORITY_ACCESS;
 import static com.importH.global.error.code.BannerErrorCode.NOT_FOUND_BANNER;
 
 
@@ -27,9 +26,8 @@ public class BannerService {
 
 
     @Transactional
-    public Response registerBanner(Request bannerDto, String role) {
+    public Response registerBanner(Request bannerDto) {
 
-        isAdmin(role);
         Banner banner = bannerDto.toEntity();
         banner.setTags(tagService.getTags(bannerDto.getTags()));
 
@@ -41,11 +39,7 @@ public class BannerService {
         return bannerRepository.save(banner);
     }
 
-    private void isAdmin(String role) {
-        if (!role.equals("ROLE_ADMIN")) {
-            throw new BannerException(NOT_AUTHORITY_ACCESS);
-        }
-    }
+
 
     public Banner findById(Long bannerId) {
         return bannerRepository.findById(bannerId).orElseThrow(() -> new BannerException(NOT_FOUND_BANNER));
@@ -58,9 +52,8 @@ public class BannerService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteBanner(Long bannerId, String role) {
+    public void deleteBanner(Long bannerId) {
 
-        isAdmin(role);
         Banner banner = findById(bannerId);
         fileService.deleteImage(banner.getStoreImageUrl());
         bannerRepository.delete(banner);

@@ -8,6 +8,8 @@ import com.importH.domain.user.dto.UserDto.Response;
 import com.importH.domain.user.dto.UserDto.Response_findAllUsers;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
+import com.importH.global.error.code.SecurityErrorCode;
+import com.importH.global.error.exception.SecurityException;
 import com.importH.global.error.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -49,7 +51,7 @@ public class UserService {
 
     private void isSameUser(User user, User findUser) {
         if(!findUser.equals(user)) {
-            throw new UserException(NOT_EQUALS_USER);
+            throw new SecurityException(SecurityErrorCode.ACCESS_DENIED);
         }
     }
 

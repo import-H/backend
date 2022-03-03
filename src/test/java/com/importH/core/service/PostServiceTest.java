@@ -11,7 +11,9 @@ import com.importH.domain.tag.TagDto;
 import com.importH.domain.tag.TagService;
 import com.importH.domain.user.entity.User;
 import com.importH.global.error.code.PostErrorCode;
+import com.importH.global.error.code.SecurityErrorCode;
 import com.importH.global.error.exception.PostException;
+import com.importH.global.error.exception.SecurityException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -172,10 +174,10 @@ class PostServiceTest {
         PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1", FREE);
         User test2 = User.builder().nickname("test2").build();
         // when
-        PostException postException = assertThrows(PostException.class, () -> postService.updatePost(test2, post.getId(), request));
+        SecurityException postException = assertThrows(SecurityException.class, () -> postService.updatePost(test2, post.getId(), request));
 
         //then
-        assertThat(postException).hasMessageContaining(PostErrorCode.NOT_ACCORD_ACCOUNT.getDescription());
+        assertThat(postException).hasMessageContaining(SecurityErrorCode.ACCESS_DENIED.getDescription());
     }
 
     @Test
@@ -197,10 +199,10 @@ class PostServiceTest {
         // given
         User test2 = User.builder().nickname("test2").build();
         // when
-        PostException postException = assertThrows(PostException.class, () -> postService.deletePost(test2, post.getId()));
+        SecurityException postException = assertThrows(SecurityException.class, () -> postService.deletePost(test2, post.getId()));
 
         //then
-        assertThat(postException).hasMessageContaining(PostErrorCode.NOT_ACCORD_ACCOUNT.getDescription());
+        assertThat(postException).hasMessageContaining(SecurityErrorCode.ACCESS_DENIED.getDescription());
 
     }
 

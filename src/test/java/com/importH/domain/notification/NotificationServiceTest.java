@@ -83,7 +83,7 @@ class NotificationServiceTest {
         given(notificationRepository.findById(any())).willReturn(Optional.of(getNotification()));
 
         // when
-        String uri = notificationService.checkNotification(any(), 100L);
+        String uri = notificationService.checkNotification(getNotification().getUser(), 100L);
 
         //then
         assertThat(uri).isEqualTo(getNotification().getLink());

@@ -5,7 +5,9 @@ import com.importH.domain.post.Post;
 import com.importH.domain.post.PostService;
 import com.importH.domain.user.entity.User;
 import com.importH.global.error.code.CommentErrorCode;
+import com.importH.global.error.code.SecurityErrorCode;
 import com.importH.global.error.exception.CommentException;
+import com.importH.global.error.exception.SecurityException;
 import com.importH.global.event.PostUpdatedEventDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -65,7 +67,7 @@ public class CommentService {
 
     private void canModifiableComment(User user, Post post, Comment comment) {
         if (!isEqualsAccount(user, comment)) {
-            throw new CommentException(CommentErrorCode.NOT_EQUALS_USER);
+            throw new SecurityException(SecurityErrorCode.ACCESS_DENIED);
         }
         if (!isEqualsPost(post, comment)) {
             throw new CommentException(CommentErrorCode.NOT_EQUALS_POST);

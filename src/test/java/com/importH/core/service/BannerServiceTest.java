@@ -54,7 +54,7 @@ class BannerServiceTest {
         when(bannerRepository.save(any())).thenReturn(getEntity(req));
         when(tagService.getTags(any())).thenReturn(req.getTags().stream().map(tagDto -> Tag.builder().name(tagDto.getName()).build()).collect(Collectors.toSet()));
 
-        Response response = bannerService.registerBanner(req,"ROLE_ADMIN");
+        Response response = bannerService.registerBanner(req);
 
         //then
         assertThat(response)
@@ -73,23 +73,23 @@ class BannerServiceTest {
 
     }
 
-    @Test
+/*    @Test
     @DisplayName("[실패] 배너 등록 - 권한없는 사용자")
     void registerBanner_fail() throws Exception {
         // given
         Request req = getRequest();
-        BannerErrorCode err = BannerErrorCode.NOT_AUTHORITY_ACCESS;
+        SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
 
         // when
-        BannerException bannerException = assertThrows(BannerException.class, () -> bannerService.registerBanner(req, "ROLE_USER"));
+        BannerException bannerException = assertThrows(BannerException.class, () -> bannerService.registerBanner(req));
 
         //then
         assertThat(bannerException)
-                .hasFieldOrPropertyWithValue("errorCode", err)
-                .hasFieldOrPropertyWithValue("errorMessage",err.getDescription());
+                .hasFieldOrPropertyWithValue("errorCode", errorCode)
+                .hasFieldOrPropertyWithValue("errorMessage",errorCode.getDescription());
 
         verify(bannerRepository, never()).save(any());
-    }
+    }*/
 
     @Test
     @DisplayName("[성공] 배너 조회 성공")
@@ -127,7 +127,7 @@ class BannerServiceTest {
         when(bannerRepository.findById(any())).thenReturn(Optional.of(getEntity(getRequest())));
 
         // when
-        bannerService.deleteBanner(banner.getId(), role);
+        bannerService.deleteBanner(banner.getId());
 
         //then
         verify(bannerRepository, times(1)).delete(any());
@@ -135,6 +135,7 @@ class BannerServiceTest {
     }
 
 
+/*
     @Test
     @DisplayName("[성공] 배너 삭제 실패 - 관리자가 아닌 일반 유저가 접근시")
     void deleteBanner_fail() throws Exception {
@@ -142,18 +143,19 @@ class BannerServiceTest {
         // given
         String role = "ROLE_USER";
         Banner banner = getEntity(getRequest());
-        BannerErrorCode err = BannerErrorCode.NOT_AUTHORITY_ACCESS;
+        SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
 
         // when
-        BannerException exception = assertThrows(BannerException.class, () -> bannerService.deleteBanner(banner.getId(), role));
+        BannerException exception = assertThrows(BannerException.class, () -> bannerService.deleteBanner(banner.getId()));
 
         //then
         assertThat(exception)
-                .hasFieldOrPropertyWithValue("errorCode", err)
-                .hasFieldOrPropertyWithValue("errorMessage",err.getDescription());
+                .hasFieldOrPropertyWithValue("errorCode", errorCode)
+                .hasFieldOrPropertyWithValue("errorMessage",errorCode.getDescription());
 
         verify(bannerRepository, never()).delete(any());
     }
+*/
 
     @Test
     @DisplayName("[성공] 배너 삭제 실패 - bannerId 에 해당하는 배너가 없을시")
@@ -166,7 +168,7 @@ class BannerServiceTest {
         BannerErrorCode err = BannerErrorCode.NOT_FOUND_BANNER;
 
         // when
-        BannerException exception = assertThrows(BannerException.class, () -> bannerService.deleteBanner(banner.getId(), role));
+        BannerException exception = assertThrows(BannerException.class, () -> bannerService.deleteBanner(banner.getId()));
 
         //then
         assertThat(exception)

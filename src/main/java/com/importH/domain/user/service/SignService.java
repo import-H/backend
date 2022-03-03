@@ -1,6 +1,5 @@
 package com.importH.domain.user.service;
 
-import com.importH.domain.user.CustomUser;
 import com.importH.domain.user.dto.EmailDto;
 import com.importH.domain.user.dto.SignupDto;
 import com.importH.domain.user.entity.InfoAgree;
@@ -17,9 +16,6 @@ import com.importH.global.security.JwtProvider;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +28,7 @@ import static com.importH.global.error.code.UserErrorCode.*;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class SignService implements UserDetailsService {
+public class SignService {
 
     private final UserRepository userRepository;
 
@@ -49,16 +45,6 @@ public class SignService implements UserDetailsService {
     private void initAccount() {
         userRepository.save(User.builder().nickname("test").email("p2062199@gmail.com").password(passwordEncoder.encode("12341234")).role("ROLE_USER").oauthId("100").emailCheckToken("5fde96c1-46d0-464b-84e3-478170402815").infoAgree(new InfoAgree(true,true)).build());
         userRepository.save(User.builder().nickname("관리자").email("관리자").password(passwordEncoder.encode("1234")).role("ROLE_ADMIN").emailVerified(true).build());
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = findByEmail(email);
-        return new CustomUser(user);
-    }
-
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
     }
 
     /** 회원가입 */

@@ -7,7 +7,9 @@ import com.importH.domain.tag.TagDto;
 import com.importH.domain.tag.TagService;
 import com.importH.domain.user.entity.User;
 import com.importH.global.error.code.PostErrorCode;
+import com.importH.global.error.code.SecurityErrorCode;
 import com.importH.global.error.exception.PostException;
+import com.importH.global.error.exception.SecurityException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -47,7 +49,7 @@ public class PostService {
     }
 
     private void validateType(User user, Post post) {
-        if (isPathId(user, post) || isExistType(post)) return;
+        if (isvalidPathId(user, post) || isExistType(post)) return;
         throw new PostException(PostErrorCode.NOT_EXIST_TYPE);
     }
 
@@ -56,7 +58,7 @@ public class PostService {
                 .anyMatch(postType -> postType.getType().equals(post.getType()));
     }
 
-    private boolean isPathId(User user, Post post) {
+    private boolean isvalidPathId(User user, Post post) {
         if (user.getPathId() != null && user.getPathId().equals(post.getType())) {
             return true;
         }
@@ -132,7 +134,7 @@ public class PostService {
 
     private void validateAccount(User user, Post findPost) {
         if (!isEqualsAccount(user, findPost)) {
-            throw new PostException(PostErrorCode.NOT_ACCORD_ACCOUNT);
+            throw new SecurityException(SecurityErrorCode.ACCESS_DENIED);
         }
     }
 

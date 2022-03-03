@@ -15,6 +15,7 @@ import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
 import com.importH.global.error.code.CommonErrorCode;
 import com.importH.global.error.code.PostErrorCode;
+import com.importH.global.error.code.SecurityErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -335,7 +336,7 @@ class PostControllerTest {
     void updatePost_fail() throws Exception {
         // given
         PostDto.Request request = getRequest("테스트2", "테스트2", "free", "스터디1","자바1");
-        PostErrorCode notAccordAccount = PostErrorCode.NOT_ACCORD_ACCOUNT;
+        SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
 
         // when
         ResultActions perform = mockMvc.perform(put(V_1_POSTS + "/" + post.getId())
@@ -345,7 +346,7 @@ class PostControllerTest {
         //then
         perform.andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.msg").value(notAccordAccount.getDescription()));
+                .andExpect(jsonPath("$.msg").value(errorCode.getDescription()));
 
     }
 
@@ -377,14 +378,14 @@ class PostControllerTest {
     @DisplayName("[실패] 게시글 삭제 - 게시글 작성자가 아닌경우")
     void deletePost_fail() throws Exception {
         // given
-        PostErrorCode notAccordAccount = PostErrorCode.NOT_ACCORD_ACCOUNT;
+        SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
 
         // when
 
         mockMvc.perform(delete(V_1_POSTS + "/" + post.getId()))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.msg").value(notAccordAccount.getDescription()));
+                .andExpect(jsonPath("$.msg").value(errorCode.getDescription()));
 
         //then
         assertThat(postRepository.existsById(post.getId())).isTrue();

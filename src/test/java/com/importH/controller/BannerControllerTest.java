@@ -9,7 +9,6 @@ import com.importH.domain.banner.BannerRepository;
 import com.importH.domain.banner.BannerService;
 import com.importH.domain.tag.Tag;
 import com.importH.domain.tag.TagDto;
-import com.importH.global.error.code.BannerErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +81,6 @@ class BannerControllerTest {
     void registerBanner_fail() throws Exception {
         // given
         Request request = getRequest();
-        BannerErrorCode errorCode = BannerErrorCode.NOT_AUTHORITY_ACCESS;
 
         // when
         ResultActions perform = mockMvc.perform(post("/v1/banners")
@@ -90,10 +88,8 @@ class BannerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
-        perform.andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.msg").value(errorCode.getDescription()))
-                .andDo(print());
+        perform.andExpect(status().is3xxRedirection());
+        assertThat(bannerRepository.findByTitle(request.getTitle())).isEmpty();
 
     }
 
@@ -104,7 +100,7 @@ class BannerControllerTest {
         // given
         for (int i = 0; i < 3; i++) {
             Request request = getRequest(i);
-            bannerService.registerBanner(request, "ROLE_ADMIN");
+            bannerService.registerBanner(request);
         }
         // when
         ResultActions perform = mockMvc.perform(get("/v1/banners"));
@@ -127,7 +123,7 @@ class BannerControllerTest {
     @DisplayName("[성공] 관리자가 존재하는 배너 삭제하기")
     void deleteBanner_success() throws Exception {
         // given
-        Response response = bannerService.registerBanner(getRequest(), "ROLE_ADMIN");
+        Response response = bannerService.registerBanner(getRequest());
         Banner banner = bannerRepository.findById(response.getBannerId()).get();
         File file = new File(banner.getImageUrl());
 
@@ -148,16 +144,13 @@ class BannerControllerTest {
     @DisplayName("[실패] 배너 삭제하기 - 권한이 없는 유저가 접근")
     void deleteBanner_fail_user() throws Exception {
         // given
-        Response response = bannerService.registerBanner(getRequest(), "ROLE_ADMIN");
+        Response response = bannerService.registerBanner(getRequest());
         Banner banner = bannerRepository.findById(response.getBannerId()).get();
-        BannerErrorCode err = BannerErrorCode.NOT_AUTHORITY_ACCESS;
         // when
         ResultActions perform = mockMvc.perform(delete("/v1/banners/" + banner.getId()));
 
         //then
-        perform.andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.msg").value(err.getDescription()));
+        perform.andExpect(status().is3xxRedirection());
 
         assertThat(bannerRepository.findById(banner.getId())).isPresent();
 

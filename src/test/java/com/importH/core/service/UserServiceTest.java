@@ -11,7 +11,9 @@ import com.importH.domain.user.dto.UserDto.Response_findAllUsers;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
 import com.importH.domain.user.service.UserService;
+import com.importH.global.error.code.SecurityErrorCode;
 import com.importH.global.error.code.UserErrorCode;
+import com.importH.global.error.exception.SecurityException;
 import com.importH.global.error.exception.UserException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -93,14 +95,14 @@ class UserServiceTest {
     void getUserInfo_fail_notAccordUser() throws Exception {
         // given
         User test = userRepository.findByNickname("test1").get();
-        UserErrorCode err = UserErrorCode.NOT_EQUALS_USER;
+        SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
         // when
-        UserException exception = assertThrows(UserException.class, () -> userService.findUserById(user.getId(), test));
+        SecurityException exception = assertThrows(SecurityException.class, () -> userService.findUserById(user.getId(), test));
 
         //then
         assertThat(exception)
-                .hasFieldOrPropertyWithValue("errorCode", err)
-                .hasFieldOrPropertyWithValue("errorMessage",err.getDescription());
+                .hasFieldOrPropertyWithValue("errorCode", errorCode)
+                .hasFieldOrPropertyWithValue("errorMessage",errorCode.getDescription());
     }
 
 
@@ -171,7 +173,7 @@ class UserServiceTest {
 
         // when
         //then
-        assertThrows(UserException.class, () -> userService.updateUser(another.getId(), user, request));
+        assertThrows(SecurityException.class, () -> userService.updateUser(another.getId(), user, request));
     }
 
     @Test
@@ -201,7 +203,7 @@ class UserServiceTest {
 
         // when
         //then
-        assertThrows(UserException.class, () -> userService.deleteUser(user.getId(), another));
+        assertThrows(SecurityException.class, () -> userService.deleteUser(user.getId(), another));
     }
 
     @Test
@@ -231,14 +233,14 @@ class UserServiceTest {
 
         PasswordDto.Request request = getPasswordReq("testtest", "testtest");
         User another = userRepository.findByNickname("test1").get();
-        UserErrorCode err = UserErrorCode.NOT_EQUALS_USER;
+        SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
         // when
-        UserException exception = assertThrows(UserException.class, () -> userService.updatePassword(user.getId(), another, request));
+        SecurityException exception = assertThrows(SecurityException.class, () -> userService.updatePassword(user.getId(), another, request));
 
         //then
         assertThat(exception)
-                .hasFieldOrPropertyWithValue("errorCode", err)
-                .hasFieldOrPropertyWithValue("errorMessage", err.getDescription());
+                .hasFieldOrPropertyWithValue("errorCode", errorCode)
+                .hasFieldOrPropertyWithValue("errorMessage", errorCode.getDescription());
 
     }
 
