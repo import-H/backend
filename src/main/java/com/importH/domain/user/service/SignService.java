@@ -121,11 +121,11 @@ public class SignService {
     /** 로그인 */
     @Transactional
     public TokenDto login(String email, String password) {
-        User user = findUserByEmail(email, EMAIL_LOGIN_FAILED);
+        User user = findUserWithTokenByEmail(email, EMAIL_LOGIN_FAILED);
         validatePassword(password, user);
 
         TokenDto tokenDto = createToken(user);
-        RefreshToken refreshToken = getRefreshToken(user);
+        RefreshToken refreshToken = user.getRefreshToken();
 
         saveRefreshToken(user, tokenDto, refreshToken);
 
@@ -145,10 +145,6 @@ public class SignService {
         tokenRepository.save(newRefreshToken);
     }
 
-    private RefreshToken getRefreshToken(User user) {
-        return tokenRepository.findByUser(user).orElse(null);
-    }
-
     private TokenDto createToken(User user) {
 
         return jwtProvider.createToken(user);
@@ -164,12 +160,16 @@ public class SignService {
         return passwordEncoder.matches(password, accountPassword);
     }
 
+    private User findUserWithTokenByEmail(String email, UserErrorCode errorCode) {
+        return userRepository.findWithTokenByEmail(email).orElseThrow(() -> new UserException(errorCode));
+    }
+
     private User findUserByEmail(String email, UserErrorCode errorCode) {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserException(errorCode));
     }
 
     private User findUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
+        return userRepository.findWithTokenById(userId).orElseThrow(() -> new UserException(NOT_FOUND_USERID));
     }
 
     /** 토큰 재발급 */
@@ -191,7 +191,7 @@ public class SignService {
 
 
     private RefreshToken getValidateRefreshToken(User user, String requestRefreshToken) {
-        RefreshToken refreshToken = getRefreshToken(user);
+        RefreshToken refreshToken = user.getRefreshToken();
         validateRefreshToken(refreshToken, requestRefreshToken);
         return refreshToken;
     }

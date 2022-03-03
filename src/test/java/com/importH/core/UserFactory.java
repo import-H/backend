@@ -3,6 +3,8 @@ package com.importH.core;
 import com.importH.domain.user.entity.InfoAgree;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
+import com.importH.domain.user.token.RefreshToken;
+import com.importH.domain.user.token.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -16,19 +18,21 @@ public class UserFactory {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final RefreshTokenRepository refreshTokenRepository;
+
 
     public User createNewAccount(String nickname, String email, String pathId, boolean emailVerified) {
 
-        return createNewAccount(nickname,email,pathId,emailVerified,false,false);
+        return createNewAccount(nickname,email,pathId,emailVerified,false,false,null);
     }
 
     public User createNewAccount(String nickname, boolean infoByWeb, boolean infoByEmail) {
-        return createNewAccount(nickname, nickname, nickname, true, infoByWeb, infoByEmail);
+        return createNewAccount(nickname, nickname, nickname, true, infoByWeb, infoByEmail,null);
     }
 
-    public User createNewAccount(String nickname, String email, String pathId, boolean emailVerified, boolean infoByWeb , boolean infoByEmail) {
+    public User createNewAccount(String nickname, String email, String pathId, boolean emailVerified, boolean infoByWeb , boolean infoByEmail, RefreshToken token) {
 
-        return userRepository.save(User.builder()
+        User save = userRepository.save(User.builder()
                 .email(email)
                 .nickname(nickname)
                 .introduction("테스트 입니다.")
@@ -37,7 +41,9 @@ public class UserFactory {
                 .pathId(pathId)
                 .emailVerified(emailVerified)
                 .weekAgree(true)
-                .infoAgree(new InfoAgree(infoByEmail,infoByWeb))
+                .infoAgree(new InfoAgree(infoByEmail, infoByWeb))
                 .build());
+        save.setToken(token);
+        return save;
     }
 }

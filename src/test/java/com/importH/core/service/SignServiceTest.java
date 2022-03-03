@@ -195,7 +195,7 @@ class SignServiceTest {
 
         // when
         TokenDto reissue = signService.reissue(tokenDto);
-        RefreshToken refreshToken = tokenRepository.findByUser(user).get();
+        RefreshToken refreshToken = user.getRefreshToken();
 
         //then
         assertThat(refreshToken.getToken()).isEqualTo(reissue.getRefreshToken());

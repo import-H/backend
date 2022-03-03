@@ -26,8 +26,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -258,7 +256,7 @@ class SignControllerTest {
     @DisplayName("[성공] 로그인 - 정상적인 요청 ")
     void login_success() throws Exception {
         // given
-        User user = getNewUser();
+        User user = getNewUser(null);
         LoginDto loginDto = getLoginDto(user, "12341234");
 
         // when
@@ -279,9 +277,8 @@ class SignControllerTest {
     @DisplayName("[성공] 로그인 - 리프레시 토큰 저장이 아닌 업데이트되는 경우")
     void login_success_update_refreshToken() throws Exception {
         // given
-        User user = getNewUser();
+        User user = getNewUser(RefreshToken.builder().token("token").build());
         LoginDto loginDto = getLoginDto(user, "12341234");
-        given(refreshTokenRepository.findByUser(any())).willReturn(Optional.of(RefreshToken.builder().build()));
 
         // when
         ResultActions perform = mvc.perform(post(V_1_LOGIN)
@@ -295,13 +292,14 @@ class SignControllerTest {
                 .andExpect(jsonPath("$.data.refreshToken").exists());
 
         verify(refreshTokenRepository, never()).save(any());
+
     }
 
     @Test
     @DisplayName("[실패] 로그인 실패 - 옳바르지 않은 패스워드")
     void login_fail_different_Password() throws Exception {
         // given
-        User user = getNewUser();
+        User user = getNewUser(null);
         LoginDto loginDto = getLoginDto(user, "123412345");
         UserErrorCode errorCode = UserErrorCode.EMAIL_LOGIN_FAILED;
 
@@ -318,8 +316,8 @@ class SignControllerTest {
         verify(refreshTokenRepository, times(0)).save(any());
     }
 
-    private User getNewUser() {
-        return userFactory.createNewAccount("테스트", "테스트", "테스트", true);
+    private User getNewUser(RefreshToken token) {
+        return userFactory.createNewAccount("테스트", "테스트", "테스트", true,false,false,token);
     }
 
     private LoginDto getLoginDto(User user, String password) {

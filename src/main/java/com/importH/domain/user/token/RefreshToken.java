@@ -18,7 +18,7 @@ public class RefreshToken extends BaseTimeEntity {
     @Column(name = "refresh_token_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "refreshToken")
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -27,10 +27,12 @@ public class RefreshToken extends BaseTimeEntity {
     private String token;
 
     public static RefreshToken create(User user, String refreshToken) {
-        return RefreshToken.builder()
+        RefreshToken token = RefreshToken.builder()
                 .user(user)
                 .token(refreshToken)
                 .build();
+        user.setToken(token);
+        return token;
     }
 
     public RefreshToken updateToken(String token) {

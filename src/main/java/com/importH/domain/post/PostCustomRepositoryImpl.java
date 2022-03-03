@@ -31,6 +31,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository{
         queryFactory = new JPAQueryFactory(em);
     }
 
+    //todo 커버링 인덱스 적용
     @Override
     public Slice<Post> findAllPostsByType(String type, Pageable pageable) {
         List<Post> posts = queryFactory

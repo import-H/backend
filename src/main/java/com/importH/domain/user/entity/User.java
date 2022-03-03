@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.importH.domain.BaseTimeEntity;
 import com.importH.domain.tag.Tag;
 import com.importH.domain.user.dto.UserDto.Request;
+import com.importH.domain.user.token.RefreshToken;
 import lombok.*;
 
 import javax.persistence.*;
@@ -69,6 +70,9 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private Set<Tag> tags = new HashSet<>();
 
+    @OneToOne(fetch = FetchType.LAZY,orphanRemoval = true, cascade = CascadeType.ALL)
+    private RefreshToken refreshToken;
+
     public void setPassword(String encodePassword) {
         this.password = encodePassword;
     }
@@ -127,5 +131,9 @@ public class User extends BaseTimeEntity {
 
     public boolean isInfoByWeb() {
         return infoAgree.isInfoByWeb();
+    }
+
+    public void setToken(RefreshToken token) {
+        this.refreshToken = token;
     }
 }
