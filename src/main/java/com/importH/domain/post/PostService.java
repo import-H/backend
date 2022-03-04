@@ -85,7 +85,7 @@ public class PostService {
     @Transactional
     public PostDto.Response getPost(User user, Long postId) {
 
-        Post post = findByPostId(postId);
+        Post post = findWithUserTags(postId);
 
         increaseViewCount(user, post);
 
@@ -95,6 +95,10 @@ public class PostService {
         boolean isLike = havePostLike(user, post);
 
         return PostDto.Response.fromEntity(post, tags, comments, isLike);
+    }
+
+    public Post findWithUserTags(Long postsId) {
+        return postRepository.findWithUserAndTagsById(postsId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
     }
 
     private boolean havePostLike(User user, Post post) {
