@@ -3,6 +3,7 @@ package com.importH.domain.post;
 import com.importH.domain.BaseTimeEntity;
 import com.importH.domain.comment.Comment;
 import com.importH.domain.image.Image;
+import com.importH.domain.post.PostDto.Request;
 import com.importH.domain.tag.Tag;
 import com.importH.domain.user.entity.User;
 import lombok.*;
@@ -38,6 +39,8 @@ public class Post extends BaseTimeEntity {
 
     private String type;
 
+    private boolean important;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -58,8 +61,9 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
-    public Long updatePost(PostDto.Request postRequestDto, Set<Tag> tags) {
+    public Long updatePost(Request postRequestDto, Set<Tag> tags) {
         this.tags = tags;
+        this.important = postRequestDto.isImportant();
         this.content = postRequestDto.getContent();
         this.title = postRequestDto.getTitle();
         return id;

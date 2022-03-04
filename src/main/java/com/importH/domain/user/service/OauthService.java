@@ -25,7 +25,7 @@ public class OauthService {
 
     private final JwtProvider jwtProvider;
 
-    private final OauthAdapterImpl oauthAdapter;
+    private final OauthAdapter oauthAdapter;
 
     @Transactional
     public TokenDto socialLogin(String providerName, String code) {

@@ -1,11 +1,8 @@
 package com.importH.core.service;
 
 import com.importH.core.UserFactory;
-import com.importH.domain.post.Post;
-import com.importH.domain.post.PostDto;
+import com.importH.domain.post.*;
 import com.importH.domain.post.PostDto.Response;
-import com.importH.domain.post.PostRepository;
-import com.importH.domain.post.PostService;
 import com.importH.domain.tag.Tag;
 import com.importH.domain.tag.TagDto;
 import com.importH.domain.tag.TagService;
@@ -93,18 +90,6 @@ class PostServiceTest {
         assertThat(exception).hasMessageContaining(exception.getErrorMessage());
     }
 
-    private PostDto.Request getRequest(String title, String content, String tagName, String type) {
-        return PostDto.Request.
-                builder()
-                .title(title)
-                .type(type)
-                .content(content)
-                .tags(List.of(TagDto.builder()
-                        .name(tagName)
-                        .build()))
-                .build();
-    }
-
 
     @Test
     @DisplayName("[성공] 게시글 조회 정상적인 요청")
@@ -124,8 +109,35 @@ class PostServiceTest {
                 .hasFieldOrPropertyWithValue("responseInfo.nickname", post.getUser().getNickname())
                 .hasFieldOrPropertyWithValue("responseInfo.profileImage", post.getUser().getProfileImage())
                 .hasFieldOrPropertyWithValue("responseInfo.likeCount", post.getLikeCount())
+                .hasFieldOrPropertyWithValue("responseInfo.important", post.isImportant())
                 .hasFieldOrPropertyWithValue("responseInfo.viewCount", post.getViewCount());
 
+        assertThat(response.getResponseInfo().getTags()).hasSameElementsAs(tagService.getTagDtos(post.getTags()));
+        assertThat(response.getComments()).hasSameElementsAs(postService.getCommentDtos(post));
+    }
+
+    @Test
+    @DisplayName("[성공] 게시글 조회 정상적인 요청 - 전체 공지사항 게시글")
+    void getPost_success_important() throws Exception {
+        // given
+        Post post =  postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", "자바", FREE,true));
+
+        // when
+        Response response = postService.getPost(user, post.getId());
+
+        //then
+        assertThat(response)
+                .hasFieldOrPropertyWithValue("responseInfo.boardId", post.getType())
+                .hasFieldOrPropertyWithValue("responseInfo.postId", post.getId())
+                .hasFieldOrPropertyWithValue("responseInfo.title", post.getTitle())
+                .hasFieldOrPropertyWithValue("responseInfo.content", post.getContent())
+                .hasFieldOrPropertyWithValue("responseInfo.nickname", post.getUser().getNickname())
+                .hasFieldOrPropertyWithValue("responseInfo.profileImage", post.getUser().getProfileImage())
+                .hasFieldOrPropertyWithValue("responseInfo.likeCount", post.getLikeCount())
+                .hasFieldOrPropertyWithValue("responseInfo.important", post.isImportant())
+                .hasFieldOrPropertyWithValue("responseInfo.viewCount", post.getViewCount());
+
+        assertThat(post.isImportant()).isTrue();
         assertThat(response.getResponseInfo().getTags()).hasSameElementsAs(tagService.getTagDtos(post.getTags()));
         assertThat(response.getComments()).hasSameElementsAs(postService.getCommentDtos(post));
     }
@@ -166,6 +178,31 @@ class PostServiceTest {
         assertThat(post.getTags()).contains(tagAfter);
         assertThat(post.getTags()).doesNotContain(tagBefore);
     }
+
+
+    @Test
+    @DisplayName("[성공] 게시글 수정 - 전체 공지사항으로 올리기")
+    void updatePost_success_setImportant() throws Exception {
+        // given
+        PostDto.Request request = getRequest("테스트2", "테스트 게시글 입니다.3", "자바1", PostType.NOTICE.getType(), true);
+
+        // when
+        postService.updatePost(user, post.getId(), request);
+
+        //then
+        assertThat(post)
+                .hasFieldOrPropertyWithValue("title", request.getTitle())
+                .hasFieldOrPropertyWithValue("important", request.isImportant())
+                .hasFieldOrPropertyWithValue("content", request.getContent());
+
+        Tag tagBefore = tagService.findByTitle("자바");
+        Tag tagAfter = tagService.findByTitle("자바1");
+        assertThat(post.getTags()).contains(tagAfter);
+        assertThat(post.getTags()).doesNotContain(tagBefore);
+    }
+
+
+
 
     @Test
     @DisplayName("[실패] 게시글 수정 - 글 작성자 아닌경우")
@@ -229,6 +266,7 @@ class PostServiceTest {
                 .hasFieldOrProperty("responseInfo.content")
                 .hasFieldOrProperty("responseInfo.nickname")
                 .hasFieldOrProperty("responseInfo.profileImage")
+                .hasFieldOrProperty("responseInfo.important")
                 .hasFieldOrProperty("responseInfo.likeCount")
                 .hasFieldOrProperty("responseInfo.viewCount")
                 .hasFieldOrProperty("commentsCount")
@@ -258,6 +296,7 @@ class PostServiceTest {
                 .hasFieldOrProperty("responseInfo.content")
                 .hasFieldOrProperty("responseInfo.nickname")
                 .hasFieldOrProperty("responseInfo.profileImage")
+                .hasFieldOrProperty("responseInfo.important")
                 .hasFieldOrProperty("responseInfo.likeCount")
                 .hasFieldOrProperty("responseInfo.viewCount")
                 .hasFieldOrProperty("commentsCount")
@@ -285,6 +324,7 @@ class PostServiceTest {
                 .hasFieldOrProperty("responseInfo.postId")
                 .hasFieldOrProperty("responseInfo.title")
                 .hasFieldOrProperty("responseInfo.content")
+                .hasFieldOrProperty("responseInfo.important")
                 .hasFieldOrProperty("responseInfo.nickname")
                 .hasFieldOrProperty("responseInfo.profileImage")
                 .hasFieldOrProperty("responseInfo.likeCount")
@@ -311,4 +351,21 @@ class PostServiceTest {
 
 
 
+
+    private PostDto.Request getRequest(String title, String content, String tagName, String type) {
+        return getRequest(title, content, tagName, type, false);
+    }
+
+    private PostDto.Request getRequest(String title, String content, String tagName, String type, boolean important) {
+        return PostDto.Request.
+                builder()
+                .title(title)
+                .type(type)
+                .content(content)
+                .important(important)
+                .tags(List.of(TagDto.builder()
+                        .name(tagName)
+                        .build()))
+                .build();
+    }
 }

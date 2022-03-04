@@ -45,6 +45,10 @@ public class PostDto {
         @ApiModelProperty(value = "이미지 목록")
         private List<String> images = new ArrayList<>();
 
+        @Builder.Default
+        @ApiModelProperty(value = "전체 공지사항 여부")
+        private boolean important = false;
+
 
         public Post toEntity() {
             return Post.builder()
@@ -52,6 +56,7 @@ public class PostDto {
                     .type(type)
                     .comments(new ArrayList<>())
                     .postLikes(new ArrayList<>())
+                    .important(important)
                     .title(title)
                     .tags(new HashSet<>()).build();
         }
@@ -93,6 +98,9 @@ public class PostDto {
         @ApiModelProperty(value = "작성시간", example = "yyyy-MM-dd/HH:mm")
         private LocalDateTime createdAt;
 
+        @ApiModelProperty(value = "전체 공지사항 여부" ,example = "true/false")
+        private boolean important;
+
     }
 
     @Getter
@@ -121,6 +129,7 @@ public class PostDto {
                             .title(post.getTitle())
                             .tags(tagDtos)
                             .viewCount(post.getViewCount())
+                            .important(post.isImportant())
                             .likeCount(post.getLikeCount())
                             .build())
                     .comments(commentDtos)
@@ -152,6 +161,7 @@ public class PostDto {
                             .profileImage(post.getUser().getProfileImage())
                             .content(post.getContent())
                             .createdAt(post.getCreatedAt())
+                            .important(post.isImportant())
                             .title(post.getTitle())
                             .tags(post.getTags().stream().map(tag -> TagDto.fromEntity(tag)).collect(Collectors.toSet()))
                             .viewCount(post.getViewCount())

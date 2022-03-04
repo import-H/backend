@@ -330,6 +330,28 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.msg").exists());
     }
 
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 게시글 수정 - 전체 공지사항으로 올리기")
+    void updatePost_success_important() throws Exception {
+        // given
+        post = createPost(userRepository.findByNickname("테스트").get());
+        PostDto.Request request = getRequest("테스트2", "테스트2", "free",true, "스터디1","자바1");
+
+        // when
+        ResultActions perform = mockMvc.perform(put(V_1_POSTS + "/" + post.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.msg").exists());
+
+        assertThat(post.isImportant()).isTrue();
+    }
+
     @Test
     @WithAccount("테스트")
     @DisplayName("[실패] 게시글 수정 - 작성자 아닌경우")
@@ -417,6 +439,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.list[*].responseInfo.nickname").exists())
                 .andExpect(jsonPath("$.list[*].responseInfo.profileImage").exists())
                 .andExpect(jsonPath("$.list[*].responseInfo.likeCount").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.important").exists())
                 .andExpect(jsonPath("$.list[*].responseInfo.tags[*].name").exists())
                 .andExpect(jsonPath("$.list[*].responseInfo.viewCount").exists())
                 .andExpect(jsonPath("$.list[*]", hasSize(postRepository.countByType(FREE))));
@@ -445,7 +468,9 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.list[*].responseInfo.postId").exists())
                 .andExpect(jsonPath("$.list[*].responseInfo.title").exists())
                 .andExpect(jsonPath("$.list[*].responseInfo.content").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.important").exists())
                 .andExpect(jsonPath("$.list[*].responseInfo.nickname").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.important").exists())
                 .andExpect(jsonPath("$.list[*].responseInfo.profileImage").exists())
                 .andExpect(jsonPath("$.list[*].responseInfo.likeCount").exists())
                 .andExpect(jsonPath("$.list[*].responseInfo.viewCount").exists())
@@ -453,13 +478,17 @@ class PostControllerTest {
     }
 
 
-
     private PostDto.Request getRequest(String title, String content, String type, String... tagName) {
+        return getRequest(title, content, type, false, tagName);
+    }
+
+    private PostDto.Request getRequest(String title, String content, String type, boolean important , String... tagName) {
         return PostDto.Request.
                 builder()
                 .title(title)
                 .type(type)
                 .content(content)
+                .important(important)
                 .tags(Arrays.stream(tagName).map(name ->TagDto.builder().name(name).build()).collect(Collectors.toList()))
                 .build();
     }
