@@ -57,6 +57,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath profileImage = createString("profileImage");
 
+    public final com.importH.domain.user.token.QRefreshToken refreshToken;
+
     public final StringPath role = createString("role");
 
     public final SetPath<com.importH.domain.tag.Tag, com.importH.domain.tag.QTag> tags = this.<com.importH.domain.tag.Tag, com.importH.domain.tag.QTag>createSet("tags", com.importH.domain.tag.Tag.class, com.importH.domain.tag.QTag.class, PathInits.DIRECT2);
@@ -85,6 +87,7 @@ public class QUser extends EntityPathBase<User> {
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.infoAgree = inits.isInitialized("infoAgree") ? new QInfoAgree(forProperty("infoAgree")) : null;
+        this.refreshToken = inits.isInitialized("refreshToken") ? new com.importH.domain.user.token.QRefreshToken(forProperty("refreshToken"), inits.get("refreshToken")) : null;
     }
 
 }

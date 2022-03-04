@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.importH.global.error.code.PostErrorCode.NOT_FOUND_POST;
 
@@ -161,11 +162,14 @@ public class PostService {
      */
     public List<PostDto.ResponseAll> findAllPost(String type, Pageable pageable) {
 
+        List<Post> importantIsTrue = postRepository.findAllByImportantIsTrue();
+
         Slice<Post> postSlice = postRepository.findAllPostsByType(type,pageable);
 
         List<Post> content = postSlice.getContent();
 
-        return content.stream()
+        return Stream.of(importantIsTrue,content)
+                .flatMap(posts -> posts.stream())
                 .map(PostDto.ResponseAll::fromEntity)
                 .collect(Collectors.toList());
     }

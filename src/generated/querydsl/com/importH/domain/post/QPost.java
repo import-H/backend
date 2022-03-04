@@ -35,6 +35,8 @@ public class QPost extends EntityPathBase<Post> {
 
     public final ListPath<com.importH.domain.image.Image, com.importH.domain.image.QImage> images = this.<com.importH.domain.image.Image, com.importH.domain.image.QImage>createList("images", com.importH.domain.image.Image.class, com.importH.domain.image.QImage.class, PathInits.DIRECT2);
 
+    public final BooleanPath important = createBoolean("important");
+
     public final NumberPath<Integer> likeCount = createNumber("likeCount", Integer.class);
 
     public final ListPath<PostLike, QPostLike> postLikes = this.<PostLike, QPostLike>createList("postLikes", PostLike.class, QPostLike.class, PathInits.DIRECT2);

@@ -54,6 +54,16 @@ public class PostCustomRepositoryImpl implements PostCustomRepository{
         return new SliceImpl(posts,pageable,hasNext);
     }
 
+    @Override
+    public List<Post> findAllByImportantIsTrue() {
+
+        return queryFactory.select(post)
+                .from(post)
+                .where(post.important.isTrue())
+                .leftJoin(post.user, user).fetchJoin()
+                .fetch();
+    }
+
     private BooleanExpression typeEq(String boardId) {
         if (StringUtils.isNullOrEmpty(boardId)) {
             return null;

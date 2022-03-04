@@ -11,4 +11,5 @@ public interface PostRepository extends JpaRepository<Post,Long>,PostCustomRepos
     Post findByTitle(String title);
 
     int countByType(String type);
+
 }

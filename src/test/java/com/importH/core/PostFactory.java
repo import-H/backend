@@ -45,11 +45,17 @@ public class PostFactory {
        return postService.registerPost(user,request);
     }
 
+
     public PostDto.Request getRequest(String title, String content, String... tagName) {
+        return getRequest(title, content, false, tagName);
+    }
+
+    public PostDto.Request getRequest(String title, String content, boolean important , String... tagName) {
         return PostDto.Request.
                 builder()
                 .title(title)
                 .content(content)
+                .important(important)
                 .type("free")
                 .tags(Arrays.stream(tagName).map(name -> TagDto.builder().name(name).build()).collect(Collectors.toList()))
                 .build();

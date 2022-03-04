@@ -5,10 +5,7 @@ import com.importH.core.PostFactory;
 import com.importH.core.WithAccount;
 import com.importH.domain.comment.CommentDto;
 import com.importH.domain.comment.CommentService;
-import com.importH.domain.post.Post;
-import com.importH.domain.post.PostDto;
-import com.importH.domain.post.PostRepository;
-import com.importH.domain.post.PostService;
+import com.importH.domain.post.*;
 import com.importH.domain.tag.TagDto;
 import com.importH.domain.tag.TagRepository;
 import com.importH.domain.user.entity.User;
@@ -32,7 +29,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -475,6 +472,37 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.list[*].responseInfo.likeCount").exists())
                 .andExpect(jsonPath("$.list[*].responseInfo.viewCount").exists())
                 .andExpect(jsonPath("$.list[*]", hasSize(Integer.valueOf(limit))));
+    }
+
+
+    @Test
+    @DisplayName("[성공] 전체 게시글 조회 - 자유 게시판 / 전체 공지사항 포함해서 가져오기")
+    void findAllPost_Success_03() throws Exception {
+        // given
+        for (int i = 0; i < 3; i++) {
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", PostType.NOTICE.getType(),true));
+        }
+        for (int i = 0; i < 10; i++) {
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.",PostType.FREE.getType()));
+        }
+
+        // when
+        ResultActions perform = mockMvc.perform(get("/v1/boards/"+FREE+"?size=10"));
+
+        //then
+        perform.andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.msg").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.boardId").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.postId").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.title").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.content").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.nickname").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.profileImage").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.likeCount").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.important").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.tags[*].name").exists())
+                .andExpect(jsonPath("$.list[*].responseInfo.viewCount").exists());
     }
 
 
