@@ -16,6 +16,9 @@ public interface PostRepository extends JpaRepository<Post,Long>,PostCustomRepos
     int countByType(String type);
 
     @EntityGraph(attributePaths = {"user","tags","comments"})
-    Optional<Post> findWithUserAndTagsById(Long  postId);
+    Optional<Post> findWithTagsAndCommentsById(Long  postId);
 
+    @Override
+    @EntityGraph(attributePaths = {"user"})
+    Optional<Post> findById(Long aLong);
 }

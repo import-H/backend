@@ -80,6 +80,9 @@ class CommentServiceTest {
     }
 
 
+
+
+
     @Test
     @DisplayName("[실패] 댓글 등록 - 존재하지 않는 게시글")
     void regComment_fail() throws Exception {
@@ -214,7 +217,7 @@ class CommentServiceTest {
                 .build();
     }
     private Post getPost() {
-        return Post.builder().id(1L).title("테스트게시글").content("테스트").build();
+        return Post.builder().id(1L).title("테스트게시글").user(User.builder().id(100L).build()).content("테스트").build();
     }
 
     private User getUser(long id) {

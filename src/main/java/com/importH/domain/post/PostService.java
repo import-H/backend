@@ -50,7 +50,7 @@ public class PostService {
     }
 
     private void validateType(User user, Post post) {
-        if (isvalidPathId(user, post) || isExistType(post)) return;
+        if (isValidPathId(user, post) || isExistType(post)) return;
         throw new PostException(PostErrorCode.NOT_EXIST_TYPE);
     }
 
@@ -59,7 +59,7 @@ public class PostService {
                 .anyMatch(postType -> postType.getType().equals(post.getType()));
     }
 
-    private boolean isvalidPathId(User user, Post post) {
+    private boolean isValidPathId(User user, Post post) {
         if (user.getPathId() != null && user.getPathId().equals(post.getType())) {
             return true;
         }
@@ -98,7 +98,7 @@ public class PostService {
     }
 
     public Post findWithUserTags(Long postsId) {
-        return postRepository.findWithUserAndTagsById(postsId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
+        return postRepository.findWithTagsAndCommentsById(postsId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
     }
 
     private boolean havePostLike(User user, Post post) {

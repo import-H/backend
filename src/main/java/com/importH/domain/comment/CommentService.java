@@ -37,9 +37,16 @@ public class CommentService {
 
         saveComment(comment);
 
-        eventPublisher.publishEvent(new PostUpdatedEventDto(post,post.getTitle() + "게시글에 댓글이 달렸습니다."));
+        createNotificationToAuthor(user, post);
 
         return comment.getId();
+    }
+
+    private void createNotificationToAuthor(User user, Post post) {
+        if (post.getUser().equals(user)) {
+            return;
+        }
+        eventPublisher.publishEvent(new PostUpdatedEventDto(post, post.getTitle() + "게시글에 댓글이 달렸습니다."));
     }
 
     private void setCommentRelation(User user, Post post, Comment comment) {

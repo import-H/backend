@@ -66,6 +66,23 @@ class GlobalEventListenerTest {
 
     @Test
     @WithAccount("테스트")
+    @DisplayName("[성공] 게시글 주인이 댓글 등록시 알람 생성 X")
+    void createNotification_success_author() throws Exception {
+        // given
+        User loginUser = userRepository.findByNickname("테스트").get();
+        Post post = postFactory.createPost(loginUser);
+        given(notificationService.createNotification(any())).willReturn(100L);
+
+        // when
+        commentService.registerComment(post.getId(), loginUser, getRequest("테스트 댓글"));
+
+        //then
+        verify(notificationService, never()).createNotification(any());
+
+    }
+
+    @Test
+    @WithAccount("테스트")
     @DisplayName("[성공] 댓글 등록시 해당 게시글 유저에게 알람 - 알람 설정 off 인 유저는 알람 생성 x")
     void createNotification_success_off() throws Exception {
         // given
