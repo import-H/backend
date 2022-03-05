@@ -27,11 +27,18 @@ public class TagService {
         return findTag;
     }
 
+    @Transactional
     public Set<Tag> getTags(List<TagDto> tags) {
-        return tags.stream()
-                .map(TagDto::toEntity)
-                .map(tag -> getTag(tag))
-                .collect(Collectors.toSet());
+
+        Set<Tag> collect = tags.stream().map(TagDto::toEntity).collect(Collectors.toSet());
+        Set<String> stringSet = collect.stream().map(Tag::getName).collect(Collectors.toSet());
+
+        Set<Tag> tagList = tagRepository.findAllByNameIn(stringSet);
+
+        Set<Tag> tagSet = collect.stream().filter(tag -> !tagList.contains(tag)).map(tagRepository::save).collect(Collectors.toSet());
+        tagList.addAll(tagSet);
+        return tagList;
+
     }
 
     public Set<TagDto> getTagDtos(Set<Tag> tags) {
