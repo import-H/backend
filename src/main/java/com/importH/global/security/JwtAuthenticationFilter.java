@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -22,6 +23,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtProvider jwtProvider;
+    private final CustomUserDetailsService userDetailsService;
 
     // request 에 들어오는 Jwt 의 유효성을 검증 -> jwtProvider.validationToken() 을 필터로서 FilterChain 에 추가
     @Override
@@ -33,7 +35,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         log.info(((HttpServletRequest) request).getRequestURL().toString());
 
         if (token != null && jwtProvider.validationToken(token)) {
-                Authentication authentication = jwtProvider.getAuthentication(token);
+                Authentication authentication = userDetailsService.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         chain.doFilter(request,response);

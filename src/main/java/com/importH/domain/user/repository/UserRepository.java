@@ -29,4 +29,5 @@ public interface UserRepository extends JpaRepository<User,Long> , UserCustomRep
     Long countByEmailVerified(boolean verified);
 
     Optional<User> findByOauthId(String oauthId);
+
 }

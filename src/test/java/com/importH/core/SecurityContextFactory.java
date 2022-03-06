@@ -45,10 +45,10 @@ public class SecurityContextFactory implements WithSecurityContextFactory<WithAc
             user = userRepository.findByNickname(nickname).get();
         }
 
-        UserDetails userDetailsService = customUserDetailsService.loadUserByUsername(String.valueOf(user.getId()));
+//        UserDetails userDetailsService = customUserDetailsService.loadUserByUsername(String.valueOf(user.getId()));
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                userDetailsService, "", List.of(new SimpleGrantedAuthority(user.getRole()))
+                user.getNickname(), "", List.of(new SimpleGrantedAuthority(user.getRole()))
         );
 
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();

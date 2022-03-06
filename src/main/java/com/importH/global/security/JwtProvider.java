@@ -81,7 +81,7 @@ public class JwtProvider {
     }
 
     // Jwt 로 인증정보를 조회
-    public Authentication getAuthentication(String token) {
+/*    public Authentication getAuthentication(String token) {
 
         // JWT 에서 CLAIMS 추출
         Claims claims = parseClaims(token);
@@ -92,7 +92,7 @@ public class JwtProvider {
 
         CustomUser customUser = (CustomUser) userDetailsService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(customUser, "", customUser.getAuthorities());
-    }
+    }*/
 
     // jwt 에서 회원 구분 PK 추출
     public Claims parseClaims(String token) {
