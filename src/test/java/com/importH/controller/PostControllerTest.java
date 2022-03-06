@@ -480,7 +480,7 @@ class PostControllerTest {
     void findAllPost_Success_03() throws Exception {
         // given
         for (int i = 0; i < 3; i++) {
-            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", PostType.NOTICE.getType(),true));
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", PostType.NOTICE.getType(),true,"태그1","태그2"));
         }
         for (int i = 0; i < 10; i++) {
             postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.",PostType.FREE.getType()));

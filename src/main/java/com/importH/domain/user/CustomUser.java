@@ -12,7 +12,7 @@ public class CustomUser extends org.springframework.security.core.userdetails.Us
     private User user;
 
     public CustomUser(User user) {
-        super(user.getNickname(), "", List.of(new SimpleGrantedAuthority(user.getRole())));
+        super(String.valueOf(user.getId()), "", List.of(new SimpleGrantedAuthority(user.getRole())));
         this.user = user;
     }
 

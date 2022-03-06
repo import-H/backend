@@ -1,18 +1,15 @@
 package com.importH.core;
 
+import com.importH.domain.user.CustomUser;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
 import com.importH.global.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
-
-import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -45,11 +42,8 @@ public class SecurityContextFactory implements WithSecurityContextFactory<WithAc
             user = userRepository.findByNickname(nickname).get();
         }
 
-//        UserDetails userDetailsService = customUserDetailsService.loadUserByUsername(String.valueOf(user.getId()));
-
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                user.getNickname(), "", List.of(new SimpleGrantedAuthority(user.getRole()))
-        );
+        CustomUser customUser = new CustomUser(user);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(customUser, "", customUser.getAuthorities());
 
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(token);

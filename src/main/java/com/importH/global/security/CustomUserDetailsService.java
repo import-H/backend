@@ -2,10 +2,7 @@ package com.importH.global.security;
 
 import com.importH.domain.user.CustomUser;
 import com.importH.domain.user.entity.User;
-import com.importH.domain.user.repository.UserRepository;
-import com.importH.global.error.code.UserErrorCode;
 import com.importH.global.error.exception.SecurityException;
-import com.importH.global.error.exception.UserException;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,11 +31,14 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new SecurityException(AUTHENTICATION_ENTRYPOINT);
         }
 
-        User user = User.builder().id(Long.valueOf(claims.getSubject())).role(String.valueOf(claims.get("roles"))).build();
+        return new CustomUser(toUser(claims));
+    }
 
-//        User user = userRepository.findById(Long.valueOf(id)).orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_USERID));
-
-        return new CustomUser(user);
+    private User toUser(Claims claims) {
+        return User.builder()
+                .id(Long.valueOf(claims.getSubject()))
+                .role(String.valueOf(claims.get("roles")))
+                .build();
     }
 
     public Authentication getAuthentication(String token) {

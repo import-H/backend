@@ -1,23 +1,17 @@
 package com.importH.global.security;
 
-import com.importH.domain.user.CustomUser;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.token.TokenDto;
-import com.importH.global.error.exception.SecurityException;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
-
-import static com.importH.global.error.code.SecurityErrorCode.AUTHENTICATION_ENTRYPOINT;
 
 
 /**
@@ -37,8 +31,6 @@ public class JwtProvider {
     // 토큰 유효시간 30분
     private Long accessTokenValidTime = 24 * 60 * 60 * 1000L; // 30 min // 24 hours
     private Long refreshTokenValidTime = 145 * 24 * 60 * 60 * 1000L; // 14day
-
-    private final CustomUserDetailsService userDetailsService;
 
     @PostConstruct
     protected void init() {
@@ -80,19 +72,6 @@ public class JwtProvider {
         return user.getPathId() == null;
     }
 
-    // Jwt 로 인증정보를 조회
-/*    public Authentication getAuthentication(String token) {
-
-        // JWT 에서 CLAIMS 추출
-        Claims claims = parseClaims(token);
-
-        if (claims.get(ROLES) == null) {
-            throw new SecurityException(AUTHENTICATION_ENTRYPOINT);
-        }
-
-        CustomUser customUser = (CustomUser) userDetailsService.loadUserByUsername(claims.getSubject());
-        return new UsernamePasswordAuthenticationToken(customUser, "", customUser.getAuthorities());
-    }*/
 
     // jwt 에서 회원 구분 PK 추출
     public Claims parseClaims(String token) {
