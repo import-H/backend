@@ -4,7 +4,10 @@ package com.importH.domain.post.service;
 import com.importH.domain.post.entity.Post;
 import com.importH.domain.post.entity.PostLike;
 import com.importH.domain.post.repository.PostLikeRepository;
+import com.importH.domain.post.repository.PostRepository;
 import com.importH.domain.user.entity.User;
+import com.importH.global.error.code.PostErrorCode;
+import com.importH.global.error.exception.PostException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,21 +21,19 @@ import java.util.Optional;
 public class PostLikeService {
 
     private final PostLikeRepository postLikeRepository;
-    private final PostService postService;
+    private final PostRepository postRepository;
     /**
      * 게시글 좋아요 요청
      */
     @Transactional
     public void changeLike(User user, Long postId) {
 
-        Post post = postService.findByPostId(postId);
+        Post post = postRepository.findPostWithLikeById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND_POST));
 
+        Optional<PostLike> findPostLike = post.getLikes().stream().filter(postLike -> postLike.getUser().equals(user)).findFirst();
 
-        //TODO postLikeRepository 가 아닌 post 로 조회
-        Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
-
-        if (postLike.isPresent()) {
-            decreaseLike(post, postLike.get());
+        if (findPostLike.isPresent()) {
+            decreaseLike(post, findPostLike.get());
             return;
         }
             increaseLike(user, post);

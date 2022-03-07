@@ -25,4 +25,7 @@ public interface PostRepository extends JpaRepository<Post,Long>, PostCustomRepo
 
     @EntityGraph(attributePaths = {"scraps","user"})
     Optional<Post> findPostWithScrapById(Long postId);
+
+    @EntityGraph(attributePaths = {"likes","user"})
+    Optional<Post> findPostWithLikeById(Long postId);
 }

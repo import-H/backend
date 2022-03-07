@@ -26,21 +26,39 @@ public class PostScrapService {
      */
     @Transactional
     public void scrap(Long postId, User currentUser) {
-        Post post = postRepository
-                .findPostWithScrapById(postId)
-                .orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND_POST));
+        Post post = findPost(postId);
 
-        Optional<PostScrap> scrap = post.getScraps().stream().filter(postScrap -> postScrap.getUser().equals(currentUser)).findFirst();
+        Optional<PostScrap> scrap = findPostScrapByUser(currentUser, post);
 
         if (scrap.isPresent()) {
-            postScrapRepository.delete(scrap.get());
-            post.removeScrap(scrap.get());
+            removeScrap(post, scrap);
             return;
         }
 
+        addScrap(currentUser, post);
+
+    }
+
+    private void addScrap(User currentUser, Post post) {
         PostScrap postScrap = postScrapRepository.save(PostScrap.create(post, currentUser));
         post.addScrap(postScrap);
+    }
 
+    private void removeScrap(Post post, Optional<PostScrap> scrap) {
+        postScrapRepository.delete(scrap.get());
+        post.removeScrap(scrap.get());
+    }
+
+    private Optional<PostScrap> findPostScrapByUser(User currentUser, Post post) {
+        return post.getScraps().stream()
+                .filter(postScrap -> postScrap.getUser().equals(currentUser))
+                .findFirst();
+    }
+
+    private Post findPost(Long postId) {
+        return postRepository
+                .findPostWithScrapById(postId)
+                .orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND_POST));
     }
 
 }
