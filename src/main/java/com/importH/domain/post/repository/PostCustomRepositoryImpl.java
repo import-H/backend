@@ -1,7 +1,11 @@
 package com.importH.domain.post.repository;
 
-import com.importH.domain.post.QPost;
+import com.importH.domain.comment.QComment;
 import com.importH.domain.post.entity.Post;
+import com.importH.domain.post.entity.QPost;
+import com.importH.domain.post.entity.QPostLike;
+import com.importH.domain.post.entity.QPostScrap;
+import com.importH.domain.tag.QTag;
 import com.importH.domain.user.entity.QUser;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -18,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -64,6 +69,20 @@ public class PostCustomRepositoryImpl implements PostCustomRepository{
                 .where(post.important.isTrue())
                 .leftJoin(post.user, user).fetchJoin()
                 .fetch();
+    }
+
+    @Override
+    public Optional<Post> findWithAllById(Long id) {
+
+        return queryFactory.select(post)
+                .from(post)
+                .where(post.id.eq(id))
+                .leftJoin(post.user, user).fetchJoin()
+                .leftJoin(post.likes, QPostLike.postLike).fetchJoin()
+                .leftJoin(post.comments, QComment.comment).fetchJoin()
+                .leftJoin(post.tags, QTag.tag).fetchJoin()
+                .leftJoin(post.scraps , QPostScrap.postScrap).fetchJoin()
+                .stream().findFirst();
     }
 
     private BooleanExpression typeEq(String boardId) {

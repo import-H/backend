@@ -69,7 +69,7 @@ class CommentServiceTest {
         //then
         assertThat(post.getComments().size()).isEqualTo(1);
 
-        Comment comment = post.getComments().get(0);
+        Comment comment = post.getComments().stream().findFirst().get();
         assertThat(comment)
                 .hasFieldOrProperty("id")
                 .hasFieldOrPropertyWithValue("content",request.getContent())

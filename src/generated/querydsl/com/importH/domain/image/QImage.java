@@ -24,7 +24,7 @@ public class QImage extends EntityPathBase<Image> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final com.importH.domain.post.QPost post;
+    public final com.importH.domain.post.entity.QPost post;
 
     public final StringPath storeFileName = createString("storeFileName");
 
@@ -48,7 +48,7 @@ public class QImage extends EntityPathBase<Image> {
 
     public QImage(Class<? extends Image> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.post = inits.isInitialized("post") ? new com.importH.domain.post.QPost(forProperty("post"), inits.get("post")) : null;
+        this.post = inits.isInitialized("post") ? new com.importH.domain.post.entity.QPost(forProperty("post"), inits.get("post")) : null;
     }
 
 }

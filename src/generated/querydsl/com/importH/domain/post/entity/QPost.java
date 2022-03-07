@@ -1,9 +1,7 @@
-package com.importH.domain.post;
+package com.importH.domain.post.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.importH.domain.post.entity.Post;
-import com.importH.domain.post.entity.PostLike;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
@@ -18,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QPost extends EntityPathBase<Post> {
 
-    private static final long serialVersionUID = 46243260L;
+    private static final long serialVersionUID = 495776623L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -41,7 +39,9 @@ public class QPost extends EntityPathBase<Post> {
 
     public final NumberPath<Integer> likeCount = createNumber("likeCount", Integer.class);
 
-    public final ListPath<PostLike, QPostLike> postLikes = this.<PostLike, QPostLike>createList("postLikes", PostLike.class, QPostLike.class, PathInits.DIRECT2);
+    public final SetPath<PostLike, QPostLike> likes = this.<PostLike, QPostLike>createSet("likes", PostLike.class, QPostLike.class, PathInits.DIRECT2);
+
+    public final SetPath<PostScrap, QPostScrap> scraps = this.<PostScrap, QPostScrap>createSet("scraps", PostScrap.class, QPostScrap.class, PathInits.DIRECT2);
 
     public final SetPath<com.importH.domain.tag.Tag, com.importH.domain.tag.QTag> tags = this.<com.importH.domain.tag.Tag, com.importH.domain.tag.QTag>createSet("tags", com.importH.domain.tag.Tag.class, com.importH.domain.tag.QTag.class, PathInits.DIRECT2);
 

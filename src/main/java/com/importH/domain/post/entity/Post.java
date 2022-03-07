@@ -52,15 +52,15 @@ public class Post extends BaseTimeEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    private Set<Comment> comments = new HashSet<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<PostLike> likes = new ArrayList<>();
+    private Set<PostLike> likes = new HashSet<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<PostScrap> scraps = new ArrayList<>();
+    private Set<PostScrap> scraps = new HashSet<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)

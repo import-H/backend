@@ -90,7 +90,7 @@ public class PostService {
     @Transactional
     public PostDto.Response getPost(User user, Long postId) {
 
-        Post post = findWithUserTags(postId);
+        Post post = findWithAll(postId);
 
         increaseViewCount(user, post);
 
@@ -98,16 +98,21 @@ public class PostService {
         List<CommentDto.Response> comments = getCommentDtos(post);
 
         boolean isLike = havePostLike(user, post);
+        boolean isScrap = haveScrap(user, post);
 
-        return PostDto.Response.fromEntity(post, tags, comments, isLike);
+        return PostDto.Response.fromEntity(post, tags, comments, isLike,isScrap);
     }
 
-    public Post findWithUserTags(Long postsId) {
-        return postRepository.findWithTagsAndCommentsById(postsId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
+    private boolean haveScrap(User user, Post post) {
+        return post.getScraps().stream().anyMatch(postScrap -> postScrap.getUser().equals(user));
+    }
+
+    public Post findWithAll(Long postsId) {
+        return postRepository.findWithAllById(postsId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
     }
 
     private boolean havePostLike(User user, Post post) {
-        return postLikeRepository.existsByUserAndPost(user, post);
+        return  post.getLikes().stream().anyMatch(postLike -> postLike.getUser().equals(user));
     }
 
     private void increaseViewCount(User user, Post post) {

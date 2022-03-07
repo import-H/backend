@@ -114,7 +114,10 @@ public class PostDto {
         @ApiModelProperty(value = "현재 유저 좋아요 여부", example = "true/false")
         private boolean isLike;
 
-        public static Response fromEntity(Post post, Set<TagDto> tagDtos, List<CommentDto.Response> commentDtos, boolean isLike) {
+        @ApiModelProperty(value = "현재 유저 스크랩 여부", example = "true/false")
+        private boolean isScrap;
+
+        public static Response fromEntity(Post post, Set<TagDto> tagDtos, List<CommentDto.Response> commentDtos, boolean isLike, boolean isScrap) {
 
             return Response.builder()
                     .responseInfo(ResponseInfo.builder()
@@ -132,6 +135,7 @@ public class PostDto {
                             .build())
                     .comments(commentDtos)
                     .isLike(isLike)
+                    .isScrap(isScrap)
                     .build();
         }
     }

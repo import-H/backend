@@ -1,8 +1,7 @@
-package com.importH.domain.post;
+package com.importH.domain.post.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.importH.domain.post.entity.PostLike;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
@@ -12,48 +11,40 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QPostLike is a Querydsl query type for PostLike
+ * QPostScrap is a Querydsl query type for PostScrap
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QPostLike extends EntityPathBase<PostLike> {
+public class QPostScrap extends EntityPathBase<PostScrap> {
 
-    private static final long serialVersionUID = 1764262771L;
+    private static final long serialVersionUID = -440585822L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QPostLike postLike = new QPostLike("postLike");
-
-    public final com.importH.domain.QBaseTimeEntity _super = new com.importH.domain.QBaseTimeEntity(this);
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+    public static final QPostScrap postScrap = new QPostScrap("postScrap");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QPost post;
 
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
-
     public final com.importH.domain.user.entity.QUser user;
 
-    public QPostLike(String variable) {
-        this(PostLike.class, forVariable(variable), INITS);
+    public QPostScrap(String variable) {
+        this(PostScrap.class, forVariable(variable), INITS);
     }
 
-    public QPostLike(Path<? extends PostLike> path) {
+    public QPostScrap(Path<? extends PostScrap> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QPostLike(PathMetadata metadata) {
+    public QPostScrap(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QPostLike(PathMetadata metadata, PathInits inits) {
-        this(PostLike.class, metadata, inits);
+    public QPostScrap(PathMetadata metadata, PathInits inits) {
+        this(PostScrap.class, metadata, inits);
     }
 
-    public QPostLike(Class<? extends PostLike> type, PathMetadata metadata, PathInits inits) {
+    public QPostScrap(Class<? extends PostScrap> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.post = inits.isInitialized("post") ? new QPost(forProperty("post"), inits.get("post")) : null;
         this.user = inits.isInitialized("user") ? new com.importH.domain.user.entity.QUser(forProperty("user"), inits.get("user")) : null;
