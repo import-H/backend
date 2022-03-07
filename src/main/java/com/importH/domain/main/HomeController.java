@@ -1,7 +1,7 @@
 package com.importH.domain.main;
 
-import com.importH.domain.post.PostDto;
-import com.importH.domain.post.PostService;
+import com.importH.domain.post.dto.PostDto;
+import com.importH.domain.post.service.PostService;
 import com.importH.global.response.ResponseService;
 import com.importH.global.response.ListResult;
 import io.swagger.annotations.Api;

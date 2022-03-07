@@ -1,5 +1,7 @@
-package com.importH.domain.post;
+package com.importH.domain.post.repository;
 
+import com.importH.domain.post.QPost;
+import com.importH.domain.post.entity.Post;
 import com.importH.domain.user.entity.QUser;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;

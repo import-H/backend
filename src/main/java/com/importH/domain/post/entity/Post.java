@@ -1,9 +1,9 @@
-package com.importH.domain.post;
+package com.importH.domain.post.entity;
 
 import com.importH.domain.BaseTimeEntity;
 import com.importH.domain.comment.Comment;
 import com.importH.domain.image.Image;
-import com.importH.domain.post.PostDto.Request;
+import com.importH.domain.post.dto.PostDto.Request;
 import com.importH.domain.tag.Tag;
 import com.importH.domain.user.entity.User;
 import lombok.*;
@@ -45,6 +45,7 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Builder.Default
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
 
@@ -56,6 +57,10 @@ public class Post extends BaseTimeEntity {
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PostLike> postLikes = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<PostScrap> postScraps = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)

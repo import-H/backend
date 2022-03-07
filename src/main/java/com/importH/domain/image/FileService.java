@@ -1,6 +1,6 @@
 package com.importH.domain.image;
 
-import com.importH.domain.post.Post;
+import com.importH.domain.post.entity.Post;
 import com.importH.global.error.code.FileErrorCode;
 import com.importH.global.error.exception.FileException;
 import lombok.RequiredArgsConstructor;

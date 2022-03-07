@@ -2,7 +2,7 @@ package com.importH.global.event;
 
 
 import com.importH.domain.notification.NotificationService;
-import com.importH.domain.post.Post;
+import com.importH.domain.post.entity.Post;
 import com.importH.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.importH.domain.post;
 
-import com.querydsl.core.types.dsl.*;
+import com.importH.domain.post.dto.PostDto;
 
 import com.querydsl.core.types.ConstructorExpression;
 import javax.annotation.processing.Generated;

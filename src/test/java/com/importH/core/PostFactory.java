@@ -1,9 +1,9 @@
 package com.importH.core;
 
-import com.importH.domain.post.Post;
-import com.importH.domain.post.PostDto;
-import com.importH.domain.post.PostRepository;
-import com.importH.domain.post.PostService;
+import com.importH.domain.post.entity.Post;
+import com.importH.domain.post.dto.PostDto;
+import com.importH.domain.post.repository.PostRepository;
+import com.importH.domain.post.service.PostService;
 import com.importH.domain.tag.TagDto;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;

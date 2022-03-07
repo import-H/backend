@@ -1,5 +1,6 @@
-package com.importH.domain.post;
+package com.importH.domain.post.repository;
 
+import com.importH.domain.post.entity.Post;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 

@@ -1,7 +1,8 @@
-package com.importH.domain.post;
+package com.importH.domain.post.dto;
 
 
 import com.importH.domain.comment.CommentDto;
+import com.importH.domain.post.entity.Post;
 import com.importH.domain.tag.TagDto;
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.annotations.ApiModel;
@@ -11,7 +12,6 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -54,11 +54,9 @@ public class PostDto {
             return Post.builder()
                     .content(content)
                     .type(type)
-                    .comments(new ArrayList<>())
-                    .postLikes(new ArrayList<>())
                     .important(important)
                     .title(title)
-                    .tags(new HashSet<>()).build();
+                    .build();
         }
 
     }

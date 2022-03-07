@@ -1,8 +1,8 @@
 package com.importH.domain.comment;
 
 import com.importH.domain.comment.CommentDto.Request;
-import com.importH.domain.post.Post;
-import com.importH.domain.post.PostService;
+import com.importH.domain.post.entity.Post;
+import com.importH.domain.post.service.PostService;
 import com.importH.domain.user.entity.User;
 import com.importH.global.error.code.CommentErrorCode;
 import com.importH.global.error.code.SecurityErrorCode;

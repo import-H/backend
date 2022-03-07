@@ -1,7 +1,7 @@
 package com.importH.global.event;
 
 import com.importH.domain.notification.NotificationType;
-import com.importH.domain.post.Post;
+import com.importH.domain.post.entity.Post;
 import lombok.Getter;
 
 @Getter

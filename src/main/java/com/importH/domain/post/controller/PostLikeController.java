@@ -1,6 +1,7 @@
-package com.importH.domain.post;
+package com.importH.domain.post.controller;
 
 
+import com.importH.domain.post.service.PostLikeService;
 import com.importH.domain.user.CurrentUser;
 import com.importH.domain.user.entity.User;
 import com.importH.global.response.ResponseService;

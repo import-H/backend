@@ -2,9 +2,9 @@ package com.importH.controller;
 
 import com.importH.core.PostFactory;
 import com.importH.core.WithAccount;
-import com.importH.domain.post.Post;
-import com.importH.domain.post.PostLikeRepository;
-import com.importH.domain.post.PostLikeService;
+import com.importH.domain.post.entity.Post;
+import com.importH.domain.post.repository.PostLikeRepository;
+import com.importH.domain.post.service.PostLikeService;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;

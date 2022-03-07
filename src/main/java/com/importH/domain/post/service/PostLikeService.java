@@ -1,6 +1,9 @@
-package com.importH.domain.post;
+package com.importH.domain.post.service;
 
 
+import com.importH.domain.post.entity.Post;
+import com.importH.domain.post.entity.PostLike;
+import com.importH.domain.post.repository.PostLikeRepository;
 import com.importH.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

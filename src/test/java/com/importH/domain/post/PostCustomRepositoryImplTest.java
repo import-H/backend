@@ -1,5 +1,8 @@
 package com.importH.domain.post;
 
+import com.importH.domain.post.entity.Post;
+import com.importH.domain.post.entity.PostType;
+import com.importH.domain.post.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

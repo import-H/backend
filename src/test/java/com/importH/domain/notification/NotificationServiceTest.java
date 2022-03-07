@@ -1,6 +1,6 @@
 package com.importH.domain.notification;
 
-import com.importH.domain.post.Post;
+import com.importH.domain.post.entity.Post;
 import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
 import com.importH.global.error.code.NotificationErrorCode;

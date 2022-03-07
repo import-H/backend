@@ -1,7 +1,7 @@
 package com.importH.domain.comment;
 
 import com.importH.domain.BaseTimeEntity;
-import com.importH.domain.post.Post;
+import com.importH.domain.post.entity.Post;
 import com.importH.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,8 +1,12 @@
 package com.importH.core.service;
 
 import com.importH.core.UserFactory;
-import com.importH.domain.post.*;
-import com.importH.domain.post.PostDto.Response;
+import com.importH.domain.post.dto.PostDto;
+import com.importH.domain.post.dto.PostDto.Response;
+import com.importH.domain.post.entity.Post;
+import com.importH.domain.post.entity.PostType;
+import com.importH.domain.post.repository.PostRepository;
+import com.importH.domain.post.service.PostService;
 import com.importH.domain.tag.Tag;
 import com.importH.domain.tag.TagDto;
 import com.importH.domain.tag.TagService;

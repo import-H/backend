@@ -1,4 +1,4 @@
-package com.importH.domain.post;
+package com.importH.domain.post.entity;
 
 import com.importH.domain.BaseTimeEntity;
 import com.importH.domain.user.entity.User;

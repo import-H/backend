@@ -1,7 +1,12 @@
-package com.importH.domain.post;
+package com.importH.domain.post.service;
 
 import com.importH.domain.comment.CommentDto;
 import com.importH.domain.image.FileService;
+import com.importH.domain.post.dto.PostDto;
+import com.importH.domain.post.entity.Post;
+import com.importH.domain.post.entity.PostType;
+import com.importH.domain.post.repository.PostLikeRepository;
+import com.importH.domain.post.repository.PostRepository;
 import com.importH.domain.tag.Tag;
 import com.importH.domain.tag.TagDto;
 import com.importH.domain.tag.TagService;

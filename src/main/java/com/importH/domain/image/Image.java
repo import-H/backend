@@ -1,6 +1,6 @@
 package com.importH.domain.image;
 
-import com.importH.domain.post.Post;
+import com.importH.domain.post.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

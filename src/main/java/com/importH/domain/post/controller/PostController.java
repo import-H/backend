@@ -1,5 +1,8 @@
-package com.importH.domain.post;
+package com.importH.domain.post.controller;
 
+import com.importH.domain.post.dto.PostDto;
+import com.importH.domain.post.service.PostService;
+import com.importH.domain.post.entity.Post;
 import com.importH.domain.user.CurrentUser;
 import com.importH.domain.user.entity.User;
 import com.importH.global.response.ResponseService;

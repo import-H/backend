@@ -2,6 +2,8 @@ package com.importH.domain.post;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
+import com.importH.domain.post.entity.Post;
+import com.importH.domain.post.entity.PostLike;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
