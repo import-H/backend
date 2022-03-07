@@ -27,6 +27,8 @@ public class PostLikeService {
 
         Post post = postService.findByPostId(postId);
 
+
+        //TODO postLikeRepository 가 아닌 post 로 조회
         Optional<PostLike> postLike = postLikeRepository.findByPostAndUser(post, user);
 
         if (postLike.isPresent()) {

@@ -23,4 +23,11 @@ public class PostScrap {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    public static PostScrap create(Post post, User user) {
+        return PostScrap.builder()
+                .post(post)
+                .user(user)
+                .build();
+    }
 }
