@@ -1,12 +1,15 @@
 package com.importH.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.importH.core.PostFactory;
+import com.importH.core.PostScrapFactory;
 import com.importH.core.UserFactory;
 import com.importH.core.WithAccount;
+import com.importH.domain.post.entity.Post;
 import com.importH.domain.user.dto.PasswordDto;
 import com.importH.domain.user.dto.SocialDto;
-import com.importH.domain.user.entity.User;
 import com.importH.domain.user.dto.UserDto;
+import com.importH.domain.user.entity.User;
 import com.importH.domain.user.repository.UserRepository;
 import com.importH.global.error.code.CommonErrorCode;
 import com.importH.global.error.code.SecurityErrorCode;
@@ -351,6 +354,54 @@ class UserControllerTest {
 
     }
 
+
+    @Autowired
+    PostFactory postFactory;
+
+    @Autowired
+    PostScrapFactory postScrapFactory;
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 유저 스크랩 가져오기")
+    void findAllScraps_success() throws Exception {
+        // given
+        User user = userRepository.findByNickname("테스트").get();
+        for (int i = 0; i < 10; i++) {
+            Post post = postFactory.createPost(user);
+            postScrapFactory.createScrap(user,post);
+        }
+        // when
+        ResultActions perform = mockMvc.perform(get("/v1/users/" + user.getId() + "/scrap"));
+
+        //then
+        perform
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.list[*].title").exists())
+                .andExpect(jsonPath("$.list[*].createdAt").exists())
+                .andExpect(jsonPath("$.list[*].author").exists())
+                .andExpect(jsonPath("$.list[*].postUri").exists())
+                .andExpect(jsonPath("$.list[*]", hasSize(10)));
+    }
+
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[실패] 유저 스크랩 가져오기 - 권한이 없는 유저 ")
+    void findAllScraps_fail() throws Exception {
+        //given
+        User another = userRepository.findByNickname("test0").get();
+        SecurityErrorCode err = SecurityErrorCode.ACCESS_DENIED;
+
+        // when
+        ResultActions perform = mockMvc.perform(get("/v1/users/" + another.getId() + "/scrap"));
+
+        //then
+        perform.andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.msg").value(err.getDescription()));
+
+    }
     private PasswordDto.Request getPasswordReq(String password, String confirmPassword) {
         return PasswordDto.Request.builder().password(password).confirmPassword(confirmPassword).build();
     }

@@ -35,4 +35,5 @@ public class PostScrapController {
         postScrapService.scrap(postId, user);
         return responseService.getSuccessResult();
     }
+
 }
