@@ -57,7 +57,7 @@ class PostLikeServiceTest {
     void increasePostLike() throws Exception {
 
         // when
-        postLikeService.changeLike(user,post.getId());
+        postLikeService.addLike(user,post.getId());
 
         //then
         assertThat(postLikeRepository.existsByUserAndPost(user, post)).isTrue();
@@ -71,10 +71,10 @@ class PostLikeServiceTest {
     void decreasePostLike() throws Exception {
 
         //given
-        postLikeService.changeLike(user,post.getId());
+        postLikeService.addLike(user,post.getId());
 
         // when
-        postLikeService.changeLike(user,post.getId());
+        postLikeService.cancelLike(user,post.getId());
 
 
         //then
@@ -87,7 +87,7 @@ class PostLikeServiceTest {
     @DisplayName("[성공] 게시글 삭제시 해당 게시글 좋아요 데이터 삭제")
     void deletePostWithPostLike() throws Exception {
         // given
-        postLikeService.changeLike(user,post.getId());
+        postLikeService.addLike(user,post.getId());
 
         // when
         postRepository.delete(post);

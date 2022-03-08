@@ -22,11 +22,28 @@ public class PostLikeService {
 
     private final PostLikeRepository postLikeRepository;
     private final PostRepository postRepository;
+
     /**
      * 게시글 좋아요 요청
      */
     @Transactional
-    public void changeLike(User user, Long postId) {
+    public void addLike(User user, Long postId) {
+
+        Post post = postRepository.findPostWithLikeById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND_POST));
+
+        Optional<PostLike> findPostLike = post.getLikes().stream().filter(postLike -> postLike.getUser().equals(user)).findFirst();
+
+
+        if (findPostLike.isEmpty()) {
+            increaseLike(user, post);
+        }
+    }
+
+    /**
+     * 게시글 좋아요 취소
+     */
+    @Transactional
+    public void cancelLike(User user, Long postId) {
 
         Post post = postRepository.findPostWithLikeById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND_POST));
 
@@ -34,10 +51,9 @@ public class PostLikeService {
 
         if (findPostLike.isPresent()) {
             decreaseLike(post, findPostLike.get());
-            return;
         }
-            increaseLike(user, post);
     }
+
 
     private void increaseLike(User user, Post post) {
         PostLike postLike = savePostLike(PostLike.builder().post(post).user(user).build());

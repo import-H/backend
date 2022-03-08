@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -75,10 +76,10 @@ class PostLikeControllerTest {
     @DisplayName("[성공] 게시글 좋아요 취소")
     void decreaseLike() throws Exception {
         //given
-        postLikeService.changeLike(user, post.getId());
+        postLikeService.addLike(user, post.getId());
 
         // when
-        ResultActions perform = mockMvc.perform(post("/v1/posts/" + post.getId() + "/like"));
+        ResultActions perform = mockMvc.perform(delete("/v1/posts/" + post.getId() + "/like"));
 
         //then
         perform.andExpect(status().isOk())

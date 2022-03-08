@@ -25,6 +25,9 @@ public class BannerService {
     private final TagService tagService;
 
 
+    /**
+     * 배너 등록
+     */
     @Transactional
     public Response registerBanner(Request bannerDto) {
 
@@ -52,6 +55,10 @@ public class BannerService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 배너 삭제
+     */
+    @Transactional
     public void deleteBanner(Long bannerId) {
 
         Banner banner = findById(bannerId);

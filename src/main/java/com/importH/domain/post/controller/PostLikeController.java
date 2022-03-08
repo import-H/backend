@@ -9,10 +9,7 @@ import com.importH.global.response.CommonResult;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Api(tags = "6. PostLike")
@@ -26,12 +23,21 @@ public class PostLikeController {
     private final PostLikeService postLikeService;
 
 
-    @ApiOperation(value = "게시글 좋아요 요청", notes = "postId 의 게시글 좋아요 요청을 보냅니다.")
+    @ApiOperation(value = "게시글 좋아요", notes = "postId 의 게시글 좋아요 요청을 보냅니다.")
     @PostMapping
     public CommonResult requestLike(@ApiIgnore @CurrentUser User user,
                                     @ApiParam(value = "게시글 ID" , example = "1") @PathVariable Long postId) {
 
-        postLikeService.changeLike(user,postId);
+        postLikeService.addLike(user,postId);
+        return responseService.getSuccessResult();
+    }
+
+    @ApiOperation(value = "게시글 좋아요 취소", notes = "postId 의 게시글 좋아요 취소 요청을 보냅니다.")
+    @DeleteMapping
+    public CommonResult requestUnLike(@ApiIgnore @CurrentUser User user,
+                                    @ApiParam(value = "게시글 ID" , example = "1") @PathVariable Long postId) {
+
+        postLikeService.cancelLike(user,postId);
         return responseService.getSuccessResult();
     }
 }
