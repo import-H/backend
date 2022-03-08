@@ -1,6 +1,8 @@
 package com.importH.domain.user.service;
 
 import com.importH.domain.image.FileService;
+import com.importH.domain.post.dto.ScrapDto;
+import com.importH.domain.post.service.PostScrapService;
 import com.importH.domain.user.dto.PasswordDto;
 import com.importH.domain.user.dto.SocialDto;
 import com.importH.domain.user.dto.UserDto.Request;
@@ -31,6 +33,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final PostScrapService postScrapService;
+
     private final FileService fileService;
 
     /**
@@ -45,11 +49,11 @@ public class UserService {
 
     private User getValidatedUser(Long userId, User user) {
         User findUser = findById(userId);
-        isSameUser(user, findUser);
+        isAuthorization(user, findUser);
         return findUser;
     }
 
-    private void isSameUser(User user, User findUser) {
+    private void isAuthorization(User user, User findUser) {
         if(!findUser.equals(user)) {
             throw new SecurityException(SecurityErrorCode.ACCESS_DENIED);
         }
@@ -133,10 +137,8 @@ public class UserService {
             throw new UserException(USER_PATH_ID_DUPLICATED);
         }
         user.setPathId(socialDto.getPathId());
-
-
-
     }
+
 
     private boolean isSocialUser(User user) {
         return notHavePathId(user) && user.getOauthId() != null;
@@ -144,5 +146,17 @@ public class UserService {
 
     private boolean notHavePathId(User user) {
         return user.getPathId() == null;
+    }
+
+
+    /**
+     * 유저 스크랩 가져오기
+     */
+    public List<ScrapDto.Response> findAllScrap(Long userId, User loginUser, Pageable pageable) {
+        User findUser = this.findById(userId);
+
+        isAuthorization(loginUser,findUser);
+
+        return postScrapService.findAllScrap(findUser,pageable);
     }
 }

@@ -24,7 +24,7 @@ public class QPost extends EntityPathBase<Post> {
 
     public final com.importH.domain.QBaseTimeEntity _super = new com.importH.domain.QBaseTimeEntity(this);
 
-    public final ListPath<com.importH.domain.comment.Comment, com.importH.domain.comment.QComment> comments = this.<com.importH.domain.comment.Comment, com.importH.domain.comment.QComment>createList("comments", com.importH.domain.comment.Comment.class, com.importH.domain.comment.QComment.class, PathInits.DIRECT2);
+    public final SetPath<com.importH.domain.comment.Comment, com.importH.domain.comment.QComment> comments = this.<com.importH.domain.comment.Comment, com.importH.domain.comment.QComment>createSet("comments", com.importH.domain.comment.Comment.class, com.importH.domain.comment.QComment.class, PathInits.DIRECT2);
 
     public final StringPath content = createString("content");
 

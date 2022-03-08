@@ -1,5 +1,6 @@
 package com.importH.domain.user.dto;
 
+import com.importH.domain.user.entity.InfoAgree;
 import com.importH.domain.user.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -60,6 +61,7 @@ public class SignupDto {
                 .nickname(nickname)
                 .role("ROLE_USER")
                 .weekAgree(agree)
+                .infoAgree(new InfoAgree(true,true))
                 .build();
     }
 

@@ -1,8 +1,12 @@
 package com.importH.core.service;
 
+import com.importH.core.PostFactory;
+import com.importH.core.PostScrapFactory;
 import com.importH.core.UserFactory;
 import com.importH.core.WithAccount;
 import com.importH.domain.image.FileService;
+import com.importH.domain.post.dto.ScrapDto;
+import com.importH.domain.post.entity.Post;
 import com.importH.domain.user.dto.PasswordDto;
 import com.importH.domain.user.dto.SocialDto;
 import com.importH.domain.user.dto.UserDto.Request;
@@ -386,4 +390,47 @@ class UserServiceTest {
                 .hasMessageContaining(err.getDescription());
     }
 
+    @Autowired
+    PostFactory postFactory;
+
+    @Autowired
+    PostScrapFactory postScrapFactory;
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 유저 스크랩 가져오기")
+    void findAllScraps_success() throws Exception {
+        // given
+        for (int i = 0; i < 10; i++) {
+            Post post = postFactory.createPost(user);
+            postScrapFactory.createScrap(user,post);
+        }
+        PageRequest request = PageRequest.of(0, 10);
+
+        // when
+        List<ScrapDto.Response> responses = userService.findAllScrap(user.getId(), user, request);
+
+        //then
+        assertThat(responses).hasSize(10)
+                .extracting("author").containsAnyOf(user.getNickname());
+
+    }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[실패] 유저 스크랩 가져오기 - 동일하지 않은 유저")
+    void findAllScraps_fail() throws Exception {
+
+        // given
+        User another = userRepository.findByNickname("test0").get();
+        PageRequest request = PageRequest.of(0, 10);
+        SecurityErrorCode err = SecurityErrorCode.ACCESS_DENIED;
+
+        // when
+        SecurityException securityException = assertThrows(SecurityException.class, () -> userService.findAllScrap(another.getId(), this.user, request));
+
+        //then
+        assertThat(securityException).hasMessageContaining(err.getDescription());
+
+    }
 }

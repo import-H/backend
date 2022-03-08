@@ -1,5 +1,6 @@
 package com.importH.domain.post.service;
 
+import com.importH.domain.post.dto.ScrapDto;
 import com.importH.domain.post.entity.Post;
 import com.importH.domain.post.entity.PostScrap;
 import com.importH.domain.post.repository.PostRepository;
@@ -8,9 +9,12 @@ import com.importH.domain.user.entity.User;
 import com.importH.global.error.code.PostErrorCode;
 import com.importH.global.error.exception.PostException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -61,4 +65,11 @@ public class PostScrapService {
                 .orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND_POST));
     }
 
+    /**
+     * 해당 유저 스크랩 가져오기
+     */
+    public List<ScrapDto.Response> findAllScrap(User user, Pageable pageable) {
+        Page<ScrapDto.Response> responses = postScrapRepository.findAllByUser(user, pageable);
+        return responses.getContent();
+    }
 }
