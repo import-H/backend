@@ -98,7 +98,7 @@ class PostScrapServiceTest {
         given(postRepository.findPostWithScrapById(any())).willReturn(Optional.of(post));
 
         // when
-        postScrapService.scrap(post.getId(), user);
+        postScrapService.cancelScrap(post.getId(), user);
 
         //then
         assertThat(post.getScraps()).hasSize(0);

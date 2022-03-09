@@ -34,11 +34,7 @@ public class PostScrapService {
 
         Optional<PostScrap> scrap = findPostScrapByUser(currentUser, post);
 
-        if (scrap.isPresent()) {
-            removeScrap(post, scrap);
-            return;
-        }
-
+        if(scrap.isEmpty())
         addScrap(currentUser, post);
 
     }
@@ -48,9 +44,9 @@ public class PostScrapService {
         post.addScrap(postScrap);
     }
 
-    private void removeScrap(Post post, Optional<PostScrap> scrap) {
-        postScrapRepository.delete(scrap.get());
-        post.removeScrap(scrap.get());
+    private void removeScrap(Post post, PostScrap postScrap) {
+        postScrapRepository.delete(postScrap);
+        post.removeScrap(postScrap);
     }
 
     private Optional<PostScrap> findPostScrapByUser(User currentUser, Post post) {
@@ -71,5 +67,17 @@ public class PostScrapService {
     public List<ScrapDto.Response> findAllScrap(User user, Pageable pageable) {
         Page<ScrapDto.Response> responses = postScrapRepository.findAllByUser(user, pageable);
         return responses.getContent();
+    }
+
+    /**
+     * 스크랩 취소하기
+     */
+    @Transactional
+    public void cancelScrap(Long postId, User user) {
+
+        Post post = findPost(postId);
+
+        findPostScrapByUser(user, post).ifPresent(scrap -> removeScrap(post, scrap));
+
     }
 }

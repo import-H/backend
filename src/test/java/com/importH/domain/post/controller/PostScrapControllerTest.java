@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -110,7 +111,7 @@ class PostScrapControllerTest {
         post.addScrap(PostScrap.create(post,user));
 
         // when
-        ResultActions perform = mockMvc.perform(post("/v1/posts/" + post.getId() + "/scrap"));
+        ResultActions perform = mockMvc.perform(delete("/v1/posts/" + post.getId() + "/scrap"));
 
         //then
         perform.andExpect(status().isOk())

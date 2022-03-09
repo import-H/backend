@@ -3,6 +3,7 @@ package com.importH.domain.post.repository;
 import com.importH.domain.post.entity.Post;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -20,9 +21,10 @@ public interface PostRepository extends JpaRepository<Post,Long>, PostCustomRepo
     @EntityGraph(attributePaths = {"user"})
     Optional<Post> findById(Long aLong);
 
-    @EntityGraph(attributePaths = {"scraps","user"})
-    Optional<Post> findPostWithScrapById(Long postId);
+//    @Query("select p  from Post p left join fetch p.scraps scrap where p.id=:postId")
+    @EntityGraph(attributePaths = {"user","scraps"})
+    Optional<Post> findPostWithScrapById(@Param("postId") Long postId);
 
-    @EntityGraph(attributePaths = {"user"})
+    @EntityGraph(attributePaths = {"user","likes"})
     Optional<Post> findPostWithLikeById(Long postId);
 }

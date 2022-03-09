@@ -10,10 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Api(tags = "9. PostScrap")
@@ -33,6 +30,16 @@ public class PostScrapController {
 
 
         postScrapService.scrap(postId, user);
+        return responseService.getSuccessResult();
+    }
+
+    @ApiOperation(value = "게시글 스크랩 취소", notes = "postId 의 게시글 스크랩 취소 요청을 보냅니다.")
+    @DeleteMapping
+    public CommonResult requestScrapCancel(@ApiIgnore @CurrentUser User user,
+                                     @ApiParam(value = "게시글 ID" , example = "1") @PathVariable Long postId) {
+
+
+        postScrapService.cancelScrap(postId, user);
         return responseService.getSuccessResult();
     }
 
