@@ -6,6 +6,7 @@ import com.importH.core.PostScrapFactory;
 import com.importH.core.UserFactory;
 import com.importH.core.WithAccount;
 import com.importH.domain.post.entity.Post;
+import com.importH.domain.post.service.PostLikeService;
 import com.importH.domain.user.dto.PasswordDto;
 import com.importH.domain.user.dto.SocialDto;
 import com.importH.domain.user.dto.UserDto;
@@ -401,6 +402,33 @@ class UserControllerTest {
         perform.andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.msg").value(err.getDescription()));
 
+    }
+
+    @Autowired
+    PostLikeService postLikeService;
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 유저 좋아요한 게시글 가져오기")
+    void findAllPostByLike_success() throws Exception {
+        // given
+        User user = userRepository.findByNickname("테스트").get();
+        for (int i = 0; i < 10; i++) {
+            Post post = postFactory.createPost(user);
+            postLikeService.addLike(user,post.getId());
+        }
+        // when
+        ResultActions perform = mockMvc.perform(get("/v1/users/" + user.getId() + "/like"));
+
+        //then
+        perform
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.list[*].title").exists())
+                .andExpect(jsonPath("$.list[*].createdAt").exists())
+                .andExpect(jsonPath("$.list[*].author").exists())
+                .andExpect(jsonPath("$.list[*].postUri").exists())
+                .andExpect(jsonPath("$.list[*]", hasSize(10)));
     }
     private PasswordDto.Request getPasswordReq(String password, String confirmPassword) {
         return PasswordDto.Request.builder().password(password).confirmPassword(confirmPassword).build();

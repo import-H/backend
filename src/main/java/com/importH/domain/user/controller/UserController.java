@@ -1,6 +1,6 @@
 package com.importH.domain.user.controller;
 
-import com.importH.domain.post.dto.ScrapDto;
+import com.importH.domain.user.dto.UserPostDto;
 import com.importH.domain.user.CurrentUser;
 import com.importH.domain.user.dto.PasswordDto;
 import com.importH.domain.user.dto.SocialDto;
@@ -108,13 +108,19 @@ public class UserController {
 
     @ApiOperation(value = "스크랩한 게시글 가져오기", notes = "스크랩한 게시글을 가져옵니다.")
     @GetMapping("/{userId}/scrap")
-    public ListResult<ScrapDto.Response> findAllScraps(@ApiIgnore @CurrentUser User user,
-                                                       @ApiParam(value = "?limit=...&page=...") Pageable pageable,
-                                                       @ApiParam(value = "회원 ID", required = true) @PathVariable Long userId) {
+    public ListResult<UserPostDto.Response> findAllScraps(@ApiIgnore @CurrentUser User user,
+                                                          @ApiParam(value = "?limit=...&page=...") Pageable pageable,
+                                                          @ApiParam(value = "회원 ID", required = true) @PathVariable Long userId) {
         return responseService.getListResult(userService.findAllScrap(userId,user,pageable));
     }
 
-
+    @ApiOperation(value = "좋아요 한 게시글 가져오기", notes = "좋아요한 게시글을 가져옵니다.")
+    @GetMapping("/{userId}/like")
+    public ListResult<UserPostDto.Response> findAllPostByLike(@ApiIgnore @CurrentUser User user,
+                                                          @ApiParam(value = "?limit=...&page=...") Pageable pageable,
+                                                          @ApiParam(value = "회원 ID", required = true) @PathVariable Long userId) {
+        return responseService.getListResult(userService.findAllPostByLike(userId,user,pageable));
+    }
 
 
 }

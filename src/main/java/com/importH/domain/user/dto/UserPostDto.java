@@ -1,4 +1,4 @@
-package com.importH.domain.post.dto;
+package com.importH.domain.user.dto;
 
 import com.importH.domain.post.entity.Post;
 import com.querydsl.core.annotations.QueryProjection;
@@ -9,8 +9,8 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@ApiModel(value = "유저 스크랩 DTO")
-public class ScrapDto {
+@ApiModel(value = "유저 게시글 DTO (스크랩,좋아요,작성한게시글)")
+public class UserPostDto {
 
     @Getter
     @ApiModel(value = "유저 스크랩 DTO")

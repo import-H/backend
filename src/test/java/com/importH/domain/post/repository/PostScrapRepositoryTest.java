@@ -1,6 +1,6 @@
 package com.importH.domain.post.repository;
 
-import com.importH.domain.post.dto.ScrapDto;
+import com.importH.domain.user.dto.UserPostDto;
 import com.importH.domain.post.entity.Post;
 import com.importH.domain.post.entity.PostScrap;
 import com.importH.domain.post.entity.PostType;
@@ -45,7 +45,7 @@ class PostScrapRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 10);
 
         // when
-        Page<ScrapDto.Response> allByUser = postScrapRepository.findAllByUser(user, pageRequest);
+        Page<UserPostDto.Response> allByUser = postScrapRepository.findAllByUser(user, pageRequest);
 
         //then
         assertThat(allByUser.getSize()).isEqualTo(10);
@@ -71,7 +71,7 @@ class PostScrapRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 10);
 
         // when
-        Page<ScrapDto.Response> allByUser = postScrapRepository.findAllByUser(user, pageRequest);
+        Page<UserPostDto.Response> allByUser = postScrapRepository.findAllByUser(user, pageRequest);
 
         //then
         assertThat(allByUser).hasSize(5);

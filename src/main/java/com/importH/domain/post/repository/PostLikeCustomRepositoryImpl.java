@@ -13,13 +13,12 @@ import java.util.List;
 
 import static com.importH.domain.post.entity.QPostLike.postLike;
 
-
-public class PostScrapCustomRepositoryImpl implements PostScrapCustomRepository{
+public class PostLikeCustomRepositoryImpl implements PostLikeCustomRepository{
 
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
 
-    public PostScrapCustomRepositoryImpl(EntityManager em) {
+    public PostLikeCustomRepositoryImpl(EntityManager em) {
         this.em = em;
         queryFactory = new JPAQueryFactory(em);
     }
@@ -29,7 +28,7 @@ public class PostScrapCustomRepositoryImpl implements PostScrapCustomRepository{
 
 
 
-        List<UserPostDto.Response> scraps = queryFactory
+        List<UserPostDto.Response> likes = queryFactory
                 .select(new QUserPostDto_Response(
                         postLike.post.title
                         , postLike.post.createdAt
@@ -44,6 +43,6 @@ public class PostScrapCustomRepositoryImpl implements PostScrapCustomRepository{
                 .fetch();
 
 
-        return new PageImpl<>(scraps, pageable, scraps.size());
+        return new PageImpl<>(likes, pageable, likes.size());
     }
 }

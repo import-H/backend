@@ -1,7 +1,8 @@
 package com.importH.domain.user.service;
 
 import com.importH.domain.image.FileService;
-import com.importH.domain.post.dto.ScrapDto;
+import com.importH.domain.post.service.PostLikeService;
+import com.importH.domain.user.dto.UserPostDto;
 import com.importH.domain.post.service.PostScrapService;
 import com.importH.domain.user.dto.PasswordDto;
 import com.importH.domain.user.dto.SocialDto;
@@ -34,6 +35,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final PostScrapService postScrapService;
+
+    private final PostLikeService postLikeService;
 
     private final FileService fileService;
 
@@ -152,11 +155,22 @@ public class UserService {
     /**
      * 유저 스크랩 가져오기
      */
-    public List<ScrapDto.Response> findAllScrap(Long userId, User loginUser, Pageable pageable) {
+    public List<UserPostDto.Response> findAllScrap(Long userId, User loginUser, Pageable pageable) {
         User findUser = this.findById(userId);
 
         isAuthorization(loginUser,findUser);
 
         return postScrapService.findAllScrap(findUser,pageable);
+    }
+
+    /**
+     * 유저 좋아요 한 게시글 가져오기
+     */
+    public List<UserPostDto.Response> findAllPostByLike(Long userId, User loginUser, Pageable pageable) {
+        User findUser = this.findById(userId);
+
+        isAuthorization(loginUser,findUser);
+
+        return postLikeService.findAllPostLike(findUser,pageable);
     }
 }

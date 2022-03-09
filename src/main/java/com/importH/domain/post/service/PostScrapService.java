@@ -1,6 +1,6 @@
 package com.importH.domain.post.service;
 
-import com.importH.domain.post.dto.ScrapDto;
+import com.importH.domain.user.dto.UserPostDto;
 import com.importH.domain.post.entity.Post;
 import com.importH.domain.post.entity.PostScrap;
 import com.importH.domain.post.repository.PostRepository;
@@ -64,8 +64,8 @@ public class PostScrapService {
     /**
      * 해당 유저 스크랩 가져오기
      */
-    public List<ScrapDto.Response> findAllScrap(User user, Pageable pageable) {
-        Page<ScrapDto.Response> responses = postScrapRepository.findAllByUser(user, pageable);
+    public List<UserPostDto.Response> findAllScrap(User user, Pageable pageable) {
+        Page<UserPostDto.Response> responses = postScrapRepository.findAllByUser(user, pageable);
         return responses.getContent();
     }
 

@@ -5,7 +5,8 @@ import com.importH.core.PostScrapFactory;
 import com.importH.core.UserFactory;
 import com.importH.core.WithAccount;
 import com.importH.domain.image.FileService;
-import com.importH.domain.post.dto.ScrapDto;
+import com.importH.domain.post.service.PostLikeService;
+import com.importH.domain.user.dto.UserPostDto;
 import com.importH.domain.post.entity.Post;
 import com.importH.domain.user.dto.PasswordDto;
 import com.importH.domain.user.dto.SocialDto;
@@ -408,7 +409,7 @@ class UserServiceTest {
         PageRequest request = PageRequest.of(0, 10);
 
         // when
-        List<ScrapDto.Response> responses = userService.findAllScrap(user.getId(), user, request);
+        List<UserPostDto.Response> responses = userService.findAllScrap(user.getId(), user, request);
 
         //then
         assertThat(responses).hasSize(10)
@@ -428,6 +429,48 @@ class UserServiceTest {
 
         // when
         SecurityException securityException = assertThrows(SecurityException.class, () -> userService.findAllScrap(another.getId(), this.user, request));
+
+        //then
+        assertThat(securityException).hasMessageContaining(err.getDescription());
+
+    }
+
+
+    @Autowired
+    PostLikeService postLikeService;
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 유저 좋아요 한 게시글 가져오기")
+    void findAllPostByLike_success() throws Exception {
+        // given
+        for (int i = 0; i < 10; i++) {
+            Post post = postFactory.createPost(user);
+            postLikeService.addLike(user, post.getId());
+        }
+        PageRequest request = PageRequest.of(0, 10);
+
+        // when
+        List<UserPostDto.Response> responses = userService.findAllPostByLike(user.getId(), user, request);
+
+        //then
+        assertThat(responses).hasSize(10)
+                .extracting("author").containsAnyOf(user.getNickname());
+
+    }
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[실패] 유저 스크랩 가져오기 - 동일하지 않은 유저")
+    void findAllPostByLike_fail() throws Exception {
+
+        // given
+        User another = userRepository.findByNickname("test0").get();
+        PageRequest request = PageRequest.of(0, 10);
+        SecurityErrorCode err = SecurityErrorCode.ACCESS_DENIED;
+
+        // when
+        SecurityException securityException = assertThrows(SecurityException.class, () -> userService.findAllPostByLike(another.getId(), this.user, request));
 
         //then
         assertThat(securityException).hasMessageContaining(err.getDescription());

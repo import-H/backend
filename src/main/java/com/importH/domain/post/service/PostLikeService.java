@@ -5,13 +5,17 @@ import com.importH.domain.post.entity.Post;
 import com.importH.domain.post.entity.PostLike;
 import com.importH.domain.post.repository.PostLikeRepository;
 import com.importH.domain.post.repository.PostRepository;
+import com.importH.domain.user.dto.UserPostDto;
 import com.importH.domain.user.entity.User;
 import com.importH.global.error.code.PostErrorCode;
 import com.importH.global.error.exception.PostException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -71,5 +75,14 @@ public class PostLikeService {
 
     private void deletePostLike(PostLike postLike) {
         postLikeRepository.delete(postLike);
+    }
+
+    /**
+     * 좋아요 한 게시글 가져오기
+     */
+
+    public List<UserPostDto.Response> findAllPostLike(User user, Pageable pageable) {
+        Page<UserPostDto.Response> responses = postLikeRepository.findAllByUser(user, pageable);
+        return responses.getContent();
     }
 }
