@@ -60,7 +60,7 @@ public class UserService {
     }
 
     private void isAuthorization(User user, Long userId) {
-        if(user.getId() != userId) {
+        if (!user.getId().equals(userId)) {
             throw new SecurityException(SecurityErrorCode.ACCESS_DENIED);
         }
     }

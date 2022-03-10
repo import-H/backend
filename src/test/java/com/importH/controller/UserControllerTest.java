@@ -7,7 +7,6 @@ import com.importH.core.UserFactory;
 import com.importH.core.WithAccount;
 import com.importH.domain.post.entity.Post;
 import com.importH.domain.post.service.PostLikeService;
-import com.importH.domain.post.service.PostService;
 import com.importH.domain.user.dto.PasswordDto;
 import com.importH.domain.user.dto.SocialDto;
 import com.importH.domain.user.dto.UserDto;
@@ -16,6 +15,7 @@ import com.importH.domain.user.repository.UserRepository;
 import com.importH.global.error.code.CommonErrorCode;
 import com.importH.global.error.code.SecurityErrorCode;
 import com.importH.global.error.code.UserErrorCode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,12 +52,19 @@ class UserControllerTest {
     @Autowired
     UserFactory userFactory;
 
+    User user;
+
+    @BeforeEach
+    void init() {
+        user = userRepository.findByNickname("테스트").orElse(null);
+    }
+
     @Test
     @WithAccount("테스트")
     @DisplayName("[성공] 유저 정보 조회")
     void getUserInfo_success() throws Exception {
         // given
-        User user = userRepository.findByNickname("테스트").get();
+        user = userRepository.findByNickname("테스트").get();
 
         // when
         ResultActions perform = mockMvc.perform(get("/v1/users/" + user.getId()));
@@ -125,7 +132,7 @@ class UserControllerTest {
                 .personalUrl("http://cafe.naver.com")
                 .build();
 
-        User user = userRepository.findByNickname("테스트").get();
+        user = userRepository.findByNickname("테스트").get();
 
         // when
         ResultActions perform = mockMvc.perform(put("/v1/users/" + user.getId())
@@ -154,7 +161,7 @@ class UserControllerTest {
                 .personalUrl("cafe")
                 .build();
 
-        User user = userRepository.findByNickname("테스트").get();
+        user = userRepository.findByNickname("테스트").get();
         CommonErrorCode errorCode = CommonErrorCode.NOT_VALID_PARAM;
 
         // when
@@ -175,7 +182,7 @@ class UserControllerTest {
     @DisplayName("[성공] 유저 탈퇴")
     void deleteUser_success() throws Exception {
         // given
-        User user = userRepository.findByNickname("테스트").get();
+        user = userRepository.findByNickname("테스트").get();
 
         // when
         ResultActions perform = mockMvc.perform(delete("/v1/users/" + user.getId()));
@@ -207,7 +214,7 @@ class UserControllerTest {
     @DisplayName("[성공] 패스워드 변경")
     void updatePassword_success() throws Exception {
         // given
-        User user = userRepository.findByNickname("테스트").get();
+        user = userRepository.findByNickname("테스트").get();
         PasswordDto.Request request = getPasswordReq("testtest", "testtest");
 
         // when
@@ -226,7 +233,7 @@ class UserControllerTest {
     @DisplayName("[실패] 패스워드 변경 - 동일하지 않은 유저")
     void updatePassword_fail1() throws Exception {
         // given
-        User user = userRepository.findByNickname("test1").get();
+        user = userRepository.findByNickname("test1").get();
         PasswordDto.Request request = getPasswordReq("testtest", "testtest");
         SecurityErrorCode errorCode = SecurityErrorCode.ACCESS_DENIED;
 
@@ -247,7 +254,7 @@ class UserControllerTest {
     @DisplayName("[실패] 패스워드 변경 - 입력된 비밀번호와 확인이 동일하지 않은 경우")
     void updatePassword_fail2() throws Exception {
         // given
-        User user = userRepository.findByNickname("테스트").get();
+        user = userRepository.findByNickname("테스트").get();
         PasswordDto.Request request = getPasswordReq("testtest", "testtest1");
         UserErrorCode err = UserErrorCode.NOT_PASSWORD_EQUALS;
 
@@ -297,7 +304,7 @@ class UserControllerTest {
     void createPathId_success() throws Exception {
         // given
         SocialDto socialDto = getSocialDto();
-        User user = userRepository.findByNickname("소셜로그인").get();
+        user = userRepository.findByNickname("소셜로그인").get();
 
         // when
         ResultActions perform = mockMvc.perform(put("/v1/users/" + user.getId() + "/path-id")
@@ -317,7 +324,7 @@ class UserControllerTest {
     void createPathId_fail_exist_PathId() throws Exception {
         // given
         SocialDto socialDto = getSocialDto();
-        User user = userRepository.findByNickname("소셜로그인").get();
+        user = userRepository.findByNickname("소셜로그인").get();
         user.setPathId("social0");
         UserErrorCode errorCode = UserErrorCode.NOT_CREATE_SOCIAL_PATH_ID;
 
@@ -341,7 +348,7 @@ class UserControllerTest {
     void createPathId_fail_not_socialLogin() throws Exception {
         // given
         SocialDto socialDto = getSocialDto();
-        User user = userRepository.findByNickname("테스트").get();
+        user = userRepository.findByNickname("테스트").get();
         UserErrorCode errorCode = UserErrorCode.NOT_CREATE_SOCIAL_PATH_ID;
 
         // when
@@ -364,18 +371,17 @@ class UserControllerTest {
     PostScrapFactory postScrapFactory;
 
     @Test
-    @WithAccount("테스트")
+    @WithAccount("테스트1")
     @DisplayName("[성공] 유저 스크랩 가져오기")
     void findAllScraps_success() throws Exception {
         // given
-        User user = userRepository.findByNickname("테스트").get();
+        user = userRepository.findByNickname("테스트1").get();
         for (int i = 0; i < 10; i++) {
             Post post = postFactory.createPost(user);
             postScrapFactory.createScrap(user,post);
         }
         // when
         ResultActions perform = mockMvc.perform(get("/v1/users/" + user.getId() + "/scrap"));
-
         //then
         perform
                 .andExpect(status().isOk())
@@ -413,7 +419,7 @@ class UserControllerTest {
     @DisplayName("[성공] 유저 좋아요한 게시글 가져오기")
     void findAllPostByLike_success() throws Exception {
         // given
-        User user = userRepository.findByNickname("테스트").get();
+        user = userRepository.findByNickname("테스트").get();
         for (int i = 0; i < 10; i++) {
             Post post = postFactory.createPost(user);
             postLikeService.addLike(user,post.getId());
@@ -432,15 +438,11 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.list[*]", hasSize(10)));
     }
 
-    @Autowired
-    PostService postService;
-
     @Test
     @WithAccount("테스트")
     @DisplayName("[성공] 유저 작성한 게시글 가져오기")
     void findAllWrotePost_success() throws Exception {
         // given
-        User user = userRepository.findByNickname("테스트").get();
         for (int i = 0; i < 10; i++) {
             Post post = postFactory.createPost(user);
         }
@@ -457,6 +459,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.list[*].postUri").exists())
                 .andExpect(jsonPath("$.list[*]", hasSize(10)));
     }
+
     private PasswordDto.Request getPasswordReq(String password, String confirmPassword) {
         return PasswordDto.Request.builder().password(password).confirmPassword(confirmPassword).build();
     }

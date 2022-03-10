@@ -3,7 +3,6 @@ package com.importH.core.service;
 import com.importH.domain.user.token.RefreshToken;
 import com.importH.domain.user.token.RefreshTokenRepository;
 import com.importH.domain.user.token.TokenDto;
-import com.importH.domain.user.token.TokenDto.Info;
 import com.importH.domain.user.service.SignService;
 import com.importH.domain.user.dto.SignupDto;
 import com.importH.domain.user.entity.User;
@@ -323,10 +322,6 @@ class SignServiceTest {
         assertThat(exception)
                 .hasFieldOrPropertyWithValue("errorCode", err)
                 .hasFieldOrPropertyWithValue("errorMessage", err.getDescription());
-    }
-    private Info getTokenClaims() {
-        Info info = Info.fromEntity(user);
-        return info;
     }
 
     private TokenDto loginUser() {
