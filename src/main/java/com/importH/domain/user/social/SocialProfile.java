@@ -1,5 +1,6 @@
 package com.importH.domain.user.social;
 
+import com.importH.domain.user.entity.InfoAgree;
 import com.importH.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class SocialProfile {
                 .role("ROLE_USER")
                 .weekAgree(true)
                 .emailVerified(true)
+                .infoAgree(new InfoAgree(true,true))
                 .build();
     }
 }
