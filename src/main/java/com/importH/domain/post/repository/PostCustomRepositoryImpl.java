@@ -6,7 +6,10 @@ import com.importH.domain.post.entity.QPost;
 import com.importH.domain.post.entity.QPostLike;
 import com.importH.domain.post.entity.QPostScrap;
 import com.importH.domain.tag.QTag;
+import com.importH.domain.user.dto.QUserPostDto_Response;
+import com.importH.domain.user.dto.UserPostDto;
 import com.importH.domain.user.entity.QUser;
+import com.importH.domain.user.entity.User;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
@@ -14,16 +17,14 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.importH.domain.post.entity.QPostScrap.postScrap;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 public class PostCustomRepositoryImpl implements PostCustomRepository{
@@ -83,6 +84,26 @@ public class PostCustomRepositoryImpl implements PostCustomRepository{
                 .leftJoin(post.tags, QTag.tag).fetchJoin()
                 .leftJoin(post.scraps , QPostScrap.postScrap).fetchJoin()
                 .stream().findFirst();
+    }
+
+    @Override
+    public Page<UserPostDto.Response> findAllPostByUser(User user, Pageable pageable) {
+        List<UserPostDto.Response> scraps = queryFactory
+                .select(new QUserPostDto_Response(
+                        post.title
+                        , post.createdAt
+                        , post.user.nickname
+                        , post.user.profileImage
+                        , post.type.append("/").append(post.id.stringValue())))
+                .from(post)
+                .where(post.user.eq(user))
+                .orderBy(post.createdAt.desc())
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+
+        return new PageImpl<>(scraps, pageable, scraps.size());
     }
 
     private BooleanExpression typeEq(String boardId) {

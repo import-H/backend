@@ -2,6 +2,7 @@ package com.importH.domain.user.service;
 
 import com.importH.domain.image.FileService;
 import com.importH.domain.post.service.PostLikeService;
+import com.importH.domain.post.service.PostService;
 import com.importH.domain.user.dto.UserPostDto;
 import com.importH.domain.post.service.PostScrapService;
 import com.importH.domain.user.dto.PasswordDto;
@@ -38,6 +39,8 @@ public class UserService {
 
     private final PostLikeService postLikeService;
 
+    private final PostService postService;
+
     private final FileService fileService;
 
     /**
@@ -52,12 +55,12 @@ public class UserService {
 
     private User getValidatedUser(Long userId, User user) {
         User findUser = findById(userId);
-        isAuthorization(user, findUser);
+        isAuthorization(user, findUser.getId());
         return findUser;
     }
 
-    private void isAuthorization(User user, User findUser) {
-        if(!findUser.equals(user)) {
+    private void isAuthorization(User user, Long userId) {
+        if(user.getId() != userId) {
             throw new SecurityException(SecurityErrorCode.ACCESS_DENIED);
         }
     }
@@ -88,10 +91,10 @@ public class UserService {
      */
     @Transactional
     public void updatePassword(Long userId, User user, PasswordDto.Request request) {
-        User validatedUser = getValidatedUser(userId, user);
+        User findUser = getValidatedUser(userId, user);
         isValidPassword(request);
 
-        validatedUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        findUser.setPassword(passwordEncoder.encode(request.getPassword()));
     }
 
     private void isValidPassword(PasswordDto.Request request) {
@@ -152,25 +155,38 @@ public class UserService {
     }
 
 
+    //TODO 추후 변동사항 없을시 중복 제거
+
+
     /**
      * 유저 스크랩 가져오기
      */
     public List<UserPostDto.Response> findAllScrap(Long userId, User loginUser, Pageable pageable) {
-        User findUser = this.findById(userId);
 
-        isAuthorization(loginUser,findUser);
+       isAuthorization(loginUser, userId);
 
-        return postScrapService.findAllScrap(findUser,pageable);
+
+        return postScrapService.findAllScrap(loginUser,pageable);
     }
 
     /**
      * 유저 좋아요 한 게시글 가져오기
      */
     public List<UserPostDto.Response> findAllPostByLike(Long userId, User loginUser, Pageable pageable) {
-        User findUser = this.findById(userId);
 
-        isAuthorization(loginUser,findUser);
+        isAuthorization(loginUser, userId);
 
-        return postLikeService.findAllPostLike(findUser,pageable);
+
+        return postLikeService.findAllPostLike(loginUser,pageable);
+    }
+
+    /**
+     * 유저 작성 한 게시글 가져오기
+     */
+    public List<UserPostDto.Response> findAllWrotePost(Long userId, User loginUser, Pageable pageable) {
+
+        isAuthorization(loginUser, userId);
+
+        return postService.findAllPostByWrote(loginUser,pageable);
     }
 }

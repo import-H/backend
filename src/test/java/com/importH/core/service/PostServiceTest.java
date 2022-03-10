@@ -1,6 +1,8 @@
 package com.importH.core.service;
 
+import com.importH.core.PostFactory;
 import com.importH.core.UserFactory;
+import com.importH.core.WithAccount;
 import com.importH.domain.post.dto.PostDto;
 import com.importH.domain.post.dto.PostDto.Response;
 import com.importH.domain.post.entity.Post;
@@ -10,7 +12,9 @@ import com.importH.domain.post.service.PostService;
 import com.importH.domain.tag.Tag;
 import com.importH.domain.tag.TagDto;
 import com.importH.domain.tag.TagService;
+import com.importH.domain.user.dto.UserPostDto;
 import com.importH.domain.user.entity.User;
+import com.importH.domain.user.repository.UserRepository;
 import com.importH.global.error.code.PostErrorCode;
 import com.importH.global.error.code.SecurityErrorCode;
 import com.importH.global.error.exception.PostException;
@@ -381,6 +385,55 @@ class PostServiceTest {
         assertThat(post.getResponseInfo())
                 .hasFieldOrPropertyWithValue("nickname","삭제된 계정")
                 .hasFieldOrPropertyWithValue("profileImage","N");
+    }
+
+    @Autowired
+    PostFactory postFactory;
+
+    @Test
+    @DisplayName("인가된 유저가 작성 한 게시글 가져오기 ")
+    void findAllPostByLike_success() throws Exception {
+        // given
+        for (int i = 0; i < 10; i++) {
+            Post post = postFactory.createPost(user);
+        }
+
+        PageRequest of = PageRequest.of(0, 10);
+        // when
+
+        List<UserPostDto.Response> allPostByWrote = postService.findAllPostByWrote(user, of);
+
+        //then
+        assertThat(allPostByWrote).hasSize(10);
+    }
+
+    @Autowired
+    UserRepository userRepository;
+
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("인가된 유저가 작성 한 게시글 5개 가져오기 ")
+    void findAllPost5ByLike_success() throws Exception {
+
+        // given
+        int size = 5;
+        for (int i = 0; i < 6; i++) {
+            Post post = postFactory.createPost(user);
+        }
+
+        User another = userRepository.findByNickname("테스트").get();
+        for (int i = 0; i < size; i++) {
+            Post post = postFactory.createPost(another);
+        }
+
+        PageRequest of = PageRequest.of(0, 10);
+        // when
+
+        List<UserPostDto.Response> allPostByWrote = postService.findAllPostByWrote(another, of);
+
+        //then
+        assertThat(allPostByWrote).hasSize(size);
     }
 
 

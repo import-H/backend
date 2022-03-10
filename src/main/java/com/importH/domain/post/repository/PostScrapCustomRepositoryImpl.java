@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static com.importH.domain.post.entity.QPostLike.postLike;
+import static com.importH.domain.post.entity.QPostScrap.postScrap;
 
 
 public class PostScrapCustomRepositoryImpl implements PostScrapCustomRepository{
@@ -31,14 +31,14 @@ public class PostScrapCustomRepositoryImpl implements PostScrapCustomRepository{
 
         List<UserPostDto.Response> scraps = queryFactory
                 .select(new QUserPostDto_Response(
-                        postLike.post.title
-                        , postLike.post.createdAt
-                        , postLike.post.user.nickname
-                        , postLike.post.user.profileImage
-                        , postLike.post.type.append("/").append(postLike.post.id.stringValue())))
-                .from(postLike)
-                .where(postLike.user.eq(currentUser))
-                .orderBy(postLike.post.createdAt.desc())
+                        postScrap.post.title
+                        , postScrap.post.createdAt
+                        , postScrap.post.user.nickname
+                        , postScrap.post.user.profileImage
+                        , postScrap.post.type.append("/").append(postScrap.post.id.stringValue())))
+                .from(postScrap)
+                .where(postScrap.user.eq(currentUser))
+                .orderBy(postScrap.post.createdAt.desc())
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetch();

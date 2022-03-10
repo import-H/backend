@@ -7,6 +7,7 @@ import com.importH.core.UserFactory;
 import com.importH.core.WithAccount;
 import com.importH.domain.post.entity.Post;
 import com.importH.domain.post.service.PostLikeService;
+import com.importH.domain.post.service.PostService;
 import com.importH.domain.user.dto.PasswordDto;
 import com.importH.domain.user.dto.SocialDto;
 import com.importH.domain.user.dto.UserDto;
@@ -419,6 +420,32 @@ class UserControllerTest {
         }
         // when
         ResultActions perform = mockMvc.perform(get("/v1/users/" + user.getId() + "/like"));
+
+        //then
+        perform
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.list[*].title").exists())
+                .andExpect(jsonPath("$.list[*].createdAt").exists())
+                .andExpect(jsonPath("$.list[*].author").exists())
+                .andExpect(jsonPath("$.list[*].postUri").exists())
+                .andExpect(jsonPath("$.list[*]", hasSize(10)));
+    }
+
+    @Autowired
+    PostService postService;
+
+    @Test
+    @WithAccount("테스트")
+    @DisplayName("[성공] 유저 작성한 게시글 가져오기")
+    void findAllWrotePost_success() throws Exception {
+        // given
+        User user = userRepository.findByNickname("테스트").get();
+        for (int i = 0; i < 10; i++) {
+            Post post = postFactory.createPost(user);
+        }
+        // when
+        ResultActions perform = mockMvc.perform(get("/v1/users/" + user.getId() + "/post"));
 
         //then
         perform

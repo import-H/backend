@@ -122,6 +122,13 @@ public class UserController {
         return responseService.getListResult(userService.findAllPostByLike(userId,user,pageable));
     }
 
+    @ApiOperation(value = "작성 한 게시글 가져오기", notes = "작성 한 게시글을 가져옵니다.")
+    @GetMapping("/{userId}/post")
+    public ListResult<UserPostDto.Response> findAllWrotePost(@ApiIgnore @CurrentUser User user,
+                                                              @ApiParam(value = "?limit=...&page=...") Pageable pageable,
+                                                              @ApiParam(value = "회원 ID", required = true) @PathVariable Long userId) {
+        return responseService.getListResult(userService.findAllWrotePost(userId,user,pageable));
+    }
 
 }
 

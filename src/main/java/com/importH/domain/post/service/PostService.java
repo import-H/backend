@@ -10,12 +10,14 @@ import com.importH.domain.post.repository.PostRepository;
 import com.importH.domain.tag.Tag;
 import com.importH.domain.tag.TagDto;
 import com.importH.domain.tag.TagService;
+import com.importH.domain.user.dto.UserPostDto;
 import com.importH.domain.user.entity.User;
 import com.importH.global.error.code.PostErrorCode;
 import com.importH.global.error.code.SecurityErrorCode;
 import com.importH.global.error.exception.PostException;
 import com.importH.global.error.exception.SecurityException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -190,5 +192,13 @@ public class PostService {
 
     public Post findByPostId(Long postsId) {
         return postRepository.findById(postsId).orElseThrow(() -> new PostException(NOT_FOUND_POST));
+    }
+
+    /**
+     * 유저가 작성한 게시글 가져오기
+     */
+    public List<UserPostDto.Response> findAllPostByWrote(User user, Pageable pageable) {
+        Page<UserPostDto.Response> responses = postRepository.findAllPostByUser(user, pageable);
+        return responses.getContent();
     }
 }
