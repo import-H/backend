@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.importH.domain.post.entity.QPostScrap.postScrap;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 public class PostCustomRepositoryImpl implements PostCustomRepository{

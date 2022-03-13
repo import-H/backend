@@ -323,7 +323,7 @@ class PostServiceTest {
         }
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("createdAt").descending());
         // when
-        List<PostDto.ResponseAll> allPost = postService.findAllPost(null,pageRequest);
+        List<PostDto.ResponseAll> allPost = postService.findAllPost(QUESTIONS,pageRequest);
 
         //then
         assertThat(allPost.size()).isEqualTo(13);
@@ -341,6 +341,35 @@ class PostServiceTest {
                 .hasFieldOrProperty("thumbnail"));
     }
 
+    @Test
+    @DisplayName("[성공] 개인 게시판 게시글 조회 - 공지사항 포함하지 않아야함")
+    void findAll_success_04() throws Exception {
+        // given
+        for (int i = 0; i < 3; i++) {
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", "자바", FREE,true));
+        }
+        for (int i = 0; i < 10; i++) {
+            postService.registerPost(user, getRequest("테스트", "테스트 게시글 입니다.", "자바", user.getPathId()));
+        }
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("createdAt").descending());
+        // when
+        List<PostDto.ResponseAll> allPost = postService.findAllPost(user.getPathId(),pageRequest);
+
+        //then
+        assertThat(allPost.size()).isEqualTo(10);
+        allPost.stream().forEach(responseAll -> assertThat(responseAll)
+                .hasFieldOrProperty("responseInfo.boardId")
+                .hasFieldOrProperty("responseInfo.postId")
+                .hasFieldOrProperty("responseInfo.title")
+                .hasFieldOrProperty("responseInfo.content")
+                .hasFieldOrProperty("responseInfo.nickname")
+                .hasFieldOrProperty("responseInfo.profileImage")
+                .hasFieldOrProperty("responseInfo.important")
+                .hasFieldOrProperty("responseInfo.likeCount")
+                .hasFieldOrProperty("responseInfo.viewCount")
+                .hasFieldOrProperty("commentsCount")
+                .hasFieldOrProperty("thumbnail"));
+    }
 
     @Test
     @DisplayName("[성공] 전체 게시글 조회 - 좋아요 내림차순 으로 조회")

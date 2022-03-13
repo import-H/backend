@@ -23,6 +23,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -57,13 +58,13 @@ public class PostService {
     }
 
     private void validateType(User user, Post post) {
-        if (isValidPathId(user, post) || isExistType(post)) return;
+        if (isValidPathId(user, post) || isExistType(post.getType())) return;
         throw new PostException(PostErrorCode.NOT_EXIST_TYPE);
     }
 
-    private boolean isExistType(Post post) {
+    private boolean isExistType(String type) {
         return Arrays.stream(PostType.values())
-                .anyMatch(postType -> postType.getType().equals(post.getType()));
+                .anyMatch(postType -> postType.getType().equals(type));
     }
 
     private boolean isValidPathId(User user, Post post) {
@@ -178,7 +179,10 @@ public class PostService {
      */
     public List<PostDto.ResponseAll> findAllPost(String type, Pageable pageable) {
 
-        List<Post> importantIsTrue = postRepository.findAllByImportantIsTrue();
+        List<Post> importantIsTrue = new ArrayList<>();
+        if (isExistType(type)) {
+            importantIsTrue = postRepository.findAllByImportantIsTrue();
+        }
 
         Slice<Post> postSlice = postRepository.findAllPostsByType(type,pageable);
 
