@@ -38,6 +38,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return User.builder()
                 .id(Long.valueOf(claims.getSubject()))
                 .role(String.valueOf(claims.get("roles")))
+                .pathId(String.valueOf(claims.get("pathId")))
                 .build();
     }
 

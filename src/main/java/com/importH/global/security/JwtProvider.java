@@ -42,6 +42,7 @@ public class JwtProvider {
 
         Claims claims = Jwts.claims().setSubject(String.valueOf(user.getId())); // JWT PALYLOAD 에 저장되는 정보단위
         claims.put(ROLES, user.getRole());
+        claims.put("pathId", user.getPathId());
 
         Date now = new Date();
 
