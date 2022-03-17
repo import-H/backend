@@ -75,7 +75,7 @@ public class UserService {
     @Transactional
     public Response updateUser(Long userId, User user, Request request) {
         User findUser = getValidatedUser(userId, user);
-        duplicatedNickname(request.getNickname(), user.getNickname());
+        duplicatedNickname(request.getNickname(), findUser.getNickname());
         findUser.update(request);
         return Response.fromEntity(findUser);
     }
