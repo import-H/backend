@@ -22,7 +22,7 @@ public class UserDto {
 
         @ApiModelProperty(value = "닉네임 : 영어 또는 한글로만 3~20자로 입력해주세요", required = true, example = "닉네임")
         @NotBlank(message = "닉네임은 필수 입력 값 입니다.")
-        @Pattern(regexp = "^[a-zA-zㄱ-ㅎ가-힣0-9]*$", message = "영어,한글,숫자 조합으로만 입력이 가능합니다.")
+        @Pattern(regexp = "^[a-zA-Zㄱ-ㅎ가-힣0-9]*$", message = "영어,한글,숫자 조합으로만 입력이 가능합니다.")
         @Length(min = 2, max = 20, message = "2글자 이상 20글자 이하로 입력 해 주세요")
         private String nickname;
 

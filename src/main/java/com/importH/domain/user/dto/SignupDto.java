@@ -38,13 +38,13 @@ public class SignupDto {
 
     @ApiModelProperty(value = "닉네임 : 영어 또는 한글로만 3~20자로 입력해주세요", required = true, example = "닉네임")
     @NotBlank(message = "닉네임은 필수 입력 값 입니다.")
-    @Pattern(regexp = "^[a-zA-zㄱ-ㅎ가-힣0-9]*$", message = "알파벳,한글,숫자 조합으로만 입력이 가능합니다.")
+    @Pattern(regexp = "^[a-zA-Zㄱ-ㅎ가-힣0-9]*$", message = "알파벳,한글,숫자 조합으로만 입력이 가능합니다.")
     @Length(min = 2, max = 20, message = "2글자 이상 20글자 이하로 입력 해 주세요")
     private String nickname;
 
     @ApiModelProperty(value = "개인 게시판 id : 개인게시판 주소로 사용할 id 를 15자 이내 알파벳+숫자 로 입력해주세요", required = true, example = "sukeun1997")
     @NotBlank(message = "게시판 주소 id는 필수 입력 값 입니다.")
-    @Pattern(regexp = "^[a-zA-z0-9]*$", message = "알파벳,숫자 조합으로만 입력이 가능합니다.")
+    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "알파벳,숫자 조합으로만 입력이 가능합니다.")
     @Length(min = 5, max = 15, message = "5글자 이상 15글자 이하로 입력 해 주세요")
     private String pathId;
 
