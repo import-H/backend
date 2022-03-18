@@ -50,11 +50,10 @@ public class OauthService {
             return user.get();
         }
 
-        User member = userRepository.findByOauthId(socialProfile.getOauthId())
-                .orElseGet(() -> {
-                    validateProfile(socialProfile);
-                    return userRepository.save(socialProfile.toUser());
-                });
+        User member = user.orElseGet(() -> {
+            validateProfile(socialProfile);
+            return userRepository.save(socialProfile.toUser());
+        });
         return member;
     }
 

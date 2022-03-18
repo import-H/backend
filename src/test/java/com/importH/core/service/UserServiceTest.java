@@ -86,6 +86,7 @@ class UserServiceTest {
                 .hasFieldOrPropertyWithValue("profileImage", user.getProfileImage())
                 .hasFieldOrPropertyWithValue("introduction", user.getIntroduction())
                 .hasFieldOrPropertyWithValue("personalUrl", user.getPersonalUrl())
+                .hasFieldOrPropertyWithValue("commitUrl", user.getCommitUrl())
                 .hasFieldOrPropertyWithValue("infoByEmail", user.getInfoAgree().isInfoByEmail())
                 .hasFieldOrPropertyWithValue("infoByWeb", user.getInfoAgree().isInfoByWeb())
                 .hasFieldOrPropertyWithValue("pathId", user.getPathId())

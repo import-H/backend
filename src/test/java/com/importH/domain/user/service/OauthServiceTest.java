@@ -69,7 +69,6 @@ class OauthServiceTest {
         verify(oauthAdapter, times(1)).getUserProfile(any(), any(), any());
         verify(userRepository, times(1)).save(any());
         verify(jwtProvider, times(1)).createToken(any());
-        verify(userRepository, times(1)).findByOauthId(any());
     }
 
     @Test
@@ -80,9 +79,9 @@ class OauthServiceTest {
 
         given(oauthProviderRepository.findByProviderName(any())).willReturn(getOauthProvider());
         given(oauthAdapter.getToken(any(), any())).willReturn(OauthTokenResponse.builder().accessToken(ACCESS_TOKEN).build());
-        given(oauthAdapter.getUserProfile(any(),any(),any())).willReturn(getSocialProfile("test@mail.com"));
+        given(oauthAdapter.getUserProfile(any(),any(),any())).willReturn(getSocialProfile("test@gmail.com"));
         given(jwtProvider.createToken(any())).willReturn(getTokenDto());
-        given(userRepository.findByOauthId(any())).willReturn(Optional.ofNullable(getUser()));
+        given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(getUser()));
 
         // when
         TokenDto tokenDto = oauthService.socialLogin(provider, CODE);
@@ -96,7 +95,6 @@ class OauthServiceTest {
 
         verify(oauthAdapter, times(1)).getToken(any(), any());
         verify(oauthAdapter, times(1)).getUserProfile(any(), any(), any());
-        verify(userRepository, times(1)).findByOauthId(any());
         verify(jwtProvider, times(1)).createToken(any());
         verify(userRepository, never()).save(any());
     }
@@ -122,9 +120,8 @@ class OauthServiceTest {
 
         verify(oauthAdapter, times(1)).getToken(any(), any());
         verify(oauthAdapter, times(1)).getUserProfile(any(), any(), any());
-        verify(userRepository, times(1)).findByOauthId(any());
         verify(jwtProvider, never()).createToken(any());
-        verify(userRepository, times(1)).findByOauthId(any());
+        verify(userRepository, times(1)).findByEmail(any());
         verify(userRepository, never()).save(any());
     }
 
@@ -163,7 +160,7 @@ class OauthServiceTest {
     }
 
     private User getUser() {
-        return User.builder().email(getSocialProfile("test@mail.com").getEmail()).role("ROLE_USER").build();
+        return User.builder().email(getSocialProfile("test@gmail.com").getEmail()).role("ROLE_USER").build();
     }
 
     private SocialProfile getSocialProfile(String email) {

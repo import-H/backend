@@ -70,6 +70,8 @@ public class UserDto {
         @ApiModelProperty(value = "소셜 로그인 ID")
         private String oauthId;
 
+        @ApiModelProperty(value = "커밋 잔디 url")
+        private String commitUrl;
 
         @ApiModelProperty(value = "이메일 수신 동의 여부", example = "true/false")
         private boolean infoByEmail;
@@ -91,6 +93,7 @@ public class UserDto {
                     .personalUrl(user.getPersonalUrl())
                     .infoByEmail(user.getInfoAgree().isInfoByEmail())
                     .infoByWeb(user.getInfoAgree().isInfoByWeb())
+                    .commitUrl(user.getCommitUrl())
                     .oauthId(user.getOauthId())
                     .emailVerified(user.isEmailVerified())
                     .build();

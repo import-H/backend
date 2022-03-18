@@ -52,6 +52,8 @@ public class User extends BaseTimeEntity {
 
     private String oauthId;
 
+    private String commitUrl;
+
     @Embedded
     @Builder.Default
     private InfoAgree infoAgree = new InfoAgree();

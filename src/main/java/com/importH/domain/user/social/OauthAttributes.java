@@ -11,6 +11,7 @@ public enum OauthAttributes {
             return SocialProfile.builder()
                     .oauthId(String.valueOf(attributes.get("id")))
                     .email((String) attributes.get("email"))
+                    .login((String) attributes.get("login"))
                     .name((String) attributes.get("name"))
                     .imageUrl((String) attributes.get("avatar_url"))
                     .build();
